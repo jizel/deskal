@@ -1,9 +1,9 @@
-#summary One-sentence summary of this page.
+#summary Short summary of this project.
 #labels Featured
 
 = Project Summary =
 
-Desktop calendar, writen in Java, using XML.
+Desktop calendar, writen in Java, using XML. Created as a project @PB138.FI.MUNI.CZ
 
 
 = Future Features =
