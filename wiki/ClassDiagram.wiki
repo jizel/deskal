@@ -1,2 +1,0 @@
-#summary Class diagram
-#labels Phase-Requirements
