@@ -28,7 +28,8 @@ XML Schema for calendar and tag list.
     * _if node *labels* occurs, then at least one is required
 
 
-Schema code:
+
+´== Schema code: ==
 <code>
 <?xml version="1.0" encoding="UTF-8"?>
 
