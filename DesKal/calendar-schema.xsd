@@ -4,5 +4,38 @@
     targetNamespace="http://xml.netbeans.org/schema/calendar-schema"
     xmlns:tns="http://xml.netbeans.org/schema/calendar-schema"
     elementFormDefault="qualified">
-
+    <xsd:element name="tags">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="tag" type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="calendar">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="event">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="since" type="xsd:time"/>
+                            <xsd:element name="to" type="xsd:time"/>
+                            <xsd:element name="date" type="xsd:date"/>
+                            <xsd:element name="title" type="xsd:string"/>
+                            <xsd:element name="place" type="xsd:string"/>
+                            <xsd:element name="note" type="xsd:string"/>
+                            <xsd:element name="labels" minOccurs="0">
+                                <xsd:complexType>
+                                    <xsd:sequence>
+                                        <xsd:element ref="tags" minOccurs="0" maxOccurs="unbounded" />
+                                    </xsd:sequence>
+                                </xsd:complexType>
+                            </xsd:element>
+                            
+                        </xsd:sequence>
+                        <xsd:attribute name="id" type="xsd:integer" use="required"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>    
 </xsd:schema>
