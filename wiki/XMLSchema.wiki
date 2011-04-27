@@ -3,51 +3,54 @@
 
 = XML Schema =
 
- <?xml version="1.0" encoding="UTF-8"?>
- <!--
-    Document   : calendar.xml
-    Created on : 27. duben 2011, 16:13
-    Author     : AdiC
-    Description:
-        Purpose of the document follows.
- -->
+XML Schema for calendar and tag list. 
 
- <xs:calendar  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-   xmlns:xs='http://xml.netbeans.org/schema/calendar-schema'
-   xsi:schemaLocation='http://xml.netbeans.org/schema/calendar-schema  calendar-schema.xsd'>
-    <xs:event id="1">
-        <xs:since>12:00:00</xs:since>
-        <xs:duration>PT1H</xs:duration>
-        <xs:date>2011-04-30</xs:date>
-        <xs:title>Title1 - noPlace noNote noLabels</xs:title>
-    </xs:event>
-    <xs:event id="2">
-        <xs:since>13:00:00</xs:since>
-        <xs:duration>PT1H</xs:duration>
-        <xs:date>2011-05-31</xs:date>
-        <xs:title>Title2 - noNote noLabels</xs:title>
-        <xs:place>Brno</xs:place>
-    </xs:event>
-    <xs:event id="3">
-        <xs:since>12:00:00</xs:since>
-        <xs:duration>PT1H</xs:duration>
-        <xs:date>2011-04-30</xs:date>
-        <xs:title>Title13 - noPlace noNote</xs:title>
-        <xs:labels>
-            <xs:tag>work</xs:tag>
-        </xs:labels>
-    </xs:event>
-    <xs:event id="4">
-        <xs:since>12:00:00</xs:since>
-        <xs:duration>PT1H</xs:duration>
-        <xs:date>2011-04-30</xs:date>
-        <xs:title>Title4</xs:title>
-        <xs:place>Prague</xs:place>
-        <xs:note>new note</xs:note>     
-        <xs:labels>
-            <xs:tag>Work</xs:tag>
-            <xs:tag>Important</xs:tag>
-        </xs:labels>
-    </xs:event>
- 
- </xs:calendar>
+<code>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://xml.netbeans.org/schema/calendar-schema" 
+    xmlns:tns="http://xml.netbeans.org/schema/calendar-schema"
+    elementFormDefault="qualified">
+    <xsd:element name="tags">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="tag" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="calendar">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="event" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="since" type="xsd:time"/>                            
+                            <xsd:element name="duration" type="xsd:duration"/>
+                            <xsd:element name="date" type="xsd:date"/>
+                            <xsd:element name="title">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:minLength value="1" />
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="place" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="note" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="labels" minOccurs="0">
+                                <xsd:complexType>
+                                    <xsd:sequence>
+                                        <xsd:element name="tag" minOccurs="1" maxOccurs="unbounded"/>
+                                    </xsd:sequence>
+                                </xsd:complexType>
+                            </xsd:element>                          
+                        </xsd:sequence>
+                        <xsd:attribute name="id" type="xsd:integer" use="required"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>    
+</xsd:schema>
+
+</code>
