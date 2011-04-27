@@ -12,20 +12,20 @@ XML Schema for calendar and tag list.
 === Calendar contains: ===
 
  * *event* - node for each event in the calendar
- ** _id_ - unique number specifying event
- ** *since* - starting time of the event
- ** *duration* - duration of the event
- *** pair since-duration is better than ari since-to, because it allows to use more days events
- ** *date* - date of begin of the event
- ** *title* - title or name of the event
- *** _at least one letter is required_
- ** *place* - place of event
- *** _optional node_
- ** *note* - node for some notes about the event
- ** *labels* - contains event's tags
- *** _optional node
- *** *tag* - name of the tag
- **** _if node *labels* occurs, then at least one is required
+  * _id_ - unique number specifying event
+  * *since* - starting time of the event
+  * *duration* - duration of the event
+   * pair since-duration is better than ari since-to, because it allows to use more days events
+  * *date* - date of begin of the event
+  * *title* - title or name of the event
+   * _at least one letter is required_
+  * *place* - place of event
+   * _optional node_
+  * *note* - node for some notes about the event
+  * *labels* - contains event's tags
+   * _optional node
+   * *tag* - name of the tag
+    * _if node *labels* occurs, then at least one is required
 
 <code>
 <?xml version="1.0" encoding="UTF-8"?>
