@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : calendar-schema1.11.xml
+    Created on : 28. duben 2011, 19:43
+    Author     : AdiC
+    Description:
+        Purpose of the document follows.
+-->
+
+<ns0:calendar xmlns:ns0='http://www.w3.org/2001/XMLSchema-instance' ns0:noNamespaceSchemaLocation='calendar-schema1.1.xsd' >
+    <ns0:labels>
+        <ns0:tags>
+            <ns0:tag>blue</ns0:tag>
+        </ns0:tags>
+    </ns0:labels>
+    <ns0:event id="1">
+        <ns0:since>12:12:12</ns0:since>
+        <ns0:duration>PT1H</ns0:duration>
+        <ns0:date>14-04-2011</ns0:date>
+        <ns0:title>a</ns0:title>
+        <ns0:place></ns0:place>
+        <ns0:note></ns0:note>
+        <ns0:labels>
+            <ns0:tag>blue</ns0:tag>
+        </ns0:labels>
+    </ns0:event>
+    <ns0:event id="2">
+        <ns0:since>12:12:12</ns0:since>
+        <ns0:duration>PT1H</ns0:duration>
+        <ns0:date>12-03-2011</ns0:date>
+        <ns0:title>b</ns0:title>
+        <ns0:place></ns0:place>
+        <ns0:note></ns0:note>
+        <ns0:labels>
+            <ns0:tag></ns0:tag>
+        </ns0:labels>
+    </ns0:event>
+
+</ns0:calendar>
