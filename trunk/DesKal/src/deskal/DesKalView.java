@@ -519,7 +519,7 @@ public class DesKalView extends FrameView {
         jMenuItem2.setText(resourceMap.getString("jMenuItem2.text")); // NOI18N
         fileMenu.add(jMenuItem2);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem3.setAction(actionMap.get("showExportChooser")); // NOI18N
         jMenuItem3.setText(resourceMap.getString("jMenuItem3.text")); // NOI18N
         jMenuItem3.setName("jMenuItem3"); // NOI18N
         fileMenu.add(jMenuItem3);
