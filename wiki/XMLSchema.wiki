@@ -15,27 +15,27 @@ XML Schema for calendar and tag list.
   * *since* - starting time of the event
   * *duration* - duration of the event
    * pair since-duration is better than ari since-to, because it allows to use more days events
-   The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
-
-    P indicates the period (required)
-    nY indicates the number of years
-    nM indicates the number of months
-    nD indicates the number of days
-    T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
-    nH indicates the number of hours
-    nM indicates the number of minutes
-    nS indicates the number of seconds
-
+   * The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
+    * P indicates the period (required)
+    * nY indicates the number of years
+    * nM indicates the number of months
+    * nD indicates the number of days
+    * T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
+    * nH indicates the number of hours
+    * nM indicates the number of minutes
+    * nS indicates the number of seconds
   * *date* - date of begin of the event
   * *title* - title or name of the event
    * _at least one letter is required_
   * *place* - place of event
    * _optional node_
   * *note* - node for some notes about the event
-  * *labels* - contains event's tags
-   * _optional node
-   * *tag* - name of the tag
-    * _if node *labels* occurs, then at least one is required
+   * _optional node_
+  * *tags* - contains event's tags
+   * _optional node_
+   * *tag* - name of the tag (label)
+    * _tagref_ - keyref of the label
+    * _if node *labels* occurs, then at least one is required_
 
  
  
@@ -44,45 +44,72 @@ XML Schema for calendar and tag list.
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xsd:element name="calendar">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="labels" type="userTypeTag"/>
+                <xsd:element name="event" minOccurs="0" maxOccurs="unbounded" type="userTypeEvent" />
+            </xsd:sequence>
+        </xsd:complexType>
+        <xsd:unique name="eventID">
+            <xsd:selector xpath="event"/>
+            <xsd:field xpath="@id"/>
+        </xsd:unique>
+        <xsd:unique name="tag">
+            <xsd:selector xpath="labels/tag"/>
+            <xsd:field xpath="text"/>
+        </xsd:unique>
+        <xsd:key name="tagKey">
+            <xsd:selector xpath="labels/label" />
+            <xsd:field xpath="@name" />
+        </xsd:key>
+        <xsd:keyref name="tagKeyRef" refer="tagKey">
+            <xsd:selector xpath="event/tags/tag"/>
+            <xsd:field xpath="@tagref"/>
+        </xsd:keyref>
+    </xsd:element>
 
-<xsd:element name="address-book">
-    <xsd:complexType>
+    <xsd:element name="tag" type="xsd:string"/>
+
+    <xsd:complexType name="userTypeEvent">
         <xsd:sequence>
-            <xsd:element name="person" minOccurs="1" maxOccurs="unbounded" type="userType" />
+            <xsd:element name="since" type="xsd:time"/>
+            <xsd:element name="duration" type="xsd:duration"/>
+            <xsd:element name="date" type="xsd:date"/>
+            <xsd:element name="title" type="userTypeTitle" />                
+            <xsd:element name="place" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="note" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="tags" minOccurs="0" type="userTypeTags" />
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:integer" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="userTypeTag">
+        <xsd:sequence>
+            <xsd:element name="label" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                     <xsd:attribute name="name" type="xsd:NCName"  use="required"/>                
+                </xsd:complexType>
+            </xsd:element>
         </xsd:sequence>
     </xsd:complexType>
-    <xsd:unique name="userIdUnique">
-        <xsd:selector xpath="person"/>
-        <xsd:field xpath="@id"/>
-    </xsd:unique>
-</xsd:element>
 
-<xsd:element name="firstname" type="xsd:string"/>
+    <xsd:simpleType name="userTypeTitle">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
-<xsd:element name="surname" type="xsd:string"/>
-
-<xsd:element name="e-mail" type="xsd:string"/>
-
-<xsd:complexType name="userType">
-    <xsd:sequence>
-        <xsd:element ref="firstname"/>
-        <xsd:element ref="surname"/>
-        <xsd:element ref="e-mail" minOccurs="0" maxOccurs="unbounded"/>
-        <xsd:element name="contacts" type="contactsType"/>
-    </xsd:sequence>
-    <xsd:attribute name="id" type="xsd:string"/>
-</xsd:complexType>
-
-<xsd:complexType name="contactsType">
-    <xsd:sequence>
-        <xsd:element name="contact" type="contactType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-    <xsd:attribute name="visible" type="xsd:boolean" default="true"/>
-</xsd:complexType>
-
-<xsd:complexType name="contactType">
-    <xsd:attribute name="person-ref" type="xsd:string" default="true"/>
-</xsd:complexType>
+     <xsd:complexType name="userTypeTags">
+        <xsd:sequence>
+            <xsd:element name="tag" minOccurs="1" maxOccurs="unbounded">
+                 <xsd:complexType>
+                    <xsd:attribute name="tagref" type="xsd:NCName" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
 
 </xsd:schema>
+
 </code>
