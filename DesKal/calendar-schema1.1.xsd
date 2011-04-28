@@ -5,7 +5,7 @@
     <xsd:element name="calendar">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="labels" type="userTypeTag" />
+                <xsd:element name="labels" type="userTypeTag"/>
                 <xsd:element name="event" minOccurs="0" maxOccurs="unbounded" type="userTypeEvent" />
             </xsd:sequence>
         </xsd:complexType>
