@@ -9,6 +9,7 @@ Odkaz by měl být vložen do (X)HTML souboru, který ho používá:
 <head profile="http://microformats.org/profile/hcalendar">
 
 =======Ukázka události ve formátu iCalendar=======
+<code>
      BEGIN:VCALENDAR
      BEGIN:VEVENT
      UID:guid-1.host1.com
@@ -20,10 +21,11 @@ Odkaz by měl být vložen do (X)HTML souboru, který ho používá:
      LOCATION:1CP Conference Room 4350
      END:VEVENT
      END:VCALENDAR
-
+</code>
 
 
 ====Ukázka odpovídající události ve formátu hCalendar====
+<code>
 <div class="vevent">
 <h3 class="summary">XYZ Project Review</h3>
 <p class="description">Project XYZ Review Meeting</p>
@@ -33,11 +35,13 @@ until <abbr class="dtend" title="1998-03-12T09:30:00-05:00">9:30am EST</abbr></p
 <small>Booked by: <span class="uid">guid-1.host1.com</span> on 
 <abbr class="dtstamp" title="19980309T231000Z">9 Mar 1998 6:00pm</abbr></small>
 
+</code>
 
 hCalendar (zkratka z HTML iCalendar) je mikroformát sloužící k sémantickému zápisu dat ve formátu iCal do webových stránek pomocí HTML nebo XHTML.
 Umožňuje webovým prohlížečům, vyhledávačům a dalším programům snadno
 extrahovat informace z webových stránek a pracovat s nimi (např. vyexportovat je do kalendářového programu uživatele).
 
+<code>
 <p class="vevent">
     <span class="summary">Konference o používání mikroformátů na českém internetu</span> 
     proběhne 15. května 2008 od
@@ -46,3 +50,5 @@ extrahovat informace z webových stránek a pracovat s nimi (např. vyexportovat
     <span class="location">Pražském konferenčním centru</span> 
     (<a class="url" href="http://microformats.cz/konference">další informace</a>)
 </p>
+
+</code>
