@@ -1,11 +1,11 @@
 #labels hCalendar
 ==hCalendar==
-*jednoduchý, otevřený, distribuovaný formát pro kalendáře a události*
-*vychází ze standardu iCalendar (RFC2445)*
-*využívá se např. pro synchronizaci kalendářů v organizérech, mobilních telefonech, PDA, … s počítačem, výměnu informací časové povahy mezi* uvedenými zařízeními, ...
-*hCalendar odpovídá 1:1 standardu iCalendar*
+jednoduchý, otevřený, distribuovaný formát pro kalendáře a události
+vychází ze standardu iCalendar (RFC2445)
+využívá se např. pro synchronizaci kalendářů v organizérech, mobilních telefonech, PDA, … s počítačem, výměnu informací časové povahy mezi uvedenými zařízeními, ...
+hCalendar odpovídá 1:1 standardu iCalendar*
 
-*Odkaz by měl být vložen do (X)HTML souboru, který ho používá:
+Odkaz by měl být vložen do (X)HTML souboru, který ho používá:
 <head profile="http://microformats.org/profile/hcalendar">
 
 =======Ukázka události ve formátu iCalendar=======
@@ -34,9 +34,9 @@ until <abbr class="dtend" title="1998-03-12T09:30:00-05:00">9:30am EST</abbr></p
 <abbr class="dtstamp" title="19980309T231000Z">9 Mar 1998 6:00pm</abbr></small>
 
 
-*hCalendar (zkratka z HTML iCalendar) je mikroformát sloužící k* *sémantickému zápisu dat ve formátu iCal do webových stránek pomocí* *HTML nebo XHTML.*
-*Umožňuje webovým prohlížečům, vyhledávačům a dalším programům snadno*
-*extrahovat informace z webových stránek a pracovat s nimi (např.* *vyexportovat je do kalendářového programu uživatele).*
+hCalendar (zkratka z HTML iCalendar) je mikroformát sloužící k sémantickému zápisu dat ve formátu iCal do webových stránek pomocí HTML nebo XHTML.
+Umožňuje webovým prohlížečům, vyhledávačům a dalším programům snadno
+extrahovat informace z webových stránek a pracovat s nimi (např. vyexportovat je do kalendářového programu uživatele).
 
 <p class="vevent">
     <span class="summary">Konference o používání mikroformátů na českém internetu</span> 
