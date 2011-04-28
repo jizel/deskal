@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : calendar1.1.xml
+    Created on : 28. duben 2011, 19:37
+    Author     : AdiC
+    Description:
+        Purpose of the document follows.
+-->
+
+<xs:calendar  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:xs='http://xml.netbeans.org/schema/calendar-schema'
+   xsi:schemaLocation='http://xml.netbeans.org/schema/calendar-schema calendar-schema.xsd'>
+    <xs:event id="">
+        <xs:since></xs:since>
+        <xs:duration></xs:duration>
+        <xs:date></xs:date>
+        <xs:title></xs:title>
+        <xs:place></xs:place>
+        <xs:note></xs:note>
+        <xs:labels>
+            <xs:tag></xs:tag>
+            <xs:tag></xs:tag>
+            <xs:tag></xs:tag>
+        </xs:labels>
+    </xs:event>
+    <xs:event id="">
+        <xs:since></xs:since>
+        <xs:duration></xs:duration>
+        <xs:date></xs:date>
+        <xs:title></xs:title>
+        <xs:place></xs:place>
+        <xs:note></xs:note>
+        <xs:labels>
+            <xs:tag></xs:tag>
+            <xs:tag></xs:tag>
+            <xs:tag></xs:tag>
+        </xs:labels>
+    </xs:event>
+    <xs:event id="">
+        <xs:since></xs:since>
+        <xs:duration></xs:duration>
+        <xs:date></xs:date>
+        <xs:title></xs:title>
+        <xs:place></xs:place>
+        <xs:note></xs:note>
+        <xs:labels>
+            <xs:tag></xs:tag>
+            <xs:tag></xs:tag>
+            <xs:tag></xs:tag>
+        </xs:labels>
+    </xs:event>
+
+</xs:calendar>
