@@ -13,6 +13,10 @@
             <xsd:selector xpath="event"/>
             <xsd:field xpath="@id"/>
         </xsd:unique>
+        <xsd:unique name="tag">
+            <xsd:selector xpath="labels/tag"/>
+            <xsd:field xpath="text"/>
+        </xsd:unique>
     </xsd:element>
 
     <xsd:element name="tag" type="xsd:string"/>
@@ -31,10 +35,10 @@
             </xsd:element>
             <xsd:element name="place" type="xsd:string" minOccurs="0"/>
             <xsd:element name="note" type="xsd:string" minOccurs="0"/>
-            <xsd:element name="labels">
+            <xsd:element name="tags" minOccurs="0">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element ref="tag"/>
+                        <xsd:element ref="tag" minOccurs="1" maxOccurs="unbounded"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -43,17 +47,8 @@
     </xsd:complexType>
 
     <xsd:complexType name="userTypeTag">
-            <xsd:sequence>
-                <xsd:element name="tags">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element ref="tag" />
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-                <xsd:element name="event" minOccurs="0" maxOccurs="unbounded">
-
-                </xsd:element>
+            <xsd:sequence>              
+                <xsd:element ref="tag" />
             </xsd:sequence>
         </xsd:complexType>
 

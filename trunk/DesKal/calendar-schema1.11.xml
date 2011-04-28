@@ -8,33 +8,32 @@
         Purpose of the document follows.
 -->
 
-<ns0:calendar xmlns:ns0='http://www.w3.org/2001/XMLSchema-instance' ns0:noNamespaceSchemaLocation='calendar-schema1.1.xsd' >
-    <ns0:labels>
-        <ns0:tags>
-            <ns0:tag>blue</ns0:tag>
-        </ns0:tags>
-    </ns0:labels>
-    <ns0:event id="1">
-        <ns0:since>12:12:12</ns0:since>
-        <ns0:duration>PT1H</ns0:duration>
-        <ns0:date>14-04-2011</ns0:date>
-        <ns0:title>a</ns0:title>
-        <ns0:place></ns0:place>
-        <ns0:note></ns0:note>
-        <ns0:labels>
-            <ns0:tag>blue</ns0:tag>
-        </ns0:labels>
-    </ns0:event>
-    <ns0:event id="2">
-        <ns0:since>12:12:12</ns0:since>
-        <ns0:duration>PT1H</ns0:duration>
-        <ns0:date>12-03-2011</ns0:date>
-        <ns0:title>b</ns0:title>
-        <ns0:place></ns0:place>
-        <ns0:note></ns0:note>
-        <ns0:labels>
-            <ns0:tag></ns0:tag>
-        </ns0:labels>
-    </ns0:event>
+<calendar xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='calendar-schemaa.xsd' >
+    <labels>
+        <tag>blue</tag>
+        
+    </labels>
+    <event id="1">
+        <since>12:12:12</since>
+        <duration>PT1H</duration>
+        <date>2011-04-14</date>
+        <title>a</title>
+        <place></place>
+        <note></note>
+        <tags>
+            <tag>blue</tag>
+        </tags>
+    </event>
+    <event id="2">
+        <since>12:12:12</since>
+        <duration>PT1H</duration>
+        <date>2011-03-11</date>
+        <title>b</title>
+        <place></place>
+        <note></note>
+         <tags>
+            <tag>white</tag>
+        </tags>
+    </event>
 
-</ns0:calendar>
+</calendar>
