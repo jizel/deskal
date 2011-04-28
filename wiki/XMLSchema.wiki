@@ -7,11 +7,25 @@ XML Schema for calendar and tag list.
 
 === Schema contains: ===
 
+ * *labels* - contains labels
+  * *label* - _name_ - name of the label, key for tag, unique
+
  * *event* - node for each event in the calendar
   * _id_ - unique number specifying event
   * *since* - starting time of the event
   * *duration* - duration of the event
    * pair since-duration is better than ari since-to, because it allows to use more days events
+   The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
+
+    P indicates the period (required)
+    nY indicates the number of years
+    nM indicates the number of months
+    nD indicates the number of days
+    T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
+    nH indicates the number of hours
+    nM indicates the number of minutes
+    nS indicates the number of seconds
+
   * *date* - date of begin of the event
   * *title* - title or name of the event
    * _at least one letter is required_
