@@ -6,7 +6,13 @@ využívá se např. pro synchronizaci kalendářů v organizérech, mobilních 
 hCalendar odpovídá 1:1 standardu iCalendar*
 
 Odkaz by měl být vložen do (X)HTML souboru, který ho používá:
+<code>
 <head profile="http://microformats.org/profile/hcalendar">
+<link rel="profile" href="http://microformats.org/profile/hcalendar">
+Tento obsah používá 
+<a rel="profile" 
+ href="http://microformats.org/profile/hcalendar">hCalendar</a>.
+</code>
 
 =======Ukázka události ve formátu iCalendar=======
 <code>
