@@ -5,11 +5,7 @@
 
 XML Schema for calendar and tag list. 
 
-=== Tag list contains: ===
-
- * *tag* - tag/label name
-
-=== Calendar contains: ===
+=== Schema contains: ===
 
  * *event* - node for each event in the calendar
   * _id_ - unique number specifying event
@@ -31,11 +27,11 @@ XML Schema for calendar and tag list.
  
 == Schema code: ==
 <code>
-<?xml version="1.0" encoding="UTF-8"?>
+ <?xml version="1.0" encoding="UTF-8"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+ <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-<xsd:element name="address-book">
+ <xsd:element name="address-book">
     <xsd:complexType>
         <xsd:sequence>
             <xsd:element name="person" minOccurs="1" maxOccurs="unbounded" type="userType" />
@@ -47,11 +43,11 @@ XML Schema for calendar and tag list.
     </xsd:unique>
 </xsd:element>
 
-<xsd:element name="firstname" type="xsd:string"/>
-<xsd:element name="surname" type="xsd:string"/>
-<xsd:element name="e-mail" type="xsd:string"/>
+ <xsd:element name="firstname" type="xsd:string"/>
+ <xsd:element name="surname" type="xsd:string"/>
+ <xsd:element name="e-mail" type="xsd:string"/>
 
-<xsd:complexType name="userType">
+ <xsd:complexType name="userType">
     <xsd:sequence>
         <xsd:element ref="firstname"/>
         <xsd:element ref="surname"/>
@@ -59,19 +55,19 @@ XML Schema for calendar and tag list.
         <xsd:element name="contacts" type="contactsType"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:string"/>
-</xsd:complexType>
+ </xsd:complexType>
 
-<xsd:complexType name="contactsType">
+ <xsd:complexType name="contactsType">
     <xsd:sequence>
         <xsd:element name="contact" type="contactType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="visible" type="xsd:boolean" default="true"/>
-</xsd:complexType>
+ </xsd:complexType>
 
-<xsd:complexType name="contactType">
+ <xsd:complexType name="contactType">
     <xsd:attribute name="person-ref" type="xsd:string" default="true"/>
-</xsd:complexType>
+ </xsd:complexType>
 
-</xsd:schema>
+ </xsd:schema>
 
 </code>
