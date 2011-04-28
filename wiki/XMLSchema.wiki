@@ -44,7 +44,9 @@ XML Schema for calendar and tag list.
 </xsd:element>
 
 <xsd:element name="firstname" type="xsd:string"/>
+
 <xsd:element name="surname" type="xsd:string"/>
+
 <xsd:element name="e-mail" type="xsd:string"/>
 
 <xsd:complexType name="userType">
