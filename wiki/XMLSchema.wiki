@@ -1,5 +1,5 @@
 #summary XML Schema
-#labels Phase-Design
+#labels Phase-Design,Schema
 
 = XML Schema =
 
