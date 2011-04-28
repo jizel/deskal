@@ -4,3 +4,4 @@
   * [XMLSchema XML Schema]
   * Export:
    * [hCalendar]
+   * [iCalendar]
