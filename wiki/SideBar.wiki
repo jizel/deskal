@@ -2,5 +2,4 @@
 
   * [ProjectSummary Project Summary]
   * [XMLSchema XML Schema]
-  * *Export*
-   * [hCalendar]
+  * [hCalendar]
