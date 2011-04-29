@@ -2,6 +2,7 @@
 
   * [ProjectSummary Project Summary]
   * [XMLSchema XML Schema]
+  * [GUI]
   * Export:
    * [hCalendar]
    * [iCalendar]
