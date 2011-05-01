@@ -3,6 +3,7 @@
   * [ProjectSummary Project Summary]
   * [XMLSchema XML Schema]
   * [GUI]
+  * [ClassDiagram Class Diagram]
   * Export:
    * [hCalendar]
    * [iCalendar]
