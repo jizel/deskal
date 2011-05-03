@@ -2,6 +2,7 @@
 
   * [ProjectSummary Project Summary]
   * [XMLSchema XML Schema]
+  * [BaseX]
   * [GUI]
   * [ClassDiagram Class Diagram]
   * Export:
