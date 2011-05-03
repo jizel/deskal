@@ -4,21 +4,21 @@
  */
 
 /*
- * DesKalAddDialog.java
+ * EditDialog.java
  *
- * Created on 2.5.2011, 16:27:27
+ * Created on 2.5.2011, 16:45:06
  */
 
-package deskal;
+package cz.muni.fi.pb138.deskal.gui;
 
 /**
  *
  * @author Drak
  */
-public class AddDialog extends javax.swing.JDialog {
+public class EditDialog extends javax.swing.JDialog {
 
-    /** Creates new form DesKalAddDialog */
-    public AddDialog(java.awt.Frame parent, boolean modal) {
+    /** Creates new form EditDialog */
+    public EditDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -51,7 +51,7 @@ public class AddDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DesKal");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("New event"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Edit event"));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("name");
@@ -79,7 +79,7 @@ public class AddDialog extends javax.swing.JDialog {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton1.setText("Add");
+        jButton1.setText("Edit");
 
         jButton2.setText("Cancel");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -169,15 +169,17 @@ public class AddDialog extends javax.swing.JDialog {
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+}//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-            java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 dispose();
             }
         });
-    }//GEN-LAST:event_jButton2ActionPerformed
+}//GEN-LAST:event_jButton2ActionPerformed
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

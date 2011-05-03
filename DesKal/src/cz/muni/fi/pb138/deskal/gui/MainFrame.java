@@ -1,14 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * MainFrame.java
- *
- * Created on 2.5.2011, 15:59:36
- */
-package deskal;
+package cz.muni.fi.pb138.deskal.gui;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -55,18 +45,18 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        nameLabel = new javax.swing.JLabel();
+        placeLabel = new javax.swing.JLabel();
+        begginLabel = new javax.swing.JLabel();
+        endLabel = new javax.swing.JLabel();
+        tagLabel = new javax.swing.JLabel();
+        noteLabel = new javax.swing.JLabel();
+        MenuBar = new javax.swing.JMenuBar();
+        FileMenu = new javax.swing.JMenu();
+        FiltersMenuItem = new javax.swing.JMenuItem();
+        ImportMenuItem = new javax.swing.JMenuItem();
+        ExportMenuItem = new javax.swing.JMenuItem();
+        ExitMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
 
@@ -98,7 +88,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         daysTable.setCellSelectionEnabled(true);
-        daysTable.setColumnSelectionAllowed(true);
         daysTable.setRowHeight(35);
         daysTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         daysTable.getTableHeader().setReorderingAllowed(false);
@@ -119,13 +108,18 @@ public class MainFrame extends javax.swing.JFrame {
         monthLabel.setText("MONTH");
 
         prevMonthButton.setForeground(new java.awt.Color(240, 240, 240));
-        prevMonthButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/deskal/larrowicon.gif"))); // NOI18N
+        prevMonthButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/muni/fi/pb138/deskal/gui/larrowicon.gif"))); // NOI18N
 
-        nextMonthButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/deskal/rarrowicon.gif"))); // NOI18N
+        nextMonthButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/muni/fi/pb138/deskal/gui/rarrowicon.gif"))); // NOI18N
 
         jLabel3.setText("Filter");
 
         filtersComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        filtersComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtersComboBoxActionPerformed(evt);
+            }
+        });
 
         eventsList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -186,17 +180,17 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel9.setText("note");
 
-        jLabel10.setText("jLabel10");
+        nameLabel.setText("nameLabel");
 
-        jLabel11.setText("jLabel11");
+        placeLabel.setText("placeLabel");
 
-        jLabel12.setText("jLabel12");
+        begginLabel.setText("begginLabel");
 
-        jLabel13.setText("jLabel13");
+        endLabel.setText("endLabel");
 
-        jLabel14.setText("jLabel14");
+        tagLabel.setText("tagLabel");
 
-        jLabel15.setText("jLabel15");
+        noteLabel.setText("noteLabel");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -213,12 +207,12 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+                    .addComponent(placeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(begginLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(endLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tagLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(noteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -226,27 +220,27 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel10))
+                    .addComponent(nameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel11))
+                    .addComponent(placeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jLabel12))
+                    .addComponent(begginLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel13))
+                    .addComponent(endLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel14))
+                    .addComponent(tagLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel15))
+                    .addComponent(noteLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -317,40 +311,45 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        jMenu1.setText("File");
+        FileMenu.setText("File");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Filters");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        FiltersMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
+        FiltersMenuItem.setText("Filters");
+        FiltersMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                FiltersMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        FileMenu.add(FiltersMenuItem);
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem2.setText("Import");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        ImportMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
+        ImportMenuItem.setText("Import");
+        ImportMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                ImportMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        FileMenu.add(ImportMenuItem);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem3.setText("Export");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        ExportMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        ExportMenuItem.setText("Export");
+        ExportMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                ExportMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem3);
+        FileMenu.add(ExportMenuItem);
 
-        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem4.setText("Exit");
-        jMenu1.add(jMenuItem4);
+        ExitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        ExitMenuItem.setText("Exit");
+        ExitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExitMenuItemActionPerformed(evt);
+            }
+        });
+        FileMenu.add(ExitMenuItem);
 
-        jMenuBar1.add(jMenu1);
+        MenuBar.add(FileMenu);
 
         jMenu2.setText("Info");
 
@@ -363,9 +362,9 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem5);
 
-        jMenuBar1.add(jMenu2);
+        MenuBar.add(jMenu2);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(MenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -405,37 +404,37 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_EditEventButtonActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void FiltersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FiltersMenuItemActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FiltersDialog(null,true).setVisible(true);
             }
         });
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_FiltersMenuItemActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void ImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImportMenuItemActionPerformed
         final JFileChooser importChooser = new JFileChooser();
         importChooser.addChoosableFileFilter(new FileNameExtensionFilter("XML file in iCal or hCal format", "xml"));
         importChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                importChooser.showOpenDialog(jMenuItem2);
+                importChooser.showOpenDialog(ImportMenuItem);
             }
         });
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_ImportMenuItemActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void ExportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportMenuItemActionPerformed
         final JFileChooser exportChooser = new JFileChooser();
         exportChooser.addChoosableFileFilter(new FileNameExtensionFilter(".xml", "xml"));
         exportChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                exportChooser.showSaveDialog(jMenuItem3);
+                exportChooser.showSaveDialog(ExportMenuItem);
             }
         });
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_ExportMenuItemActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -478,18 +477,28 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_RemoveEventButtonActionPerformed
 
+    private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitMenuItemActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_ExitMenuItemActionPerformed
+
+    private void filtersComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_filtersComboBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton EditEventButton;
+    private javax.swing.JMenuItem ExitMenuItem;
+    private javax.swing.JMenuItem ExportMenuItem;
+    private javax.swing.JMenu FileMenu;
+    private javax.swing.JMenuItem FiltersMenuItem;
+    private javax.swing.JMenuItem ImportMenuItem;
+    private javax.swing.JMenuBar MenuBar;
     private javax.swing.JButton RemoveEventButton;
+    private javax.swing.JLabel begginLabel;
     private javax.swing.JTable daysTable;
+    private javax.swing.JLabel endLabel;
     private javax.swing.JList eventsList;
     private javax.swing.JComboBox filtersComboBox;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -497,22 +506,20 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel monthLabel;
+    private javax.swing.JLabel nameLabel;
     private javax.swing.JButton newEventButton;
     private javax.swing.JButton nextMonthButton;
+    private javax.swing.JLabel noteLabel;
+    private javax.swing.JLabel placeLabel;
     private javax.swing.JButton prevMonthButton;
+    private javax.swing.JLabel tagLabel;
     private javax.swing.JLabel yearLabel;
     // End of variables declaration//GEN-END:variables
 }

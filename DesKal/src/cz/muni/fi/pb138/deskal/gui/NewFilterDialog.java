@@ -9,7 +9,7 @@
  * Created on 2.5.2011, 16:52:13
  */
 
-package deskal;
+package cz.muni.fi.pb138.deskal.gui;
 
 /**
  *

@@ -1,25 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * FiltersFrame.java
- *
- * Created on 2.5.2011, 16:47:30
- */
-package deskal;
+package cz.muni.fi.pb138.deskal.gui;
 
 /**
  *
  * @author Drak
  */
-public class FiltersFrame extends javax.swing.JFrame {
+public class FiltersDialog extends javax.swing.JDialog {
 
-    /** Creates new form FiltersFrame */
-    public FiltersFrame() {
+    /** Creates new form FiltersDialog */
+    public FiltersDialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
-        
     }
 
     /** This method is called from within the constructor to
@@ -40,6 +30,8 @@ public class FiltersFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DesKal");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setFocusCycleRoot(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Filters"));
 
@@ -60,6 +52,7 @@ public class FiltersFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(filtersList);
 
         newFilterButton.setText("New");
+        newFilterButton.setFocusCycleRoot(true);
         newFilterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newFilterButtonActionPerformed(evt);
@@ -124,41 +117,43 @@ public class FiltersFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void closeFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeFiltersButtonActionPerformed
-        dispose();
-    }//GEN-LAST:event_closeFiltersButtonActionPerformed
+    private void filtersListFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_filtersListFocusGained
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                removeFilterButton.setEnabled(true);
+            }
+        });
+}//GEN-LAST:event_filtersListFocusGained
+
+    private void filtersListFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_filtersListFocusLost
+        if (filtersList.isSelectionEmpty()) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                public void run() {
+                    removeFilterButton.setEnabled(false);
+                }
+            });
+        }
+}//GEN-LAST:event_filtersListFocusLost
 
     private void newFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newFilterButtonActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new NewFilterDialog(null, true).setVisible(true);
             }
         });
-    }//GEN-LAST:event_newFilterButtonActionPerformed
+}//GEN-LAST:event_newFilterButtonActionPerformed
 
-    private void filtersListFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_filtersListFocusGained
-
+    private void closeFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeFiltersButtonActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {               
-                removeFilterButton.setEnabled(true);
-            }
-        });
-    }//GEN-LAST:event_filtersListFocusGained
 
-    private void filtersListFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_filtersListFocusLost
-        if(filtersList.isSelectionEmpty()){
-            java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                removeFilterButton.setEnabled(false);
+                dispose();
             }
         });
-        }
-    }//GEN-LAST:event_filtersListFocusLost
-
-    /**
-     * @param args the command line arguments
-     */
-
+}//GEN-LAST:event_closeFiltersButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeFiltersButton;
     private javax.swing.JList filtersList;
