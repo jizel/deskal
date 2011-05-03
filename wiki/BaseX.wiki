@@ -1,0 +1,9 @@
+#summary Some info about BaseX.
+
+= BaseX =
+
+Homepage [http://basex.org/]
+
+Code examples: http://docs.basex.org/wiki/Code_Examples
+
+
