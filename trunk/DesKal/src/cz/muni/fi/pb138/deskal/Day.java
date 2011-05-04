@@ -1,20 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package cz.muni.fi.pb138.deskal;
 
 import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-/**
- *
- * @author Drak
- */
 public class Day {
-private XMLGregorianCalendar date;
-private List<Event> events;
+
+    private XMLGregorianCalendar date;
+    private List<Event> events;
 
     public XMLGregorianCalendar getDate() {
         return date;

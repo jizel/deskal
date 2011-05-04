@@ -1,25 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package cz.muni.fi.pb138.deskal;
 
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-/**
- *
- * @author Drak
- */
 public class Event {
-private int id;
-private String name;
-private String place;
-private XMLGregorianCalendar date;
-private Duration duration;
-private String note;
-private String tag;
+
+    private int id;
+    private String name;
+    private String place;
+    private XMLGregorianCalendar date;
+    private Duration duration;
+    private String note;
+    private String tag;
 
     public XMLGregorianCalendar getDate() {
         return date;
@@ -76,6 +68,4 @@ private String tag;
     public void setTag(String tag) {
         this.tag = tag;
     }
-
-
 }
