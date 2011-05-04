@@ -35,21 +35,10 @@ public class FiltersDialog extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Filters"));
 
-        filtersList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        filtersList.setModel(new FiltersListModel());
         filtersList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        filtersList.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                filtersListFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                filtersListFocusLost(evt);
-            }
-        });
         jScrollPane1.setViewportView(filtersList);
+        filtersList.addListSelectionListener(new FiltersListSelectionListener(removeFilterButton,filtersList));
 
         newFilterButton.setText("New");
         newFilterButton.setFocusCycleRoot(true);
@@ -116,26 +105,6 @@ public class FiltersDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void filtersListFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_filtersListFocusGained
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                removeFilterButton.setEnabled(true);
-            }
-        });
-}//GEN-LAST:event_filtersListFocusGained
-
-    private void filtersListFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_filtersListFocusLost
-        if (filtersList.isSelectionEmpty()) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                public void run() {
-                    removeFilterButton.setEnabled(false);
-                }
-            });
-        }
-}//GEN-LAST:event_filtersListFocusLost
 
     private void newFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newFilterButtonActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
