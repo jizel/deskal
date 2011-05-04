@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.deskal.gui;
 
 import cz.muni.fi.pb138.deskal.Day;
+import cz.muni.fi.pb138.deskal.Event;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -14,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
 public class DaysTableModel extends AbstractTableModel {
 
     private List<Day> days = new ArrayList<Day>();
-    private int firstDayOfMonth;
+    private int firstDayOfMonth; //from 0 - Mon to 6 - Sun
 
     @Override
     public int getRowCount() {
@@ -35,6 +36,20 @@ public class DaysTableModel extends AbstractTableModel {
             if (myIndex < days.size() + firstDayOfMonth) {
                 Day day = days.get(myIndex - firstDayOfMonth);
                 return day.getDate().getDay();
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public List<Event> getEventsAt(int rowIndex, int columnIndex) {
+        int myIndex = rowIndex * 7 + columnIndex;
+        if (myIndex < firstDayOfMonth) {
+            return null;
+        } else {
+            if (myIndex < days.size() + firstDayOfMonth) {
+                Day day = days.get(myIndex - firstDayOfMonth);
+                return day.getEvents();
             } else {
                 return null;
             }
@@ -63,6 +78,10 @@ public class DaysTableModel extends AbstractTableModel {
         }
     }
 
+    public int getFirstDay() {
+        return firstDayOfMonth;
+    }
+
     public void setMonth(List<Day> days) {
         if (days.isEmpty()) {
             throw new IllegalArgumentException("Empty list");
@@ -71,8 +90,11 @@ public class DaysTableModel extends AbstractTableModel {
         GregorianCalendar date = this.days.get(0).getDate().toGregorianCalendar();
         firstDayOfMonth = date.get(Calendar.DAY_OF_WEEK);
         firstDayOfMonth -= 2;
-            switch(firstDayOfMonth){
-                case -1: firstDayOfMonth = 5;
-                case -2: firstDayOfMonth = 6;}
+        switch (firstDayOfMonth) {
+            case -1:
+                firstDayOfMonth = 5;
+            case -2:
+                firstDayOfMonth = 6;
+        }
     }
 }
