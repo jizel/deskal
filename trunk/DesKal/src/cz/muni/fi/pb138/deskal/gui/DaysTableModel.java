@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import javax.swing.ListModel;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -95,6 +96,27 @@ public class DaysTableModel extends AbstractTableModel {
                 firstDayOfMonth = 5;
             case -2:
                 firstDayOfMonth = 6;
+        }
+        fireTableDataChanged();
+    }
+
+    public void addEventAt(int rowIndex, int columnIndex, Event event) {
+        int myIndex = rowIndex * 7 + columnIndex;
+        Day day = days.get(myIndex - firstDayOfMonth);
+        day.getEvents().add(event);
+        fireTableCellUpdated(rowIndex, columnIndex);
+    }
+
+    public boolean isDayAt(int rowIndex, int columnIndex) {
+        int myIndex = rowIndex * 7 + columnIndex;
+        if (myIndex < firstDayOfMonth) {
+            return false;
+        } else {
+            if (myIndex < days.size() + firstDayOfMonth) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

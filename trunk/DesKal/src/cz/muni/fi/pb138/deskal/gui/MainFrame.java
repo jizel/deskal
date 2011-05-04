@@ -2,12 +2,16 @@ package cz.muni.fi.pb138.deskal.gui;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import cz.muni.fi.pb138.deskal.Day;
+import cz.muni.fi.pb138.deskal.Event;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -15,7 +19,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author Drak
  */
 public class MainFrame extends javax.swing.JFrame {
+
     private Calendar date;
+    private DaysTableModel tableModel;
+    private EventListModel listModel;
+
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
@@ -23,16 +31,23 @@ public class MainFrame extends javax.swing.JFrame {
         date.setTimeInMillis(System.currentTimeMillis());
         yearLabel.setText(Integer.toString(date.get(Calendar.YEAR)));
         monthLabel.setText(getNameOfMonth(date.get(Calendar.MONTH)));
-        //DaysTableModel test
+        //table and list test
         List<Day> month = new ArrayList<Day>();
         Day day = new Day();
+        Event event = new Event();
+        event.setName("Some event");
+        Event event2 = new Event();
+        event2.setName("Some other event");
+        day.addEvent(event);
+        day.addEvent(event2);
         day.setDate(new XMLGregorianCalendarImpl());
         day.getDate().setYear(2011);
         day.getDate().setMonth(5);
         day.getDate().setDay(1);
         month.add(day);
-        DaysTableModel model = (DaysTableModel) daysTable.getModel();
-        model.setMonth(month);
+        tableModel = (DaysTableModel) daysTable.getModel();
+        tableModel.setMonth(month);
+        listModel = (EventListModel) eventsList.getModel();
     }
 
     /** This method is called from within the constructor to
@@ -56,8 +71,8 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         eventsList = new javax.swing.JList();
         newEventButton = new javax.swing.JButton();
-        EditEventButton = new javax.swing.JButton();
-        RemoveEventButton = new javax.swing.JButton();
+        editEventButton = new javax.swing.JButton();
+        removeEventButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -87,17 +102,23 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         daysTable.setModel(new DaysTableModel());
+        daysTable.setDefaultRenderer(Color.class, new DaysTableCellRenderer());
         daysTable.setCellSelectionEnabled(true);
         daysTable.setRowHeight(35);
         daysTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         daysTable.getTableHeader().setReorderingAllowed(false);
+        daysTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                daysTableMouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(daysTable);
         daysTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        yearLabel.setFont(new java.awt.Font("Tahoma", 0, 24));
+        yearLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         yearLabel.setText("YEAR");
 
-        monthLabel.setFont(new java.awt.Font("Tahoma", 0, 18));
+        monthLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         monthLabel.setText("MONTH");
 
         prevMonthButton.setForeground(new java.awt.Color(240, 240, 240));
@@ -114,48 +135,38 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        eventsList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        eventsList.setModel(new EventListModel());
         eventsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        eventsList.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                eventsListFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                eventsListFocusLost(evt);
-            }
-        });
         jScrollPane2.setViewportView(eventsList);
+        eventsList.addListSelectionListener(new EventListSelectionListener(editEventButton,removeEventButton,eventsList));
 
         newEventButton.setText("New event");
+        newEventButton.setEnabled(false);
         newEventButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newEventButtonActionPerformed(evt);
             }
         });
 
-        EditEventButton.setText("Edit");
-        EditEventButton.setEnabled(false);
-        EditEventButton.addActionListener(new java.awt.event.ActionListener() {
+        editEventButton.setText("Edit");
+        editEventButton.setEnabled(false);
+        editEventButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditEventButtonActionPerformed(evt);
+                editEventButtonActionPerformed(evt);
             }
         });
 
-        RemoveEventButton.setText("Remove");
-        RemoveEventButton.setEnabled(false);
-        RemoveEventButton.addActionListener(new java.awt.event.ActionListener() {
+        removeEventButton.setText("Remove");
+        removeEventButton.setEnabled(false);
+        removeEventButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RemoveEventButtonActionPerformed(evt);
+                removeEventButtonActionPerformed(evt);
             }
         });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Event"));
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("name");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11));
@@ -248,25 +259,23 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(filtersComboBox, 0, 132, Short.MAX_VALUE)
                     .addComponent(newEventButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-                    .addComponent(EditEventButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-                    .addComponent(RemoveEventButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE))
+                    .addComponent(editEventButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                    .addComponent(removeEventButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(36, 36, 36)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(prevMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(119, 119, 119)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(yearLabel)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(monthLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
-                                        .addComponent(nextMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(yearLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 186, Short.MAX_VALUE))))
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(nextMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26))
         );
@@ -275,6 +284,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
                         .addComponent(yearLabel)
                         .addGap(18, 18, 18)
                         .addComponent(monthLabel))
@@ -298,9 +308,9 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(newEventButton)
                         .addGap(18, 18, 18)
-                        .addComponent(EditEventButton)
+                        .addComponent(editEventButton)
                         .addGap(18, 18, 18)
-                        .addComponent(RemoveEventButton)))
+                        .addComponent(removeEventButton)))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -383,19 +393,19 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new AddDialog(null, true).setVisible(true);
+                new AddDialog(null, true, daysTable, eventsList).setVisible(true);
             }
         });
     }//GEN-LAST:event_newEventButtonActionPerformed
 
-    private void EditEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEventButtonActionPerformed
+    private void editEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editEventButtonActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
                 new EditDialog(null, true).setVisible(true);
             }
         });
-    }//GEN-LAST:event_EditEventButtonActionPerformed
+    }//GEN-LAST:event_editEventButtonActionPerformed
 
     private void FiltersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FiltersMenuItemActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -440,36 +450,19 @@ public class MainFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-    private void eventsListFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_eventsListFocusGained
+    private void removeEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeEventButtonActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                EditEventButton.setEnabled(true);
-                RemoveEventButton.setEnabled(true);
+                int i = JOptionPane.showConfirmDialog(rootPane, "Remove event " + eventsList.getSelectedValue() + " ?", "Remove", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (i == JOptionPane.YES_OPTION) {
+                    listModel.remove(eventsList.getSelectedIndex());
+                    eventsList.clearSelection();
+                }
             }
         });
 
-    }//GEN-LAST:event_eventsListFocusGained
-
-    private void eventsListFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_eventsListFocusLost
-        if (eventsList.isSelectionEmpty()) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                public void run() {
-                    EditEventButton.setEnabled(false);
-                    RemoveEventButton.setEnabled(false);
-                }
-            });
-
-        }
-    }//GEN-LAST:event_eventsListFocusLost
-
-    private void RemoveEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveEventButtonActionPerformed
-        if (!eventsList.isSelectionEmpty()) {
-            int i = JOptionPane.showConfirmDialog(rootPane, "Remove event " + eventsList.getSelectedValue() + " ?", "Remove", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-        }
-    }//GEN-LAST:event_RemoveEventButtonActionPerformed
+    }//GEN-LAST:event_removeEventButtonActionPerformed
 
     private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitMenuItemActionPerformed
         System.exit(0);
@@ -478,17 +471,34 @@ public class MainFrame extends javax.swing.JFrame {
     private void filtersComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersComboBoxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_filtersComboBoxActionPerformed
+
+    private void daysTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_daysTableMouseReleased
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                eventsList.clearSelection();
+                if(tableModel.isDayAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn()))
+                    newEventButton.setEnabled(true);
+                else newEventButton.setEnabled(false);
+                List<Event> events = tableModel.getEventsAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn());
+                if (events != null) {
+                    listModel.setEvents(events);
+                } else {
+                    listModel.cleanList();
+                }
+            }
+        });
+    }//GEN-LAST:event_daysTableMouseReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton EditEventButton;
     private javax.swing.JMenuItem ExitMenuItem;
     private javax.swing.JMenuItem ExportMenuItem;
     private javax.swing.JMenu FileMenu;
     private javax.swing.JMenuItem FiltersMenuItem;
     private javax.swing.JMenuItem ImportMenuItem;
     private javax.swing.JMenuBar MenuBar;
-    private javax.swing.JButton RemoveEventButton;
     private javax.swing.JLabel begginLabel;
     private javax.swing.JTable daysTable;
+    private javax.swing.JButton editEventButton;
     private javax.swing.JLabel endLabel;
     private javax.swing.JList eventsList;
     private javax.swing.JComboBox filtersComboBox;
@@ -512,12 +522,13 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel noteLabel;
     private javax.swing.JLabel placeLabel;
     private javax.swing.JButton prevMonthButton;
+    private javax.swing.JButton removeEventButton;
     private javax.swing.JLabel tagLabel;
     private javax.swing.JLabel yearLabel;
     // End of variables declaration//GEN-END:variables
 
     private String getNameOfMonth(int get) {
-        switch(get){
+        switch (get) {
             case 0:
                 return "January";
             case 1:
@@ -546,6 +557,4 @@ public class MainFrame extends javax.swing.JFrame {
                 return "";
         }
     }
-
-
 }
