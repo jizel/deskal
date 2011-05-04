@@ -1,6 +1,6 @@
 package cz.muni.fi.pb138.deskal;
 
-import cz.muni.fi.pb138.deskal.gui.*;
+import cz.muni.fi.pb138.deskal.gui.MainFrame;
 import java.awt.EventQueue;
 /**
  *

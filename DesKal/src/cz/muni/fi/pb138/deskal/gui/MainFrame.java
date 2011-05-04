@@ -1,5 +1,11 @@
 package cz.muni.fi.pb138.deskal.gui;
 
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import cz.muni.fi.pb138.deskal.Day;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -9,10 +15,24 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author Drak
  */
 public class MainFrame extends javax.swing.JFrame {
-
+    private Calendar date;
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
+        date = GregorianCalendar.getInstance();
+        date.setTimeInMillis(System.currentTimeMillis());
+        yearLabel.setText(Integer.toString(date.get(Calendar.YEAR)));
+        monthLabel.setText(getNameOfMonth(date.get(Calendar.MONTH)));
+        //DaysTableModel test
+        List<Day> month = new ArrayList<Day>();
+        Day day = new Day();
+        day.setDate(new XMLGregorianCalendarImpl());
+        day.getDate().setYear(2011);
+        day.getDate().setMonth(5);
+        day.getDate().setDay(1);
+        month.add(day);
+        DaysTableModel model = (DaysTableModel) daysTable.getModel();
+        model.setMonth(month);
     }
 
     /** This method is called from within the constructor to
@@ -66,40 +86,13 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        daysTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        daysTable.setModel(new DaysTableModel());
         daysTable.setCellSelectionEnabled(true);
         daysTable.setRowHeight(35);
         daysTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         daysTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(daysTable);
         daysTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        daysTable.getColumnModel().getColumn(0).setResizable(false);
-        daysTable.getColumnModel().getColumn(1).setResizable(false);
-        daysTable.getColumnModel().getColumn(2).setResizable(false);
-        daysTable.getColumnModel().getColumn(3).setResizable(false);
-        daysTable.getColumnModel().getColumn(4).setResizable(false);
-        daysTable.getColumnModel().getColumn(5).setResizable(false);
-        daysTable.getColumnModel().getColumn(6).setResizable(false);
 
         yearLabel.setFont(new java.awt.Font("Tahoma", 0, 24));
         yearLabel.setText("YEAR");
@@ -406,8 +399,9 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void FiltersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FiltersMenuItemActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
-                new FiltersDialog(null,true).setVisible(true);
+                new FiltersDialog(null, true).setVisible(true);
             }
         });
     }//GEN-LAST:event_FiltersMenuItemActionPerformed
@@ -484,7 +478,6 @@ public class MainFrame extends javax.swing.JFrame {
     private void filtersComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersComboBoxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_filtersComboBoxActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton EditEventButton;
     private javax.swing.JMenuItem ExitMenuItem;
@@ -522,4 +515,37 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel tagLabel;
     private javax.swing.JLabel yearLabel;
     // End of variables declaration//GEN-END:variables
+
+    private String getNameOfMonth(int get) {
+        switch(get){
+            case 0:
+                return "January";
+            case 1:
+                return "February";
+            case 2:
+                return "March";
+            case 3:
+                return "April";
+            case 4:
+                return "May";
+            case 5:
+                return "June";
+            case 6:
+                return "July";
+            case 7:
+                return "August";
+            case 8:
+                return "September";
+            case 9:
+                return "October";
+            case 10:
+                return "November";
+            case 11:
+                return "December";
+            default:
+                return "";
+        }
+    }
+
+
 }
