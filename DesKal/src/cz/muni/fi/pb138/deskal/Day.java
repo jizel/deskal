@@ -14,15 +14,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 public class Day {
 private XMLGregorianCalendar date;
-private int number;
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
 private List<Event> events;
 
     public XMLGregorianCalendar getDate() {
