@@ -2,6 +2,7 @@ package basex;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.List;
 import java.util.ArrayList;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -78,7 +79,7 @@ public class baseXParse {
 
             String since;
             String date = "";
-            NodeList tags;
+            NodeList tags = doc.getElementsByTagName("");
             String durationS = "";
 
             DatatypeFactory df = DatatypeFactory.newInstance();
@@ -108,7 +109,19 @@ public class baseXParse {
             
             eventById.setDate(datetime);
             eventById.setDuration(duration);
-            
+
+            List<String> tagList = new ArrayList<String>();
+
+            System.out.println(tags.getLength());
+            for(int i = 0; i < tags.getLength(); i++){
+                System.out.println(tags.item(i).getNodeName());
+                if(tags.item(i).getNodeName().compareTo("tag")==0){
+                    tagList.add(tags.item(i).getAttributes().item(0).getTextContent());
+                }
+            }
+            if(tagList.size()>0)
+                eventById.setTag(tagList.get(0));
+            System.out.println(tagList.toString());
 
             System.out.println(eventById.toStringAll());
             

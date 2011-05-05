@@ -23,6 +23,7 @@ public class Event {
 
     public Event(int id) {
         this.id = id;
+        tag = "";
     }
 
     public Event(){
@@ -82,7 +83,7 @@ public class Event {
     }
 
     public String toStringAll(){
-        return id + ": " + date.toString() + " " + duration.toString() + " " + name + " " + place + " " + note;
+        return id + ": date: " + date.toString() + " duration: " + duration.toString() + " name: " + name + " place: " + place + " note: " + note + " tag: " + tag;
     }
 
     public void setTag(String tag) {

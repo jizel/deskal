@@ -28,8 +28,8 @@
         <duration>PT1H</duration>
         <date>2011-03-11T12:12:12</date>
         <title>b</title>
-        <place></place>
-        <note></note>
+        <place>tu</place>
+        <note>nout</note>
          <tags>
             <tag tagref="white"/>
         </tags>
