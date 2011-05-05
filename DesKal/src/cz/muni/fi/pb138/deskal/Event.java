@@ -1,5 +1,6 @@
 package cz.muni.fi.pb138.deskal;
 
+import java.util.ArrayList;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -12,6 +13,7 @@ public class Event {
     private Duration duration;
     private String note;
     private String tag;
+    private ArrayList<String> tags;
 
     public Event(String name, XMLGregorianCalendar date, Duration duration) {
         this.name = name;
@@ -19,6 +21,10 @@ public class Event {
         this.duration = duration;
     }
 
+    public Event(int id) {
+        this.id = id;
+    }
+    
     public Event(){
 
     }
@@ -73,6 +79,10 @@ public class Event {
 
     public String getTag() {
         return tag;
+    }
+
+    public String toStringAll(){
+        return id + ": " + date.toString() + " " + duration.toString() + " " + name + " " + place + " " + note + " " + tags.toString();
     }
 
     public void setTag(String tag) {
