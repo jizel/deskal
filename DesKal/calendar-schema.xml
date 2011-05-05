@@ -14,9 +14,8 @@
         <label name="white"/>
     </labels>
     <event id="1">
-        <since>12:12:12</since>
         <duration>PT1H5M6S</duration>
-        <date>2011-04-14</date>
+        <date>2011-04-14T12:12:12</date>
         <title>a</title>
         <place>Brno</place>
         <note>Nix</note>
@@ -26,9 +25,8 @@
         </tags>
     </event>
    <event id="2">
-        <since>12:12:12</since>
         <duration>PT1H</duration>
-        <date>2011-03-11</date>
+        <date>2011-03-11T12:12:12</date>
         <title>b</title>
         <place></place>
         <note></note>
@@ -37,9 +35,8 @@
         </tags>
     </event>
     <event id="3">
-        <since>12:12:12</since>
         <duration>PT1H</duration>
-        <date>2011-03-11</date>
+        <date>2011-03-11T12:12:12</date>
         <title>C</title>
         <place></place>
         <note></note>
