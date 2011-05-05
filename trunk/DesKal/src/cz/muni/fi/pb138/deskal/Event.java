@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.deskal;
 
 import java.util.ArrayList;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -24,11 +25,10 @@ public class Event {
     public Event(int id) {
         this.id = id;
     }
-    
-    public Event(){
 
+    public Event() {
     }
-            
+
     public XMLGregorianCalendar getDate() {
         return date;
     }
@@ -81,11 +81,35 @@ public class Event {
         return tag;
     }
 
-    public String toStringAll(){
+    public String toStringAll() {
         return id + ": " + date.toString() + " " + duration.toString() + " " + name + " " + place + " " + note;
     }
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public String getTimeString() {
+        int minute = date.getMinute();
+        int hour = date.getHour();
+        String time;
+        if (minute != DatatypeConstants.FIELD_UNDEFINED && hour != DatatypeConstants.FIELD_UNDEFINED) {
+            if (minute < 10) {
+                time = Integer.toString(hour) + " : 0" + Integer.toString(minute);
+            } else {
+                time = Integer.toString(hour) + " : " + Integer.toString(minute);
+            }
+            return time;
+        } else {
+            return null;
+        }
+    }
+
+    public String getDurationString() {
+        if (this.duration == null) {
+            return null;
+        }
+        String duration = Integer.toString(this.duration.getHours()) + " hours";
+        return duration;
     }
 }
