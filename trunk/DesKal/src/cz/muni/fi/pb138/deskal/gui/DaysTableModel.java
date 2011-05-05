@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.swing.ListModel;
 import javax.swing.table.AbstractTableModel;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  *
@@ -118,5 +119,11 @@ public class DaysTableModel extends AbstractTableModel {
                 return false;
             }
         }
+    }
+
+    public XMLGregorianCalendar getDateAt(int rowIndex, int columnIndex) {
+        int myIndex = rowIndex * 7 + columnIndex;
+        Day day = days.get(myIndex - firstDayOfMonth);
+        return day.getDate();
     }
 }

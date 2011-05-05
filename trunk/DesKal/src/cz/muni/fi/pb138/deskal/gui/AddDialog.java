@@ -8,26 +8,38 @@
  *
  * Created on 2.5.2011, 16:27:27
  */
-
 package cz.muni.fi.pb138.deskal.gui;
 
 import cz.muni.fi.pb138.deskal.Event;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 
 /**
  *
  * @author Drak
  */
 public class AddDialog extends javax.swing.JDialog {
+
     private JTable daysTable;
-    private JList eventsList;
+    private DaysTableModel tableModel;
+    private EventListModel listModel;
+    private DatatypeFactory df;
+
     /** Creates new form DesKalAddDialog */
     public AddDialog(java.awt.Frame parent, boolean modal, JTable daysTable, JList eventsList) {
         super(parent, modal);
         initComponents();
         this.daysTable = daysTable;
-        this.eventsList = eventsList;
+        tableModel = (DaysTableModel) daysTable.getModel();
+        listModel = (EventListModel) eventsList.getModel();
+        try {
+            df = DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException ex) {
+            throw new RuntimeException("Duration factory can not be initialized", ex);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -48,29 +60,30 @@ public class AddDialog extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         nameText = new javax.swing.JTextField();
         placeText = new javax.swing.JTextField();
-        beginText = new javax.swing.JTextField();
-        endText = new javax.swing.JTextField();
+        timeText = new javax.swing.JTextField();
+        durationText = new javax.swing.JTextField();
         noteText = new javax.swing.JTextField();
         tagComboBox = new javax.swing.JComboBox();
         addButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DesKal");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("New event"));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
-        jLabel1.setText("name");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setText("name *");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel2.setText("place");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11));
-        jLabel3.setText("beginning");
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setText("time");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11));
-        jLabel4.setText("end");
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setText("duration");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel5.setText("note");
@@ -94,6 +107,8 @@ public class AddDialog extends javax.swing.JDialog {
             }
         });
 
+        jLabel7.setText("* requied field, time input format is HH MM");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -101,25 +116,28 @@ public class AddDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(tagComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                        .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(nameText, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-                    .addComponent(placeText, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-                    .addComponent(beginText, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-                    .addComponent(endText, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-                    .addComponent(noteText, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(tagComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                                .addComponent(cancelButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(nameText, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                            .addComponent(placeText, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                            .addComponent(timeText, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                            .addComponent(durationText, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                            .addComponent(noteText, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)))
+                    .addComponent(jLabel7))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -135,11 +153,11 @@ public class AddDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(beginText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(timeText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(endText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(durationText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -150,6 +168,8 @@ public class AddDialog extends javax.swing.JDialog {
                     .addComponent(tagComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(addButton)
                     .addComponent(cancelButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel7)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -166,15 +186,16 @@ public class AddDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-            java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 dispose();
             }
@@ -182,31 +203,56 @@ public class AddDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        Event event = new Event();
-        event.setName(nameText.getText());
-        DaysTableModel tableModel = (DaysTableModel)daysTable.getModel();
-        tableModel.addEventAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn(), event);
-        EventListModel listModel = (EventListModel) eventsList.getModel();
-        listModel.update();
-        dispose();
-    }//GEN-LAST:event_addButtonActionPerformed
+        if (!nameText.getText().trim().equals("")) {
+            int row = daysTable.getSelectedRow();
+            int col = daysTable.getSelectedColumn();
+            int hour = 0;
+            int minute = 0;
+            String line = timeText.getText();
+            Event event = new Event();
+            event.setDate(tableModel.getDateAt(row, col));
+            event.setName(nameText.getText());
+            event.setDate(tableModel.getDateAt(row, col));
+            event.setNote(noteText.getText());
+            event.setPlace(placeText.getText());
 
+            event.setTag(null);
+            if (!line.trim().equals("")) {
+                try {String[] ss = line.trim().split(" ");
+                    if(ss.length != 2) throw new NumberFormatException();
+                    hour = Integer.parseInt(ss[0]);
+                    minute = Integer.parseInt(ss[1]);
+                    if(hour < 0 || hour > 24 || minute < 0 || minute > 59)
+                        throw new NumberFormatException();
+                    event.getDate().setTime(hour, minute, 0);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(timeText, "Wrong time format", "Error", JOptionPane.ERROR_MESSAGE);
+                    timeText.requestFocus();
+                    return;
+                }
+            }
+
+            tableModel.addEventAt(row, col, event);
+            listModel.update();
+            dispose();
+        }
+    }//GEN-LAST:event_addButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
-    private javax.swing.JTextField beginText;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JTextField endText;
+    private javax.swing.JTextField durationText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField nameText;
     private javax.swing.JTextField noteText;
     private javax.swing.JTextField placeText;
     private javax.swing.JComboBox tagComboBox;
+    private javax.swing.JTextField timeText;
     // End of variables declaration//GEN-END:variables
-
 }
