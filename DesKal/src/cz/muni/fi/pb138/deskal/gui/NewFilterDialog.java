@@ -112,13 +112,7 @@ public class NewFilterDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                String name = filterText.getText();
-                if (!name.trim().equals("")) {
-                    Filter filter = new Filter();
-                    filter.setName(name);
-                    model.addFilter(filter);
-                    dispose();
-                }
+                addFilterAndDispose();
             }
         });
 
@@ -129,17 +123,22 @@ public class NewFilterDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                String name = filterText.getText();
-                if (!name.trim().equals("")) {
-                    Filter filter = new Filter();
-                    filter.setName(name);
-                    model.addFilter(filter);
-                    dispose();
-                }
+                addFilterAndDispose();
             }
         });
     }//GEN-LAST:event_filterTextActionPerformed
+    private void addFilterAndDispose() {
 
+        String name = filterText.getText();
+        if (!name.trim().equals("")) {
+            Filter filter = new Filter();
+            filter.setName(name);
+            if (!model.containsFilter(filter)) {
+                model.addFilter(filter);
+            }
+            dispose();
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JButton cancelButton;

@@ -137,10 +137,7 @@
                               <EmptySpace min="-2" pref="119" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="monthLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="yearLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="6" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="yearLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="nextMonthButton" min="-2" pref="36" max="-2" attributes="0"/>
@@ -364,16 +361,11 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="tagLabel" alignment="0" pref="328" max="32767" attributes="1"/>
-                                          <Component id="timeLabel" alignment="1" pref="328" max="32767" attributes="1"/>
-                                          <Component id="durationLabel" alignment="0" pref="328" max="32767" attributes="1"/>
-                                          <Component id="placeLabel" alignment="0" pref="328" max="32767" attributes="1"/>
-                                          <Component id="nameLabel" alignment="0" pref="328" max="32767" attributes="1"/>
-                                      </Group>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="tagLabel" alignment="0" pref="328" max="32767" attributes="1"/>
+                                  <Component id="timeLabel" alignment="1" pref="328" max="32767" attributes="1"/>
+                                  <Component id="durationLabel" alignment="0" pref="328" max="32767" attributes="1"/>
+                                  <Component id="placeLabel" alignment="0" pref="328" max="32767" attributes="1"/>
+                                  <Component id="nameLabel" alignment="0" pref="328" max="32767" attributes="1"/>
                                   <Component id="noteLabel" pref="328" max="32767" attributes="1"/>
                               </Group>
                           </Group>
