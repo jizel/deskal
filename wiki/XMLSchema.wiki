@@ -12,7 +12,6 @@ XML Schema for calendar and tag list.
 
  * *event* - node for each event in the calendar
   * _id_ - unique number specifying event
-  * *since* - starting time of the event
   * *duration* - duration of the event
    * pair since-duration is better than ari since-to, because it allows to use more days events
    * The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
@@ -24,7 +23,8 @@ XML Schema for calendar and tag list.
     * nH indicates the number of hours
     * nM indicates the number of minutes
     * nS indicates the number of seconds
-  * *date* - date of begin of the event
+  * *date* - dateTime of begin of the event
+   * YYYY-MM-DDTHH:MM:SS
   * *title* - title or name of the event
    * _at least one letter is required_
   * *place* - place of event
@@ -73,9 +73,8 @@ XML Schema for calendar and tag list.
 
     <xsd:complexType name="userTypeEvent">
         <xsd:sequence>
-            <xsd:element name="since" type="xsd:time"/>
             <xsd:element name="duration" type="xsd:duration"/>
-            <xsd:element name="date" type="xsd:date"/>
+            <xsd:element name="date" type="xsd:dateTime"/>
             <xsd:element name="title" type="userTypeTitle" />                
             <xsd:element name="place" type="xsd:string" minOccurs="0"/>
             <xsd:element name="note" type="xsd:string" minOccurs="0"/>
