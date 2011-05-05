@@ -143,7 +143,10 @@ public class FiltersDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                model.remove(filtersList.getSelectedIndex());
+                int index = filtersList.getSelectedIndex();
+                String name = (String) model.getElementAt(index);
+                if(!name.equals("default"))
+                model.remove(index);
                 filtersList.clearSelection();
             }
         });

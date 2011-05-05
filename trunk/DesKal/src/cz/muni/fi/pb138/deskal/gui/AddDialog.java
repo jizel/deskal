@@ -11,6 +11,8 @@
 package cz.muni.fi.pb138.deskal.gui;
 
 import cz.muni.fi.pb138.deskal.Event;
+import cz.muni.fi.pb138.deskal.Filter;
+import java.util.List;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -27,14 +29,17 @@ public class AddDialog extends javax.swing.JDialog {
     private DaysTableModel tableModel;
     private EventListModel listModel;
     private DatatypeFactory df;
+    private FiltersComboBoxModel comboModel;
 
     /** Creates new form DesKalAddDialog */
-    public AddDialog(java.awt.Frame parent, boolean modal, JTable daysTable, JList eventsList) {
+    public AddDialog(java.awt.Frame parent, boolean modal, JTable daysTable, JList eventsList, List<Filter> filters) {
         super(parent, modal);
         initComponents();
         this.daysTable = daysTable;
         tableModel = (DaysTableModel) daysTable.getModel();
         listModel = (EventListModel) eventsList.getModel();
+        comboModel = (FiltersComboBoxModel) tagComboBox.getModel();
+        comboModel.setFilters(filters);
         try {
             df = DatatypeFactory.newInstance();
         } catch (DatatypeConfigurationException ex) {
@@ -73,16 +78,16 @@ public class AddDialog extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("New event"));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("name *");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel2.setText("place");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel3.setText("time");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel4.setText("duration");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11));
@@ -91,7 +96,7 @@ public class AddDialog extends javax.swing.JDialog {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel6.setText("tag");
 
-        tagComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        tagComboBox.setModel(new FiltersComboBoxModel());
 
         addButton.setText("Add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -215,15 +220,24 @@ public class AddDialog extends javax.swing.JDialog {
             event.setDate(tableModel.getDateAt(row, col));
             event.setNote(noteText.getText());
             event.setPlace(placeText.getText());
-
-            event.setTag(null);
+            int indexCombo = tagComboBox.getSelectedIndex();
+            if (indexCombo >= 0) {
+                String tag = (String) comboModel.getElementAt(tagComboBox.getSelectedIndex());
+                if (!tag.equals("default")) {
+                    event.setTag(tag);
+                }
+            }
             if (!line.trim().equals("")) {
-                try {String[] ss = line.trim().split(" ");
-                    if(ss.length != 2) throw new NumberFormatException();
+                try {
+                    String[] ss = line.trim().split(" ");
+                    if (ss.length != 2) {
+                        throw new NumberFormatException();
+                    }
                     hour = Integer.parseInt(ss[0]);
                     minute = Integer.parseInt(ss[1]);
-                    if(hour < 0 || hour > 24 || minute < 0 || minute > 59)
+                    if (hour < 0 || hour > 24 || minute < 0 || minute > 59) {
                         throw new NumberFormatException();
+                    }
                     event.getDate().setTime(hour, minute, 0);
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(timeText, "Wrong time format", "Error", JOptionPane.ERROR_MESSAGE);

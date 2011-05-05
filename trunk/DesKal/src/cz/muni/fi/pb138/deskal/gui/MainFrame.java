@@ -36,9 +36,10 @@ public class MainFrame extends javax.swing.JFrame {
         date.setTimeInMillis(System.currentTimeMillis());
         yearLabel.setText(Integer.toString(date.get(Calendar.YEAR)));
         monthLabel.setText(getNameOfMonth(date.get(Calendar.MONTH)));
+        Filter none = new Filter(0,"default"); //default filter
+        filters.add(none);
         comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
         comboModel.setFilters(filters);
-
         
         //table and list test
         List<Day> month = new ArrayList<Day>();
@@ -428,7 +429,7 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new AddDialog(null, true, daysTable, eventsList).setVisible(true);
+                new AddDialog(null, true, daysTable, eventsList, filters).setVisible(true);
             }
         });
     }//GEN-LAST:event_newEventButtonActionPerformed

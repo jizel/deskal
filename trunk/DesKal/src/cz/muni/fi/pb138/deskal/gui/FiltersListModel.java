@@ -35,4 +35,8 @@ public class FiltersListModel extends AbstractListModel {
         filters.remove(index);
         fireContentsChanged(this, 0, filters.size() + 1);
     }
+
+    public boolean containsFilter(Filter filter){
+        return filters.contains(filter);
+    }
 }
