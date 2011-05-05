@@ -13,6 +13,16 @@ public class Event {
     private String note;
     private String tag;
 
+    public Event(String name, XMLGregorianCalendar date, Duration duration) {
+        this.name = name;
+        this.date = date;
+        this.duration = duration;
+    }
+
+    public Event(){
+
+    }
+            
     public XMLGregorianCalendar getDate() {
         return date;
     }
