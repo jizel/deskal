@@ -20,6 +20,10 @@ public class EventListModel extends AbstractListModel {
         return events.get(index).getName();
     }
 
+    public Event getEventAt(int index) {
+        return events.get(index);
+    }
+
     public void setEvents(List<Event> events){
         this.events = events;
         fireContentsChanged(this, 0, events.size());

@@ -1,15 +1,24 @@
 package cz.muni.fi.pb138.deskal.gui;
 
+import cz.muni.fi.pb138.deskal.Filter;
+import java.util.List;
+import javax.swing.JComboBox;
+
 /**
  *
  * @author Drak
  */
 public class FiltersDialog extends javax.swing.JDialog {
-
+    private FiltersListModel model;
+    private FiltersComboBoxModel comboModel;
     /** Creates new form FiltersDialog */
-    public FiltersDialog(java.awt.Frame parent, boolean modal) {
+    public FiltersDialog(java.awt.Frame parent, boolean modal, List<Filter> filters, JComboBox filtersComboBox) {
         super(parent, modal);
         initComponents();
+        model = (FiltersListModel) filtersList.getModel();
+        newFilterButton.requestFocus();
+        model.setFilters(filters);
+        comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
     }
 
     /** This method is called from within the constructor to
@@ -50,6 +59,11 @@ public class FiltersDialog extends javax.swing.JDialog {
 
         removeFilterButton.setText("Remove");
         removeFilterButton.setEnabled(false);
+        removeFilterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeFilterButtonActionPerformed(evt);
+            }
+        });
 
         closeFiltersButton.setText("Close");
         closeFiltersButton.addActionListener(new java.awt.event.ActionListener() {
@@ -110,7 +124,7 @@ public class FiltersDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new NewFilterDialog(null, true).setVisible(true);
+                new NewFilterDialog(null, true, filtersList).setVisible(true);
             }
         });
 }//GEN-LAST:event_newFilterButtonActionPerformed
@@ -119,10 +133,22 @@ public class FiltersDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
+                comboModel.update();
                 dispose();
             }
         });
 }//GEN-LAST:event_closeFiltersButtonActionPerformed
+
+    private void removeFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFilterButtonActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                model.remove(filtersList.getSelectedIndex());
+                filtersList.clearSelection();
+            }
+        });
+    }//GEN-LAST:event_removeFilterButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeFiltersButton;
     private javax.swing.JList filtersList;

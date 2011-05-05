@@ -31,8 +31,8 @@ public class FiltersListModel extends AbstractListModel {
         fireContentsChanged(this, filters.size() - 1, filters.size());
     }
 
-    public void removeFilter(Filter filter) {
-        filters.remove(filter);
-        fireContentsChanged(this, filters.size(), filters.size() + 1);
+    public void remove(int index) {
+        filters.remove(index);
+        fireContentsChanged(this, 0, filters.size() + 1);
     }
 }
