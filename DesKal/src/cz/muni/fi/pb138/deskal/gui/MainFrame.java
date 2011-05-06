@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,15 +33,17 @@ public class MainFrame extends javax.swing.JFrame {
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
-        date = GregorianCalendar.getInstance();
+        Locale cz = new Locale("cs");
+        date = GregorianCalendar.getInstance(cz);
         date.setTimeInMillis(System.currentTimeMillis());
         yearLabel.setText(Integer.toString(date.get(Calendar.YEAR)));
         monthLabel.setText(getNameOfMonth(date.get(Calendar.MONTH)));
-        Filter none = new Filter(0,"default"); //default filter
+        dayLabel.setText(Integer.toString(date.get(Calendar.DAY_OF_MONTH)) + " .");
+        Filter none = new Filter(0, "default"); //default filter
         filters.add(none);
         comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
         comboModel.setFilters(filters);
-        
+
         //table and list test
         List<Day> month = new ArrayList<Day>();
         Day day = new Day();
@@ -48,10 +51,11 @@ public class MainFrame extends javax.swing.JFrame {
         event.setName("Some event");
         event.setDate(new XMLGregorianCalendarImpl());
         event.getDate().setTime(12, 30, 0);
-        DatatypeFactory df=null;
+        DatatypeFactory df = null;
         try {
             df = DatatypeFactory.newInstance();
-        } catch (DatatypeConfigurationException ex) {}
+        } catch (DatatypeConfigurationException ex) {
+        }
         Duration duration = df.newDuration(10000000);
         Duration duration2 = df.newDuration(100000000);
         event.setDuration(duration);
@@ -108,6 +112,7 @@ public class MainFrame extends javax.swing.JFrame {
         durationLabel = new javax.swing.JLabel();
         tagLabel = new javax.swing.JLabel();
         noteLabel = new javax.swing.JLabel();
+        dayLabel = new javax.swing.JLabel();
         MenuBar = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
         FiltersMenuItem = new javax.swing.JMenuItem();
@@ -119,6 +124,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DesKal");
+        setResizable(false);
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -132,6 +138,11 @@ public class MainFrame extends javax.swing.JFrame {
         daysTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 daysTableMouseReleased(evt);
+            }
+        });
+        daysTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                daysTableKeyReleased(evt);
             }
         });
         jScrollPane1.setViewportView(daysTable);
@@ -195,22 +206,22 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Event"));
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel4.setText("name");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel5.setText("place");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel6.setText("time");
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel7.setText("duration");
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel8.setText("tag");
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel9.setText("note");
 
         nameLabel.setText(" ");
@@ -246,17 +257,14 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(jLabel8)
                             .addComponent(jLabel9))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(tagLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                                    .addComponent(timeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                                    .addComponent(durationLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                                    .addComponent(placeLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                                    .addComponent(nameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addComponent(noteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(noteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tagLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(durationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(timeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(placeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -288,6 +296,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        dayLabel.setFont(new java.awt.Font("Tahoma", 0, 18));
+        dayLabel.setText("DAY. ");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -304,18 +315,18 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(prevMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(119, 119, 119)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(monthLabel)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(yearLabel)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(nextMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(prevMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(113, 113, 113)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(yearLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(dayLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(monthLabel)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
+                        .addComponent(nextMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -331,11 +342,14 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addComponent(filtersComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(prevMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
+                        .addGap(51, 51, 51)
+                        .addComponent(nextMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(yearLabel)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nextMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(dayLabel)
                             .addComponent(monthLabel))))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -430,6 +444,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             public void run() {
                 new AddDialog(null, true, daysTable, eventsList, filters).setVisible(true);
+                eventsList.clearSelection();
             }
         });
     }//GEN-LAST:event_newEventButtonActionPerformed
@@ -438,7 +453,9 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new EditDialog(null, true).setVisible(true);
+                Event event = listModel.getEventAt(eventsList.getSelectedIndex());
+                new EditDialog(null, true, daysTable, eventsList, filters, event).setVisible(true);
+                eventsList.clearSelection();
             }
         });
     }//GEN-LAST:event_editEventButtonActionPerformed
@@ -512,19 +529,19 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                eventsList.clearSelection();
-                if(tableModel.isDayAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn()))
-                    newEventButton.setEnabled(true);
-                else newEventButton.setEnabled(false);
-                List<Event> events = tableModel.getEventsAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn());
-                if (events != null) {
-                    listModel.setEvents(events);
-                } else {
-                    listModel.cleanList();
-                }
+                loadEvents();
             }
         });
     }//GEN-LAST:event_daysTableMouseReleased
+
+    private void daysTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_daysTableKeyReleased
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                loadEvents();
+            }
+        });
+    }//GEN-LAST:event_daysTableKeyReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ExitMenuItem;
     private javax.swing.JMenuItem ExportMenuItem;
@@ -532,6 +549,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem FiltersMenuItem;
     private javax.swing.JMenuItem ImportMenuItem;
     private javax.swing.JMenuBar MenuBar;
+    private javax.swing.JLabel dayLabel;
     private javax.swing.JTable daysTable;
     private javax.swing.JLabel durationLabel;
     private javax.swing.JButton editEventButton;
@@ -562,6 +580,21 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel timeLabel;
     private javax.swing.JLabel yearLabel;
     // End of variables declaration//GEN-END:variables
+
+    private void loadEvents() {
+        eventsList.clearSelection();
+        if (tableModel.isDayAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn())) {
+            newEventButton.setEnabled(true);
+        } else {
+            newEventButton.setEnabled(false);
+        }
+        List<Event> events = tableModel.getEventsAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn());
+        if (events != null) {
+            listModel.setEvents(events);
+        } else {
+            listModel.cleanList();
+        }
+    }
 
     private String getNameOfMonth(int get) {
         switch (get) {

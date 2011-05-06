@@ -101,7 +101,7 @@ public class Event {
             }
             return time;
         } else {
-            return null;
+            throw new IllegalArgumentException(this.getName() + "Duration missing");
         }
     }
 
@@ -111,5 +111,17 @@ public class Event {
         }
         String duration = Integer.toString(this.duration.getHours()) + " hours";
         return duration;
+    }
+
+    public int[] getTime() {
+        int[] time = new int[2];
+        time[0] = date.getHour();
+        time[1] = date.getMinute();
+        return time;
+    }
+
+    public void setTime(int hour, int minute) {
+        this.date.setHour(hour);
+        this.date.setMinute(minute);
     }
 }
