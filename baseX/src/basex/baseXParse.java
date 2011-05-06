@@ -1,5 +1,7 @@
 package basex;
 
+
+import baseX.baseXDB;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
@@ -13,6 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.basex.core.cmd.*;
 import org.basex.core.BaseXException;
+import org.basex.core.Context;
 import org.basex.core.cmd.XQuery;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -21,15 +24,18 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class baseXParse {
-    static org.basex.core.Context context = new org.basex.core.Context();
+    
+
 
     public static void main(String[] args) throws BaseXException, ParserConfigurationException, SAXException, IOException, DatatypeConfigurationException {
-        new CreateDB("DBExample", "calendar.xml").execute(context);
 
-        System.out.print(new InfoDB().execute(context));
+        baseX.baseXDB DB = new baseX.baseXDB();
+
+        DB.ConnectToBaseX("calendar.xml");
+        System.out.println(DB.ReturnLabels().toString());
 
         //labels----------------------------------------------------------------
-        String queryForLabels = "<labels> "
+        /*String queryForLabels = "<labels> "
                 + "{ "
                 + "let $doc := doc('calendar.xml') "
                 + "for $x in $doc//label "
@@ -126,8 +132,12 @@ public class baseXParse {
             System.out.println(eventById.toStringAll());
             
             
-            //Event evenById = new Event(nodesEventById.item(0).ge, null, null)
+            //Event evenById = new Event(nodesEventById.item(0).ge, null, null)*/
         }
 
+
+
     }
-}
+
+    
+
