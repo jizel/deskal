@@ -1,6 +1,8 @@
 package basex;
 
 import java.util.ArrayList;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -28,6 +30,11 @@ public class Event {
 
     public Event(){
 
+    }
+
+    public boolean isCorrect() throws DatatypeConfigurationException{
+        //TODO: overeni korektni inicializace tridy Event, ie. ma nastaveny korektni id, date, duration a title
+        return true;
     }
 
     public XMLGregorianCalendar getDate() {

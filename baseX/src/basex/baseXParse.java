@@ -1,26 +1,10 @@
 package basex;
 
 
-import baseX.baseXDB;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.List;
-import java.util.ArrayList;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.basex.core.cmd.*;
 import org.basex.core.BaseXException;
-import org.basex.core.Context;
-import org.basex.core.cmd.XQuery;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class baseXParse {
@@ -33,6 +17,11 @@ public class baseXParse {
 
         DB.ConnectToBaseX("calendar.xml");
         System.out.println(DB.ReturnLabels().toString());
+
+        Event event = DB.GetEventByID(12);
+        if(event!=null)/*!!overeni, zda je event korektne nastaven... nebo zda je null */
+            System.out.println(event.toStringAll());
+
 
         //labels----------------------------------------------------------------
         /*String queryForLabels = "<labels> "
