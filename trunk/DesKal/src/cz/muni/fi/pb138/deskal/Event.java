@@ -1,9 +1,17 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package cz.muni.fi.pb138.deskal;
 
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+/**
+ *
+ * @author Drak
+ */
 public class Event {
 
     private int id;
@@ -13,19 +21,6 @@ public class Event {
     private Duration duration;
     private String note;
     private String tag;
-
-    public Event(String name, XMLGregorianCalendar date, Duration duration) {
-        this.name = name;
-        this.date = date;
-        this.duration = duration;
-    }
-
-    public Event(int id) {
-        this.id = id;
-    }
-
-    public Event() {
-    }
 
     public XMLGregorianCalendar getDate() {
         return date;
@@ -79,10 +74,6 @@ public class Event {
         return tag;
     }
 
-    public String toStringAll() {
-        return id + ": " + date.toString() + " " + duration.toString() + " " + name + " " + place + " " + note;
-    }
-
     public void setTag(String tag) {
         this.tag = tag;
     }
@@ -91,35 +82,80 @@ public class Event {
         int minute = date.getMinute();
         int hour = date.getHour();
         String time;
-        if (minute != DatatypeConstants.FIELD_UNDEFINED && hour != DatatypeConstants.FIELD_UNDEFINED) {
-            if (minute < 10) {
-                time = Integer.toString(hour) + " : 0" + Integer.toString(minute);
-            } else {
-                time = Integer.toString(hour) + " : " + Integer.toString(minute);
-            }
-            return time;
+        if(minute != DatatypeConstants.FIELD_UNDEFINED && hour != DatatypeConstants.FIELD_UNDEFINED){
+        if (minute < 10) {
+            time = Integer.toString(hour) + " : 0" + Integer.toString(minute);
         } else {
-            throw new IllegalArgumentException(this.getName() + "Duration missing");
+            time = Integer.toString(hour) + " : " + Integer.toString(minute);
         }
+        return time;}
+        else return null;
     }
 
     public String getDurationString() {
-        if (this.duration == null) {
-            return null;
-        }
-        String duration = Integer.toString(this.duration.getHours()) + " hours";
+        if(this.duration == null) return null;
+        String duration = Integer.toString(this.duration.getHours())+" hours";
         return duration;
     }
 
-    public int[] getTime() {
+    public int[] getTime(){
         int[] time = new int[2];
         time[0] = date.getHour();
         time[1] = date.getMinute();
         return time;
     }
 
-    public void setTime(int hour, int minute) {
+    public void setTime(int hour,int minute){
         this.date.setHour(hour);
         this.date.setMinute(minute);
     }
+
+    //equals and hashcode on all attributes
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Event other = (Event) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+            return false;
+        }
+        if ((this.place == null) ? (other.place != null) : !this.place.equals(other.place)) {
+            return false;
+        }
+        if (this.date != other.date && (this.date == null || !this.date.equals(other.date))) {
+            return false;
+        }
+        if (this.duration != other.duration && (this.duration == null || !this.duration.equals(other.duration))) {
+            return false;
+        }
+        if ((this.note == null) ? (other.note != null) : !this.note.equals(other.note)) {
+            return false;
+        }
+        if ((this.tag == null) ? (other.tag != null) : !this.tag.equals(other.tag)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + this.id;
+        hash = 29 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 29 * hash + (this.place != null ? this.place.hashCode() : 0);
+        hash = 29 * hash + (this.date != null ? this.date.hashCode() : 0);
+        hash = 29 * hash + (this.duration != null ? this.duration.hashCode() : 0);
+        hash = 29 * hash + (this.note != null ? this.note.hashCode() : 0);
+        hash = 29 * hash + (this.tag != null ? this.tag.hashCode() : 0);
+        return hash;
+    }
+
+    
 }
