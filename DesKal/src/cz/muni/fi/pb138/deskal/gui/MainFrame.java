@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -43,6 +44,7 @@ public class MainFrame extends javax.swing.JFrame {
         filters.add(none);
         comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
         comboModel.setFilters(filters);
+        filtersComboBox.setSelectedIndex(0);
 
         //table and list test
         List<Day> month = new ArrayList<Day>();
@@ -443,7 +445,9 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new AddDialog(null, true, daysTable, eventsList, filters).setVisible(true);
+                JDialog addDialog = new AddDialog(null, true, daysTable, eventsList, filters);
+                addDialog.setLocationRelativeTo(daysTable);
+                addDialog.setVisible(true);
                 eventsList.clearSelection();
             }
         });
@@ -454,7 +458,9 @@ public class MainFrame extends javax.swing.JFrame {
 
             public void run() {
                 Event event = listModel.getEventAt(eventsList.getSelectedIndex());
-                new EditDialog(null, true, daysTable, eventsList, filters, event).setVisible(true);
+                JDialog editDialog = new EditDialog(null, true, daysTable, eventsList, filters, event);
+                editDialog.setLocationRelativeTo(daysTable);
+                editDialog.setVisible(true);
                 eventsList.clearSelection();
             }
         });
@@ -464,7 +470,9 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new FiltersDialog(null, true, filters, filtersComboBox).setVisible(true);
+               JDialog filtersDialog = new FiltersDialog(null, true, filters, filtersComboBox);
+               filtersDialog.setLocationRelativeTo(daysTable);
+               filtersDialog.setVisible(true);
             }
         });
     }//GEN-LAST:event_FiltersMenuItemActionPerformed
