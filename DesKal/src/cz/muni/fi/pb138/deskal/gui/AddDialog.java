@@ -12,9 +12,17 @@ package cz.muni.fi.pb138.deskal.gui;
 
 import cz.muni.fi.pb138.deskal.Event;
 import cz.muni.fi.pb138.deskal.Filter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import javax.swing.JFormattedTextField;
 import javax.swing.JList;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.SpinnerDateModel;
+import javax.swing.text.DateFormatter;
+import javax.swing.text.DefaultFormatterFactory;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 
@@ -69,11 +77,9 @@ public class AddDialog extends javax.swing.JDialog {
         addButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        startHour = new javax.swing.JSpinner();
-        startMinute = new javax.swing.JSpinner();
+        timeSpinner = new javax.swing.JSpinner();
         durationSpinner = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DesKal");
@@ -86,10 +92,10 @@ public class AddDialog extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel2.setText("place");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel3.setText("time");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel5.setText("note");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11));
@@ -113,16 +119,17 @@ public class AddDialog extends javax.swing.JDialog {
 
         jLabel7.setText("* requied field");
 
-        startHour.setModel(new javax.swing.SpinnerNumberModel(12, 0, 23, 1));
-
-        startMinute.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
+        timeSpinner.setModel(new SpinnerDateModel(new Date(), null,null, Calendar.HOUR_OF_DAY));
+        JFormattedTextField textField =((JSpinner.DefaultEditor) timeSpinner.getEditor()).getTextField();
+        DefaultFormatterFactory dff = (DefaultFormatterFactory) textField.getFormatterFactory();
+        DateFormatter formatter = (DateFormatter) dff.getDefaultFormatter();
+        formatter.setFormat(new SimpleDateFormat("HH:mm"));
+        formatter.install(textField);
 
         durationSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel4.setText("duration in hours");
-
-        jLabel9.setText(":");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -151,12 +158,8 @@ public class AddDialog extends javax.swing.JDialog {
                             .addComponent(nameText, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                             .addComponent(placeText, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(startHour, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(startMinute, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                                .addComponent(timeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(durationSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -177,9 +180,7 @@ public class AddDialog extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(durationSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(startHour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
-                    .addComponent(startMinute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(timeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -247,7 +248,8 @@ public class AddDialog extends javax.swing.JDialog {
                     event.setTag(tag);
                 }
             }
-            event.setTime((Integer) startHour.getValue(),(Integer) startMinute.getValue());
+            Date time = (Date) timeSpinner.getValue();
+            event.setTime(time.getHours(), time.getMinutes());
             tableModel.addEventAt(row, col, event);
             listModel.update();
             dispose();
@@ -264,13 +266,11 @@ public class AddDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField nameText;
     private javax.swing.JTextField noteText;
     private javax.swing.JTextField placeText;
-    private javax.swing.JSpinner startHour;
-    private javax.swing.JSpinner startMinute;
     private javax.swing.JComboBox tagComboBox;
+    private javax.swing.JSpinner timeSpinner;
     // End of variables declaration//GEN-END:variables
 }
