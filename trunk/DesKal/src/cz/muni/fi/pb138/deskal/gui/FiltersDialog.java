@@ -3,6 +3,7 @@ package cz.muni.fi.pb138.deskal.gui;
 import cz.muni.fi.pb138.deskal.Filter;
 import java.util.List;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 
 /**
  *
@@ -124,7 +125,9 @@ public class FiltersDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new NewFilterDialog(null, true, filtersList).setVisible(true);
+               JDialog newFilterDialog = new NewFilterDialog(null, true, filtersList);
+               newFilterDialog.setLocationRelativeTo(filtersList);
+               newFilterDialog.setVisible(true);
             }
         });
 }//GEN-LAST:event_newFilterButtonActionPerformed

@@ -39,6 +39,7 @@ public class AddDialog extends javax.swing.JDialog {
         listModel = (EventListModel) eventsList.getModel();
         comboModel = (FiltersComboBoxModel) tagComboBox.getModel();
         comboModel.setFilters(filters);
+        tagComboBox.setSelectedIndex(0);
         try {
             df = DatatypeFactory.newInstance();
         } catch (DatatypeConfigurationException ex) {
