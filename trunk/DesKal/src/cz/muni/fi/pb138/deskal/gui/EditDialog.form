@@ -78,12 +78,8 @@
                               <Component id="nameText" alignment="0" pref="290" max="32767" attributes="0"/>
                               <Component id="placeText" alignment="0" pref="290" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="startHour" min="-2" pref="33" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="startMinute" min="-2" pref="33" max="-2" attributes="0"/>
-                                  <EmptySpace pref="73" max="32767" attributes="0"/>
+                                  <Component id="timeSpinner" min="-2" pref="114" max="-2" attributes="0"/>
+                                  <EmptySpace pref="37" max="32767" attributes="0"/>
                                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="durationSpinner" min="-2" pref="39" max="-2" attributes="0"/>
@@ -112,9 +108,7 @@
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="durationSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="startHour" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="startMinute" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="timeSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -216,20 +210,6 @@
             <Property name="text" type="java.lang.String" value="* requied field"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JSpinner" name="startHour">
-          <Properties>
-            <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-              <SpinnerModel initial="12" maximum="23" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JSpinner" name="startMinute">
-          <Properties>
-            <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-              <SpinnerModel initial="0" maximum="59" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JSpinner" name="durationSpinner">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
@@ -245,10 +225,16 @@
             <Property name="text" type="java.lang.String" value="duration in hours"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel9">
+        <Component class="javax.swing.JSpinner" name="timeSpinner">
           <Properties>
-            <Property name="text" type="java.lang.String" value=":"/>
+            <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new SpinnerDateModel(new Date(), null,null, Calendar.HOUR_OF_DAY)" type="code"/>
+            </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JSpinner()"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="JFormattedTextField textField =((JSpinner.DefaultEditor) timeSpinner.getEditor()).getTextField();&#xa;DefaultFormatterFactory dff = (DefaultFormatterFactory) textField.getFormatterFactory();&#xa;DateFormatter formatter = (DateFormatter) dff.getDefaultFormatter();&#xa;formatter.setFormat(new SimpleDateFormat(&quot;HH:mm&quot;));&#xa;formatter.install(textField);"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
