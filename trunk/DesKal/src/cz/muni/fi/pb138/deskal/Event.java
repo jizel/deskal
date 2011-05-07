@@ -1,6 +1,5 @@
 package cz.muni.fi.pb138.deskal;
 
-import java.util.ArrayList;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -14,7 +13,6 @@ public class Event {
     private Duration duration;
     private String note;
     private String tag;
-    private ArrayList<String> tags;
 
     public Event(String name, XMLGregorianCalendar date, Duration duration) {
         this.name = name;
