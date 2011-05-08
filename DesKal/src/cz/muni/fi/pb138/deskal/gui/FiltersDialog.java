@@ -42,6 +42,7 @@ public class FiltersDialog extends javax.swing.JDialog {
         setTitle("DesKal");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setFocusCycleRoot(false);
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Filters"));
 
