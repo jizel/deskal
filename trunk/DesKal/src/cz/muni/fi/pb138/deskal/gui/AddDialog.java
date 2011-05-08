@@ -213,7 +213,7 @@ public class AddDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -237,7 +237,7 @@ public class AddDialog extends javax.swing.JDialog {
             Event event = new Event();
             event.setDate(tableModel.getDateAt(row, col));
             event.setName(nameText.getText());
-            event.setDuration(df.newDuration(hours * 3600000));
+            event.setDuration(df.newDuration("PT"+hours+"H"));
             event.setDate(tableModel.getDateAt(row, col));
             event.setNote(noteText.getText());
             event.setPlace(placeText.getText());

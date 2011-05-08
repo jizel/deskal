@@ -242,7 +242,7 @@ public class EditDialog extends javax.swing.JDialog {
             int hours = (Integer) durationSpinner.getValue();
             event.setDate(tableModel.getDateAt(row, col));
             event.setName(nameText.getText());
-            event.setDuration(df.newDuration(hours * 3600000));
+            event.setDuration(df.newDuration("PT"+hours+"H"));
             event.setDate(tableModel.getDateAt(row, col));
             event.setNote(noteText.getText());
             event.setPlace(placeText.getText());

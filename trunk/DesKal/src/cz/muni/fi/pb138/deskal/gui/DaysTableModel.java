@@ -125,4 +125,18 @@ public class DaysTableModel extends AbstractTableModel {
         Day day = days.get(myIndex - firstDayOfMonth);
         return day.getDate();
     }
+
+    public boolean isEventAt(int rowIndex, int columnIndex) {
+        int myIndex = rowIndex * 7 + columnIndex;
+        if (myIndex < firstDayOfMonth) {
+            return false;
+        } else {
+            if (myIndex < days.size() + firstDayOfMonth) {
+                Day day = days.get(myIndex - firstDayOfMonth);
+                return !day.getEvents().isEmpty();
+            } else {
+                return false;
+            }
+        }
+    }
 }
