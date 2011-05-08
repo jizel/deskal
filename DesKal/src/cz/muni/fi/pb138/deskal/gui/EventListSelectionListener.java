@@ -52,12 +52,15 @@ public class EventListSelectionListener implements ListSelectionListener {
                         button1.setEnabled(true);
                         button2.setEnabled(true);
                         event = model.getEventAt(list.getSelectedIndex());
+                        String place = event.getPlace() == null ? " " : event.getPlace();
+                        String tag = event.getTag() == null ? " " : event.getTag();
+                        String note = event.getNote()== null ? " " : event.getNote();
                         labels.get(0).setText(event.getName());
-                        labels.get(1).setText(event.getPlace());
+                        labels.get(1).setText(place);
                         labels.get(2).setText(event.getTimeString());
                         labels.get(3).setText(event.getDurationString());
-                        labels.get(4).setText(event.getTag());
-                        labels.get(5).setText(event.getNote());
+                        labels.get(4).setText(tag);
+                        labels.get(5).setText(note);
                     }
                 });
             }

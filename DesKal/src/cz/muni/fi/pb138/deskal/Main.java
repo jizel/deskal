@@ -25,7 +25,7 @@ public class Main {
                 Dimension screenSize = tk.getScreenSize();
                 int x = (int) screenSize.getWidth();
                 int y = (int) screenSize.getHeight();
-                frame.setLocation(x/4,y/10);
+                frame.setLocation(x/4,y/20);
                 frame.setVisible(true);
             }
         });
