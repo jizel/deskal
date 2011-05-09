@@ -10,12 +10,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutionException;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableCellRenderer;
@@ -35,35 +35,57 @@ public class MainFrame extends javax.swing.JFrame {
     private EventListModel listModel;
     private FiltersComboBoxModel comboModel;
     private List<Filter> filters = new ArrayList();
+    private InitGuiSwingWorker initGuiSwingWorker;
+
+    private class InitGuiSwingWorker extends SwingWorker<List<String>, Void> {
+
+        @Override
+        protected List<String> doInBackground() throws Exception {
+            List<String> labels = new ArrayList<String>();
+            Locale cz = new Locale("cs");
+            date = GregorianCalendar.getInstance(cz);
+            date.setTimeInMillis(System.currentTimeMillis());
+            String thisDay = Integer.toString(date.get(Calendar.DAY_OF_MONTH)) + ". ";
+            String thisMonth = getNameOfMonth(date.get(Calendar.MONTH)) + " ";
+            String thisYear = Integer.toString(date.get(Calendar.YEAR));
+            labels.add(thisDay);
+            labels.add(thisMonth);
+            labels.add(thisYear);
+            return labels;
+        }
+
+        protected void done() {
+            try {
+                yearLabel.setText(get().get(2));
+                monthLabel.setText(get().get(1));
+                currentDateLabel.setText(get().get(0) + get().get(1) + get().get(2));
+            } catch (InterruptedException ex) {
+            } catch (ExecutionException ex) {
+            }
+        }
+    }
 
     /** Creates new form MainFrame */
     public MainFrame() {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("GUI: look and feel error", ex);
         } catch (InstantiationException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("GUI: look and feel error", ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("GUI: look and feel error", ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("GUI: look and feel error", ex);
         }
         initComponents();
-        Locale cz = new Locale("cs");
-        date = GregorianCalendar.getInstance(cz);
-        date.setTimeInMillis(System.currentTimeMillis());
-        String thisDay = Integer.toString(date.get(Calendar.DAY_OF_MONTH)) + ". ";
-        String thisMonth = getNameOfMonth(date.get(Calendar.MONTH))+" ";
-        String thisYear = Integer.toString(date.get(Calendar.YEAR));
-        yearLabel.setText(thisYear);
-        monthLabel.setText(thisMonth);
-        Filter none = new Filter(0, "default"); //default filter
+        initGuiSwingWorker = new InitGuiSwingWorker();
+        initGuiSwingWorker.execute();
+        Filter none = new Filter("default"); //default filter
         filters.add(none);
         comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
         comboModel.setFilters(filters);
         filtersComboBox.setSelectedIndex(0);
-        currentDateLabel.setText(thisDay + thisMonth + thisYear);
 
         //table and list test
         List<Day> month = new ArrayList<Day>();
@@ -560,9 +582,9 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-               JDialog filtersDialog = new FiltersDialog(null, true, filters, filtersComboBox);
-               filtersDialog.setLocationRelativeTo(daysTable);
-               filtersDialog.setVisible(true);
+                JDialog filtersDialog = new FiltersDialog(null, true, filters, filtersComboBox);
+                filtersDialog.setLocationRelativeTo(daysTable);
+                filtersDialog.setVisible(true);
             }
         });
     }//GEN-LAST:event_FiltersMenuItemActionPerformed
@@ -609,6 +631,7 @@ public class MainFrame extends javax.swing.JFrame {
                 if (i == JOptionPane.YES_OPTION) {
                     listModel.remove(eventsList.getSelectedIndex());
                     eventsList.clearSelection();
+                    tableModel.fireTableCellUpdated(daysTable.getSelectedRow(), daysTable.getSelectedColumn());
                 }
             }
         });

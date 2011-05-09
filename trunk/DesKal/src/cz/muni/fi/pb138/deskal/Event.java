@@ -93,8 +93,9 @@ public class Event {
     }
 
     public String getDurationString() {
-        if(this.duration == null) return null;
-        String duration = Integer.toString(this.duration.getHours())+" hours";
+        int hours = this.duration.getHours();
+        String hoursString = hours == 1 ? " hour" : " hours";
+        String duration = Integer.toString(hours)+ hoursString;
         return duration;
     }
 

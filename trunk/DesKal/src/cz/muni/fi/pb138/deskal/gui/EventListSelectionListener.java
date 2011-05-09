@@ -7,7 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  *
