@@ -1,18 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * EditDialog.java
- *
- * Created on 2.5.2011, 16:45:06
- */
-
 package cz.muni.fi.pb138.deskal.gui;
 
 import cz.muni.fi.pb138.deskal.Event;
 import cz.muni.fi.pb138.deskal.Filter;
+import java.lang.Void;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +12,7 @@ import javax.swing.JList;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SwingWorker;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -33,19 +24,51 @@ import javax.xml.datatype.DatatypeFactory;
  */
 public class EditDialog extends javax.swing.JDialog {
 
-    private JTable daysTable;
     private DaysTableModel tableModel;
     private EventListModel listModel;
     private DatatypeFactory df;
     private FiltersComboBoxModel comboModel;
     private Event event;
+    private int row;
+    private int col;
+    private CreateEventSwingWorker createEventSwingWorker;
+
+    private class CreateEventSwingWorker extends SwingWorker<Void, Void> {
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            int hours = (Integer) durationSpinner.getValue();
+            event.setDate(tableModel.getDateAt(row, col));
+            event.setName(nameText.getText());
+            event.setDuration(df.newDuration("PT" + hours + "H"));
+            event.setDate(tableModel.getDateAt(row, col));
+            event.setNote(noteText.getText());
+            event.setPlace(placeText.getText());
+            int indexCombo = tagComboBox.getSelectedIndex();
+            if (indexCombo >= 0) {
+                String tag = (String) comboModel.getElementAt(tagComboBox.getSelectedIndex());
+                if (!tag.equals("default")) {
+                    event.setTag(tag);
+                }
+            }
+            Date time = (Date) timeSpinner.getValue();
+            event.setTime(time.getHours(), time.getMinutes());
+            return null;
+        }
+
+        protected void done() {
+            listModel.update();
+            dispose();
+        }
+    }
 
     /** Creates new form DesKalAddDialog */
     public EditDialog(java.awt.Frame parent, boolean modal, JTable daysTable, JList eventsList,
             List<Filter> filters, Event event) {
         super(parent, modal);
         initComponents();
-        this.daysTable = daysTable;
+        row = daysTable.getSelectedRow();
+        col = daysTable.getSelectedColumn();
         this.event = event;
         tableModel = (DaysTableModel) daysTable.getModel();
         listModel = (EventListModel) eventsList.getModel();
@@ -62,13 +85,14 @@ public class EditDialog extends javax.swing.JDialog {
         int[] time = event.getTime();
         Date date = new Date();
         date.setHours(time[0]);
-        date.setMinutes(time[1]); 
+        date.setMinutes(time[1]);
         timeSpinner.setValue(date);
         durationSpinner.setValue(event.getDuration().getHours());
-        if(event.getTag() == null)
+        if (event.getTag() == null) {
             tagComboBox.setSelectedIndex(0);
-        else
+        } else {
             tagComboBox.setSelectedItem(event.getTag());
+        }
     }
 
     /** This method is called from within the constructor to
@@ -238,27 +262,11 @@ public class EditDialog extends javax.swing.JDialog {
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         if (!nameText.getText().trim().equals("")) {
-            int row = daysTable.getSelectedRow();
-            int col = daysTable.getSelectedColumn();
-            int hours = (Integer) durationSpinner.getValue();
-            event.setDate(tableModel.getDateAt(row, col));
-            event.setName(nameText.getText());
-            event.setDuration(df.newDuration("PT"+hours+"H"));
-            event.setDate(tableModel.getDateAt(row, col));
-            event.setNote(noteText.getText());
-            event.setPlace(placeText.getText());
-            int indexCombo = tagComboBox.getSelectedIndex();
-            if (indexCombo >= 0) {
-                String tag = (String) comboModel.getElementAt(tagComboBox.getSelectedIndex());
-                if (!tag.equals("default")) {
-                    event.setTag(tag);
-                } else event.setTag(null);
-            }
-            Date time = (Date) timeSpinner.getValue();
-            event.setTime(time.getHours(), time.getMinutes());
-            listModel.update();
-            dispose();
-        } else nameText.requestFocus();
+            createEventSwingWorker = new CreateEventSwingWorker();
+            createEventSwingWorker.execute();
+        } else {
+            nameText.requestFocus();
+        }
 }//GEN-LAST:event_editButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -269,9 +277,6 @@ public class EditDialog extends javax.swing.JDialog {
             }
         });
 }//GEN-LAST:event_cancelButtonActionPerformed
-
-    
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JSpinner durationSpinner;
@@ -290,5 +295,4 @@ public class EditDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox tagComboBox;
     private javax.swing.JSpinner timeSpinner;
     // End of variables declaration//GEN-END:variables
-
 }
