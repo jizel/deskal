@@ -2,8 +2,6 @@ package basex;
 
 import java.util.ArrayList;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 public class Event {
@@ -12,16 +10,12 @@ public class Event {
     private String name;
     private String place;
     private XMLGregorianCalendar date;
-    private Duration duration;
+    private XMLGregorianCalendar to;
     private String note;
     private String tag;
     private ArrayList<String> tags;
 
-    public Event(String name, XMLGregorianCalendar date, Duration duration) {
-        this.name = name;
-        this.date = date;
-        this.duration = duration;
-    }
+
 
     public Event(int id) {
         this.id = id;
@@ -45,14 +39,18 @@ public class Event {
         this.date = date;
     }
 
-    public Duration getDuration() {
+    public void setDateTo(XMLGregorianCalendar date) {
+        this.to = date;
+    }
+
+    /*public Duration getDuration() {
         return duration;
     }
 
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
-
+*/
     public int getId() {
         return id;
     }
@@ -90,7 +88,7 @@ public class Event {
     }
 
     public String toStringAll(){
-        return id + ": date: " + date.toString() + " duration: " + duration.toString() + " name: " + name + " place: " + place + " note: " + note + " tag: " + tag;
+        return id + ": date: " + date.toString() + " to: " + to.toString() + " name: " + name + " place: " + place + " note: " + note + " tag: " + tag;
     }
 
     public void setTag(String tag) {

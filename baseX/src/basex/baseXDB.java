@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -62,7 +63,7 @@ public class baseXDB{
 
         return labels;
     }
-
+/*
     
     public basex.Event GetEventByID(int id) throws BaseXException, DatatypeConfigurationException, ParserConfigurationException, SAXException, IOException{
         String queryForEvents = "<events> "
@@ -137,31 +138,32 @@ public class baseXDB{
         return eventById;
 
     }
-
+*/
     public ArrayList<basex.Day> GetEventsByInterval(XMLGregorianCalendar since, XMLGregorianCalendar to) throws BaseXException, ParserConfigurationException, SAXException, IOException, DatatypeConfigurationException{
         ArrayList<basex.Day> month = new ArrayList<basex.Day>();
 
-        String queryForEvents = "<events> "
-                + "{ "
-                + "let $doc := doc('calendar.xml') "
-                + "return $doc//event[date/text() gt '" + since.toXMLFormat() + "'  ] "
-                + "} "
-                + "</events>";
-        System.out.println(since.toString());
-        System.out.println(to.toString());
+        //System.out.println(since.toXMLFormat());
+        //System.out.println(to.toXMLFormat());
+        /*
+         * nefunguje omg
+         */
+        String sSince = since.toString().substring(0, 10);
+        String sTo = to.toString().substring(0, 10);
+        //System.out.println(sSince);
         String queryForEvents2 = "<events> "
                 + "{ "
                 + "let $doc := doc('calendar.xml') "
                 + "return $doc//event[ "
-                + "(date/text() gt '" + since.toXMLFormat() + "' and to/text() lt '" + to.toXMLFormat() + "') or "
+                + "(date/text() > '" + sSince + "' and to/text() < '" + sTo + "') or "  //cely event je mezi daty
                 + "(to/text() gt '" + since.toXMLFormat() + "' and to/text() lt '" + to.toXMLFormat() + "') or "
-                + "(date/text() gt '" + since.toXMLFormat() + "' and date/text() lt '" + to.toXMLFormat() + "') or "
-                + "(date/text() lt '" + since.toXMLFormat() + "' and to/text() gt '" + to.toXMLFormat() + "') ] "
+                + "(date/text() gt '" + since.toXMLFormat() + "' and date/text() lt '" + to.toXMLFormat() + "')  "
+                //+ "(date/text() gt  '" + since.toXMLFormat() + "' )" //event zacina pred pocatecnim datem a konci po koncovym
+                + " ] "
                 + "} "
                 + "</events>";
-        System.out.println(queryForEvents2);
+        //System.out.println(queryForEvents2);
         String eventsParseXML = new XQuery(queryForEvents2).execute(context);
-        System.out.println(eventsParseXML);
+        //System.out.println(eventsParseXML);
 
         InputSource iSS = new InputSource();
         iSS.setCharacterStream(new StringReader(eventsParseXML));
@@ -178,16 +180,43 @@ public class baseXDB{
         /*
          * TODO - zjistit počet dni to - since, pak pripravit pole dnu a rozhazet eventy
          */
+        ArrayList<basex.Day> daysInterval = new ArrayList<basex.Day>();
+        XMLGregorianCalendar tmp = since;
+        Duration day = df.newDurationDayTime(true, 1, 0, 0, 0);
+        int daysBetween = 1;
+        int j = 0;
+        if(to.toString().compareTo(since.toString())>0){
+            while(to.toString().compareTo(tmp.toString())>0){
+                daysBetween++;
+                daysInterval.add(new basex.Day());
+                /*
+                 * Copy constructor, priradit kopii, aby se dale nemenila
+                 */
+                daysInterval.get(j++).setDate(df.newXMLGregorianCalendarDate(tmp.getYear(), tmp.getMonth(), tmp.getDay(), 0));
+                tmp.add(day);
+            }
+            daysInterval.add(new basex.Day());
+            daysInterval.get(j++).setDate(df.newXMLGregorianCalendarDate(tmp.getYear(), tmp.getMonth(), tmp.getDay(), 0));
+        }
 
-
+        /*for(int m = 0; m < daysInterval.size();m++)
+            System.out.println(daysInterval.get(m).getDate().toString());*/
+        /*
+         * Zpracování xml do eventu
+         */
+        Event event;
+        XMLGregorianCalendar datetimeTo;
+        XMLGregorianCalendar datetime;
+        NodeList tags;
+        String date;
         for(int i = 0; i < nodesEvent.getLength();i++){
-            Event event = new Event();
-            Node node = nodesEvent.item(0);
+            event = new Event();
+            Node node = nodesEvent.item(i);
             NodeList childNodes = node.getChildNodes();
 
-            String date = "";
-            NodeList tags = doc.getElementsByTagName("");
-            String durationS = "";
+            date = "";
+            tags = doc.getElementsByTagName("");
+            String dateTo = "";
 
 
             event.setId(Integer.parseInt(node.getAttributes().item(0).getTextContent()));
@@ -207,28 +236,47 @@ public class baseXDB{
                 if(childNodes.item(k).getNodeName().compareTo("tags")==0){
                     tags = childNodes.item(k).getChildNodes();
                 }
-                if(childNodes.item(k).getNodeName().compareTo("duration")==0){
-                    durationS = childNodes.item(k).getTextContent();
+                if(childNodes.item(k).getNodeName().compareTo("to")==0){
+                    dateTo = childNodes.item(k).getTextContent();
                 }
             }
-            XMLGregorianCalendar datetime = df.newXMLGregorianCalendar(date);
-            Duration duration = df.newDuration(durationS);
+            datetime = df.newXMLGregorianCalendar(date);
+            datetimeTo = df.newXMLGregorianCalendar(dateTo);
 
             event.setDate(datetime);
-            event.setDuration(duration);
+            event.setDateTo(datetimeTo);
 
             List<String> tagList = new ArrayList<String>();
 
-            System.out.println(tags.getLength());
-            for(int k = 0; k < tags.getLength(); k++){
-                if(tags.item(k).getNodeName().compareTo("tag")==0){
-                    tagList.add(tags.item(k).getAttributes().item(0).getTextContent());
+            //System.out.println(tags.getLength());
+            for(int n = 0; n < tags.getLength(); n++){
+                if(tags.item(n).getNodeName().compareTo("tag")==0){
+                    tagList.add(tags.item(n).getAttributes().item(0).getTextContent());
                 }
             }
             if(tagList.size()>0)
                 event.setTag(tagList.get(0));
 
+            //System.out.println(event.toStringAll());
+            /*
+             * nafrkani eventu do dnu
+             * 
+             */
 
+            for(int p=0;p<daysInterval.size();p++){
+                if(((daysInterval.get(p).getDate().compare(datetime) == DatatypeConstants.GREATER) || (daysInterval.get(p).getDate().compare(datetime) == DatatypeConstants.EQUAL)) &&
+                        (daysInterval.get(p).getDate().compare(datetimeTo) == DatatypeConstants.EQUAL || daysInterval.get(p).getDate().compare(datetimeTo) == DatatypeConstants.LESSER)){
+                    daysInterval.get(p).addEvent(event);
+                }       
+            }
+        }
+
+
+        for(int p=0;p<daysInterval.size();p++){
+            System.out.println(daysInterval.get(p).getDate().toString());
+            for(int o=0; o < daysInterval.get(p).getEvents().size(); o++){
+                System.out.println(daysInterval.get(p).getEvents().get(o).toStringAll());
+            }
         }
 
         return month;

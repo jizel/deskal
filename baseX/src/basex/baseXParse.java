@@ -20,16 +20,16 @@ public class baseXParse {
         DB.ConnectToBaseX("calendar.xml");
         System.out.println(DB.ReturnLabels().toString());
 
-        Event event = DB.GetEventByID(2);
-        if(event!=null)/*!!overeni, zda je event korektne nastaven... nebo zda je null */
+      //  Event event = DB.GetEventByID(2);
+        /*if(event!=null)
             System.out.println(event.toStringAll());
-
+*/
 
         XMLGregorianCalendar since;
         XMLGregorianCalendar to;
         DatatypeFactory df = DatatypeFactory.newInstance();
-        since = df.newXMLGregorianCalendarDate(2011, 05, 11, 1);
-        to = df.newXMLGregorianCalendarDate(2011, 05, 12, 0);
+        since = df.newXMLGregorianCalendarDate(2011, 05, 8, 1);
+        to = df.newXMLGregorianCalendarDate(2011, 05, 15, 0);
 
         DB.GetEventsByInterval(since, to);
 
