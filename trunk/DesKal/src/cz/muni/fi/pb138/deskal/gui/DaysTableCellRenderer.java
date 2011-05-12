@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
- * @author Drak TODO: FORMATTER
+ * @author Drak 
  */
 public class DaysTableCellRenderer extends DefaultTableCellRenderer {
 

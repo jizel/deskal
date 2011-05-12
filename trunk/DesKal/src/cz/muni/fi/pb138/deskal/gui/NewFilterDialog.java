@@ -138,7 +138,7 @@ public class NewFilterDialog extends javax.swing.JDialog {
                 model.addFilter(filter);
             }
             dispose();
-        }
+        } else filterText.requestFocus();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
