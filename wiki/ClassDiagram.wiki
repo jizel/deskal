@@ -2,7 +2,7 @@
 
 _This page introduces layout of class diagram for DesKal._
 
-https://deskal.googlecode.com/svn/image/DesKalClassDiagram3.jpg
+https://deskal.googlecode.com/svn/image/DesKalClassDiagram4.jpg
 
 = Notes =
 
