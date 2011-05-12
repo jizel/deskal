@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -62,6 +63,7 @@ public class baseXDB{
         return labels;
     }
 
+    
     public basex.Event GetEventByID(int id) throws BaseXException, DatatypeConfigurationException, ParserConfigurationException, SAXException, IOException{
         String queryForEvents = "<events> "
                 + "{ "
@@ -82,9 +84,10 @@ public class baseXDB{
 
         NodeList nodesEventById = doc.getElementsByTagName("event");
 
-        Event eventById = new Event();
+        Event eventById = null;
 
         if(nodesEventById.getLength()==1){
+            eventById = new Event();
             Node node = nodesEventById.item(0);
             NodeList childNodes = node.getChildNodes();
 
@@ -134,5 +137,100 @@ public class baseXDB{
         return eventById;
 
     }
-    
+
+    public ArrayList<basex.Day> GetEventsByInterval(XMLGregorianCalendar since, XMLGregorianCalendar to) throws BaseXException, ParserConfigurationException, SAXException, IOException, DatatypeConfigurationException{
+        ArrayList<basex.Day> month = new ArrayList<basex.Day>();
+
+        String queryForEvents = "<events> "
+                + "{ "
+                + "let $doc := doc('calendar.xml') "
+                + "return $doc//event[date/text() gt '" + since.toXMLFormat() + "'  ] "
+                + "} "
+                + "</events>";
+        System.out.println(since.toString());
+        System.out.println(to.toString());
+        String queryForEvents2 = "<events> "
+                + "{ "
+                + "let $doc := doc('calendar.xml') "
+                + "return $doc//event[ "
+                + "(date/text() gt '" + since.toXMLFormat() + "' and to/text() lt '" + to.toXMLFormat() + "') or "
+                + "(to/text() gt '" + since.toXMLFormat() + "' and to/text() lt '" + to.toXMLFormat() + "') or "
+                + "(date/text() gt '" + since.toXMLFormat() + "' and date/text() lt '" + to.toXMLFormat() + "') or "
+                + "(date/text() lt '" + since.toXMLFormat() + "' and to/text() gt '" + to.toXMLFormat() + "') ] "
+                + "} "
+                + "</events>";
+        System.out.println(queryForEvents2);
+        String eventsParseXML = new XQuery(queryForEvents2).execute(context);
+        System.out.println(eventsParseXML);
+
+        InputSource iSS = new InputSource();
+        iSS.setCharacterStream(new StringReader(eventsParseXML));
+        Document doc;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        doc = builder.parse(iSS);
+
+        NodeList nodesEvent = doc.getElementsByTagName("event");
+
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        Duration len;
+        Calendar cal;
+        /*
+         * TODO - zjistit počet dni to - since, pak pripravit pole dnu a rozhazet eventy
+         */
+
+
+        for(int i = 0; i < nodesEvent.getLength();i++){
+            Event event = new Event();
+            Node node = nodesEvent.item(0);
+            NodeList childNodes = node.getChildNodes();
+
+            String date = "";
+            NodeList tags = doc.getElementsByTagName("");
+            String durationS = "";
+
+
+            event.setId(Integer.parseInt(node.getAttributes().item(0).getTextContent()));
+            for(int k = 0; k < childNodes.getLength(); k++){
+                if(childNodes.item(k).getNodeName().compareTo("title")==0){
+                    event.setName(childNodes.item(k).getTextContent());
+                }
+                if(childNodes.item(k).getNodeName().compareTo("place")==0){
+                    event.setPlace(childNodes.item(k).getTextContent());
+                }
+                if(childNodes.item(k).getNodeName().compareTo("note")==0){
+                    event.setNote(childNodes.item(k).getTextContent());
+                }
+                if(childNodes.item(k).getNodeName().compareTo("date")==0){
+                    date = childNodes.item(k).getTextContent();
+                }
+                if(childNodes.item(k).getNodeName().compareTo("tags")==0){
+                    tags = childNodes.item(k).getChildNodes();
+                }
+                if(childNodes.item(k).getNodeName().compareTo("duration")==0){
+                    durationS = childNodes.item(k).getTextContent();
+                }
+            }
+            XMLGregorianCalendar datetime = df.newXMLGregorianCalendar(date);
+            Duration duration = df.newDuration(durationS);
+
+            event.setDate(datetime);
+            event.setDuration(duration);
+
+            List<String> tagList = new ArrayList<String>();
+
+            System.out.println(tags.getLength());
+            for(int k = 0; k < tags.getLength(); k++){
+                if(tags.item(k).getNodeName().compareTo("tag")==0){
+                    tagList.add(tags.item(k).getAttributes().item(0).getTextContent());
+                }
+            }
+            if(tagList.size()>0)
+                event.setTag(tagList.get(0));
+
+
+        }
+
+        return month;
+    }
 }

@@ -3,6 +3,8 @@ package basex;
 
 import java.io.IOException;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.ParserConfigurationException;
 import org.basex.core.BaseXException;
 import org.xml.sax.SAXException;
@@ -18,9 +20,18 @@ public class baseXParse {
         DB.ConnectToBaseX("calendar.xml");
         System.out.println(DB.ReturnLabels().toString());
 
-        Event event = DB.GetEventByID(12);
+        Event event = DB.GetEventByID(2);
         if(event!=null)/*!!overeni, zda je event korektne nastaven... nebo zda je null */
             System.out.println(event.toStringAll());
+
+
+        XMLGregorianCalendar since;
+        XMLGregorianCalendar to;
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        since = df.newXMLGregorianCalendarDate(2011, 05, 11, 1);
+        to = df.newXMLGregorianCalendarDate(2011, 05, 12, 0);
+
+        DB.GetEventsByInterval(since, to);
 
 
         //labels----------------------------------------------------------------
