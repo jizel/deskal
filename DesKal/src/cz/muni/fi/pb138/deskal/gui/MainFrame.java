@@ -1,6 +1,9 @@
 package cz.muni.fi.pb138.deskal.gui;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import cz.muni.fi.pb138.deskal.CalendarDB;
+import cz.muni.fi.pb138.deskal.CalendarManager;
+import cz.muni.fi.pb138.deskal.CalendarManagerImpl;
 import cz.muni.fi.pb138.deskal.Day;
 import cz.muni.fi.pb138.deskal.Event;
 import cz.muni.fi.pb138.deskal.Filter;
@@ -36,6 +39,8 @@ public class MainFrame extends javax.swing.JFrame {
     private FiltersComboBoxModel comboModel;
     private List<Filter> filters = new ArrayList();
     private InitGuiSwingWorker initGuiSwingWorker;
+    private CalendarManager calManager;
+    private CalendarDB calendarDB;
 
     private class InitGuiSwingWorker extends SwingWorker<List<String>, Void> {
 
@@ -51,6 +56,13 @@ public class MainFrame extends javax.swing.JFrame {
             labels.add(thisDay);
             labels.add(thisMonth);
             labels.add(thisYear);
+
+            calendarDB = new CalendarDB();
+            calendarDB.ConnectToBaseX("calendar.xml");
+            calManager = new CalendarManagerImpl(calendarDB.getContext());
+            for (String name : calManager.getAllTags()) {
+                filters.add(new Filter(name));
+            }
             return labels;
         }
 
@@ -59,6 +71,7 @@ public class MainFrame extends javax.swing.JFrame {
                 yearLabel.setText(get().get(2));
                 monthLabel.setText(get().get(1));
                 currentDateLabel.setText(get().get(0) + get().get(1) + get().get(2));
+                comboModel.setFilters(filters);
             } catch (InterruptedException ex) {
             } catch (ExecutionException ex) {
             }
