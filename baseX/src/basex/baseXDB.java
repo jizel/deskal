@@ -150,6 +150,9 @@ public class baseXDB{
         String sSince = since.toString().substring(0, 10);
         String sTo = to.toString().substring(0, 10);
         //System.out.println(sSince);
+        /*
+         * upravit: zmenit schema na odDatum doDatum, odCas, doCas a podle datumu filtrovat
+         */
         String queryForEvents2 = "<events> "
                 + "{ "
                 + "let $doc := doc('calendar.xml') "
@@ -245,6 +248,9 @@ public class baseXDB{
 
             event.setDate(datetime);
             event.setDateTo(datetimeTo);
+            /*
+             * spocitat duration podle dat a casu a vlozit
+             */
 
             List<String> tagList = new ArrayList<String>();
 
