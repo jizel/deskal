@@ -2,6 +2,7 @@ package basex;
 
 
 import java.io.IOException;
+import java.text.ParseException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -13,7 +14,7 @@ public class baseXParse {
     
 
 
-    public static void main(String[] args) throws BaseXException, ParserConfigurationException, SAXException, IOException, DatatypeConfigurationException {
+    public static void main(String[] args) throws BaseXException, ParserConfigurationException, SAXException, IOException, DatatypeConfigurationException, ParseException {
 
         baseX.baseXDB DB = new baseX.baseXDB();
 
@@ -28,8 +29,8 @@ public class baseXParse {
         XMLGregorianCalendar since;
         XMLGregorianCalendar to;
         DatatypeFactory df = DatatypeFactory.newInstance();
-        since = df.newXMLGregorianCalendarDate(2011, 05, 8, 1);
-        to = df.newXMLGregorianCalendarDate(2011, 05, 15, 0);
+        since = df.newXMLGregorianCalendarDate(2011, 05, 8, 0);
+        to = df.newXMLGregorianCalendarDate(2011, 05, 9, 0);
 
         DB.GetEventsByInterval(since, to);
 

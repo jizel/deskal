@@ -1,7 +1,9 @@
 package basex;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 public class Event {
@@ -9,8 +11,11 @@ public class Event {
     private int id;
     private String name;
     private String place;
-    private XMLGregorianCalendar date;
-    private XMLGregorianCalendar to;
+    private XMLGregorianCalendar dateSince;
+    private XMLGregorianCalendar dateTo;
+    private Duration duration;
+    private Time timeSince;
+    private Time timeTo;
     private String note;
     private String tag;
     private ArrayList<String> tags;
@@ -32,25 +37,33 @@ public class Event {
     }
 
     public XMLGregorianCalendar getDate() {
-        return date;
+        return dateSince;
     }
 
     public void setDate(XMLGregorianCalendar date) {
-        this.date = date;
+        this.dateSince = date;
     }
 
     public void setDateTo(XMLGregorianCalendar date) {
-        this.to = date;
+        this.dateTo = date;
     }
 
-    /*public Duration getDuration() {
+    public void setTime(Time time){
+        this.timeSince = time;
+    }
+
+    public void setTimeTo(Time time){
+        this.timeTo = time;
+    }
+
+    public Duration getDuration() {
         return duration;
     }
 
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
-*/
+
     public int getId() {
         return id;
     }
@@ -88,7 +101,7 @@ public class Event {
     }
 
     public String toStringAll(){
-        return id + ": date: " + date.toString() + " to: " + to.toString() + " name: " + name + " place: " + place + " note: " + note + " tag: " + tag;
+        return id + ": date: " + dateSince.toString() + " to: " + dateTo.toString() + " name: " + name + " place: " + place + " note: " + note + " tag: " + tag;
     }
 
     public void setTag(String tag) {

@@ -31,8 +31,10 @@
 
     <xsd:complexType name="userTypeEvent">
         <xsd:sequence>
-            <xsd:element name="to" type="xsd:dateTime"/>
-            <xsd:element name="date" type="xsd:dateTime"/>
+            <xsd:element name="dateSince" type="xsd:date"/>
+            <xsd:element name="dateTo" type="xsd:date"/>
+            <xsd:element name="timeFrom" type="xsd:time"/>
+            <xsd:element name="timeTo" type="xsd:time"/>
             <xsd:element name="title" type="userTypeTitle" />
             <xsd:element name="place" type="xsd:string" minOccurs="0"/>
             <xsd:element name="note" type="xsd:string" minOccurs="0"/>
