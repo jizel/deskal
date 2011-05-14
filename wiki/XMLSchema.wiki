@@ -12,19 +12,10 @@ XML Schema for calendar and tag list.
 
  * *event* - node for each event in the calendar
   * _id_ - unique number specifying event
-  * *duration* - duration of the event
-   * pair since-duration is better than ari since-to, because it allows to use more days events
-   * The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
-    * P indicates the period (required)
-    * nY indicates the number of years
-    * nM indicates the number of months
-    * nD indicates the number of days
-    * T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
-    * nH indicates the number of hours
-    * nM indicates the number of minutes
-    * nS indicates the number of seconds
-  * *date* - dateTime of begin of the event
-   * YYYY-MM-DDTHH:MM:SS
+  * *dateSince* - date of the event
+  * *dateTo* - end date of the event
+  * *timeFrom* - starting time of the event
+  * *timeTo* - ending time of the event
   * *title* - title or name of the event
    * _at least one letter is required_
   * *place* - place of event
@@ -38,12 +29,13 @@ XML Schema for calendar and tag list.
     * _if node *labels* occurs, then at least one is required_
 
  
- 
+
 == Schema code: ==
 <code>
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
     <xsd:element name="calendar">
         <xsd:complexType>
             <xsd:sequence>
@@ -73,9 +65,11 @@ XML Schema for calendar and tag list.
 
     <xsd:complexType name="userTypeEvent">
         <xsd:sequence>
-            <xsd:element name="duration" type="xsd:duration"/>
-            <xsd:element name="date" type="xsd:dateTime"/>
-            <xsd:element name="title" type="userTypeTitle" />                
+            <xsd:element name="dateSince" type="xsd:date"/>
+            <xsd:element name="dateTo" type="xsd:date"/>
+            <xsd:element name="timeFrom" type="xsd:time"/>
+            <xsd:element name="timeTo" type="xsd:time"/>
+            <xsd:element name="title" type="userTypeTitle" />
             <xsd:element name="place" type="xsd:string" minOccurs="0"/>
             <xsd:element name="note" type="xsd:string" minOccurs="0"/>
             <xsd:element name="tags" minOccurs="0" type="userTypeTags" />
@@ -87,7 +81,7 @@ XML Schema for calendar and tag list.
         <xsd:sequence>
             <xsd:element name="label" minOccurs="0" maxOccurs="unbounded">
                 <xsd:complexType>
-                     <xsd:attribute name="name" type="xsd:NCName"  use="required"/>                
+                     <xsd:attribute name="name" type="xsd:NCName"  use="required"/>
                 </xsd:complexType>
             </xsd:element>
         </xsd:sequence>
@@ -109,6 +103,9 @@ XML Schema for calendar and tag list.
         </xsd:sequence>
     </xsd:complexType>
 
+
+
 </xsd:schema>
+
 
 </code>
