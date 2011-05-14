@@ -31,9 +31,11 @@
 
     <xsd:complexType name="userTypeEvent">
         <xsd:sequence>
-            <xsd:element name="duration" type="xsd:duration"/>
-            <xsd:element name="date" type="xsd:dateTime"/>
-            <xsd:element name="title" type="userTypeTitle" />                
+            <xsd:element name="dateSince" type="xsd:date"/>
+            <xsd:element name="dateTo" type="xsd:date"/>
+            <xsd:element name="timeFrom" type="xsd:time"/>
+            <xsd:element name="timeTo" type="xsd:time"/>
+            <xsd:element name="title" type="userTypeTitle" />
             <xsd:element name="place" type="xsd:string" minOccurs="0"/>
             <xsd:element name="note" type="xsd:string" minOccurs="0"/>
             <xsd:element name="tags" minOccurs="0" type="userTypeTags" />
@@ -45,7 +47,7 @@
         <xsd:sequence>
             <xsd:element name="label" minOccurs="0" maxOccurs="unbounded">
                 <xsd:complexType>
-                     <xsd:attribute name="name" type="xsd:NCName"  use="required"/>                
+                     <xsd:attribute name="name" type="xsd:NCName"  use="required"/>
                 </xsd:complexType>
             </xsd:element>
         </xsd:sequence>
@@ -67,6 +69,6 @@
         </xsd:sequence>
     </xsd:complexType>
 
-  
+
 
 </xsd:schema>
