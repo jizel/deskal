@@ -300,6 +300,6 @@ public class baseXDB{
             }
         }
       
-        return month;
+        return daysInterval;
     }
 }
