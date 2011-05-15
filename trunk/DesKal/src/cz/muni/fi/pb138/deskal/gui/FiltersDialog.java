@@ -12,6 +12,9 @@ import javax.swing.JDialog;
 public class FiltersDialog extends javax.swing.JDialog {
     private FiltersListModel model;
     private FiltersComboBoxModel comboModel;
+    private JComboBox filtersComboBox;
+    private String activeFilterName;
+
     /** Creates new form FiltersDialog */
     public FiltersDialog(java.awt.Frame parent, boolean modal, List<Filter> filters, JComboBox filtersComboBox) {
         super(parent, modal);
@@ -19,7 +22,9 @@ public class FiltersDialog extends javax.swing.JDialog {
         model = (FiltersListModel) filtersList.getModel();
         newFilterButton.requestFocus();
         model.setFilters(filters);
+        this.filtersComboBox = filtersComboBox;
         comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
+        activeFilterName = (String) filtersComboBox.getSelectedItem();
     }
 
     /** This method is called from within the constructor to
@@ -149,9 +154,11 @@ public class FiltersDialog extends javax.swing.JDialog {
             public void run() {
                 int index = filtersList.getSelectedIndex();
                 String name = (String) model.getElementAt(index);
-                if(!name.equals("default"))
+                if(!name.equals("default")){
                 model.remove(index);
                 filtersList.clearSelection();
+                if(activeFilterName.equals(name))
+                    filtersComboBox.setSelectedIndex(0);}
             }
         });
     }//GEN-LAST:event_removeFilterButtonActionPerformed
