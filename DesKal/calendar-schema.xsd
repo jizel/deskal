@@ -45,7 +45,7 @@
 
     <xsd:complexType name="userTypeTag">
         <xsd:sequence>
-            <xsd:element name="label" minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="label" minOccurs="0" maxOccurs="1">
                 <xsd:complexType>
                      <xsd:attribute name="name" type="xsd:NCName"  use="required"/>
                 </xsd:complexType>

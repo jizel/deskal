@@ -23,7 +23,6 @@
         <note>Nix</note>
         <tags>
             <tag tagref="blue"/>
-            <tag tagref="white"/>
         </tags>
     </event>
    <event id="2">
