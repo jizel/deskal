@@ -5,15 +5,13 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import javax.swing.JFrame;
 
 /**
  *
- * @author Drak
+ * TODO: zvalidovat calendar.xml pri startu!!!
  */
 public class Main {
 

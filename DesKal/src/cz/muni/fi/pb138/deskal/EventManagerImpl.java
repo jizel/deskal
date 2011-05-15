@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -27,12 +25,23 @@ public class EventManagerImpl implements EventManager {
     private org.basex.core.Context context;
     private String calendarXml;
     private DatatypeFactory df;
+    private DocumentBuilderFactory docFactory;
+    DocumentBuilder builder;
 
     public EventManagerImpl(Context context) {
         this.context = context;
         String userDir = System.getProperty("user.home");
         String separator = System.getProperty("file.separator");
         calendarXml = userDir + separator + "DesKal" + separator + "calendar.xml";
+        docFactory = DocumentBuilderFactory.newInstance();
+        try {
+            df = DatatypeFactory.newInstance();
+            builder = docFactory.newDocumentBuilder();
+        } catch (DatatypeConfigurationException ex) {
+            throw new RuntimeException("Datatype factory init error", ex);
+        } catch (ParserConfigurationException ex) {
+            throw new RuntimeException("Document builder init error", ex);
+        }
     }
 
     public void addEvent(Event e) {
@@ -84,16 +93,12 @@ public class EventManagerImpl implements EventManager {
 
         XMLGregorianCalendar since = null;
         XMLGregorianCalendar to = null;
-        try {
-            since = DatatypeFactory.newInstance().newXMLGregorianCalendar(sinceHelp);
-            to = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-            to.setYear(year);
-            to.setMonth(month);
-            to.setDay(lastDay);
-        } catch (DatatypeConfigurationException ex) {
-            Logger.getLogger(EventManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
+        since = df.newXMLGregorianCalendar(sinceHelp);
+        to = df.newXMLGregorianCalendar();
+        to.setYear(year);
+        to.setMonth(month);
+        to.setDay(lastDay);
 
         String sSince = since.toXMLFormat();
         String sTo = to.toXMLFormat();
@@ -123,14 +128,7 @@ public class EventManagerImpl implements EventManager {
             labelsParseXML = new XQuery(query).execute(context);
         } catch (BaseXException ex) {
         }
-
-        Document doc = null;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
-        try {
-            builder = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-        }
+        Document doc = null;                        
 
         InputSource iS = new InputSource();
         iS.setCharacterStream(new StringReader(labelsParseXML));
@@ -157,11 +155,8 @@ public class EventManagerImpl implements EventManager {
             NodeList n = eventEl.getElementsByTagName("dateSince");
             String dateSinceStr = n.item(0).getTextContent();
             XMLGregorianCalendar dateSince = null;
-            try {dateSince = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateSinceStr);
-                event.setDate(dateSince);
-            } catch (DatatypeConfigurationException ex) {
-                Logger.getLogger(EventManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            dateSince = df.newXMLGregorianCalendar(dateSinceStr);
+            event.setDate(dateSince);
 
             n = eventEl.getElementsByTagName("timeFrom");
             String[] timeFromStr = (n.item(0).getTextContent()).split(":");
@@ -179,16 +174,12 @@ public class EventManagerImpl implements EventManager {
             int minutesTo = Integer.parseInt(timeToStr[1]);
             int secondsTo = Integer.parseInt(timeToStr[2]);
 
-            try {
-                XMLGregorianCalendar to = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateTo);
-                to.setTime(hoursTo, minutesTo, secondsTo);
-                long duration = to.toGregorianCalendar().getTime().getTime() - dateSince.toGregorianCalendar().getTime().getTime();
-                Duration dur = DatatypeFactory.newInstance().newDuration(duration);
-                System.out.println(dur.toString());
-                event.setDuration(dur);
-            } catch (DatatypeConfigurationException ex) {
-                Logger.getLogger(EventManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            XMLGregorianCalendar to = df.newXMLGregorianCalendar(dateTo);
+            to.setTime(hoursTo, minutesTo, secondsTo);
+            long duration = to.toGregorianCalendar().getTime().getTime() - dateSince.toGregorianCalendar().getTime().getTime();
+            Duration dur = df.newDuration(duration);
+
+            event.setDuration(dur);
 
             n = eventEl.getElementsByTagName("title");
             event.setName(n.item(0).getTextContent());
