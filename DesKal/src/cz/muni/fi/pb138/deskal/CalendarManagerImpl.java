@@ -67,11 +67,7 @@ public class CalendarManagerImpl implements CalendarManager {
         return labels;
     }
 
-    public List<Day> getDaysInMonth(int year, int month) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void runFilter(Filter filter) {
+    public List<Day> getDaysInMonthWithTag(int year, int month) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
