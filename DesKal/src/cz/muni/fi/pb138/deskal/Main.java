@@ -7,8 +7,6 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.xml.transform.Source;
@@ -18,19 +16,17 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import org.xml.sax.SAXException;
 
-/**
- *
- * TODO: zvalidovat calendar.xml pri startu!!!
- */
 public class Main {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) throws IOException {
+
         //create DesKal/calendar.xml in user's directory if it doesn't exist
         String userDir = System.getProperty("user.home");
         String separator = System.getProperty("file.separator");
+
         File desKalDir = new File(userDir + separator + "DesKal");
         if (!desKalDir.exists()) {
             desKalDir.mkdir();
@@ -62,6 +58,7 @@ public class Main {
                 }
             }
         }
+        
         // Validate calendar.xml against calendar-schema.xsd
         SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
         File schemaLocation = new File("calendar-schema.xsd");
