@@ -93,9 +93,19 @@ public class Event {
     }
 
     public String getDurationString() {
-        int hours = this.duration.getHours();
-        String hoursString = hours == 1 ? " hour" : " hours";
-        String duration = Integer.toString(hours)+ hoursString;
+        int years = duration.getYears();
+        int months = duration.getMonths();
+        int days = duration.getDays();
+        int hours = duration.getHours();
+        int minutes = duration.getMinutes();
+
+        String yearsString = years == 0 ? "" : (Integer.toString(years) + (years == 1 ? " Year   " : " Years   "));
+        String monthsString = months == 0 ? "" : (Integer.toString(months) + (months == 1 ? " Month   " : " Months   "));
+        String daysString = days == 0 ? "" : (Integer.toString(days) + (days == 1 ? " Day   " : " Days   "));
+        String hoursString = hours == 0 ? "" : (Integer.toString(hours) + (hours == 1 ? " Hour   " : " Hours   "));
+        String minutesString = minutes == 0 ? "" : (Integer.toString(minutes) + (minutes == 1 ? " Minute   " : " Minutes   "));
+
+        String duration =  yearsString + monthsString + daysString + hoursString + minutesString;
         return duration;
     }
 

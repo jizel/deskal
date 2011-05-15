@@ -6,6 +6,8 @@ import cz.muni.fi.pb138.deskal.CalendarManager;
 import cz.muni.fi.pb138.deskal.CalendarManagerImpl;
 import cz.muni.fi.pb138.deskal.Day;
 import cz.muni.fi.pb138.deskal.Event;
+import cz.muni.fi.pb138.deskal.EventManager;
+import cz.muni.fi.pb138.deskal.EventManagerImpl;
 import cz.muni.fi.pb138.deskal.Filter;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -18,7 +20,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -27,6 +28,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.swing.UIManager;
+import org.basex.core.Context;
 
 /**
  *
@@ -41,6 +43,7 @@ public class MainFrame extends javax.swing.JFrame {
     private List<Filter> filters = new ArrayList();
     private InitGuiSwingWorker initGuiSwingWorker;
     private CalendarManager calManager;
+    private EventManager evtManager;
     private CalendarDB calendarDB;
 
     private class InitGuiSwingWorker extends SwingWorker<List<String>, Void> {
@@ -59,8 +62,13 @@ public class MainFrame extends javax.swing.JFrame {
             labels.add(thisYear);
 
             calendarDB = new CalendarDB();
-            calendarDB.ConnectToBaseX("calendar.xml");
-            calManager = new CalendarManagerImpl(calendarDB.getContext());
+            calendarDB.ConnectToBaseX();
+            Context context = calendarDB.getContext();
+            calManager = new CalendarManagerImpl(context);
+            evtManager = new EventManagerImpl(context);
+
+            Filter none = new Filter("default"); //default filter
+            filters.add(none);
             for (String name : calManager.getAllTags()) {
                 filters.add(new Filter(name));
             }
@@ -69,10 +77,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         protected void done() {
             try {
+                comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
                 yearLabel.setText(get().get(2));
                 monthLabel.setText(get().get(1));
                 currentDateLabel.setText(get().get(0) + get().get(1) + get().get(2));
                 comboModel.setFilters(filters);
+                filtersComboBox.setSelectedIndex(0);
+
             } catch (InterruptedException ex) {
             } catch (ExecutionException ex) {
             }
@@ -95,12 +106,8 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         initGuiSwingWorker = new InitGuiSwingWorker();
         initGuiSwingWorker.execute();
-        Filter none = new Filter("default"); //default filter
-        filters.add(none);
-        comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
-        comboModel.setFilters(filters);
-        filtersComboBox.setSelectedIndex(0);
-        daysTable.setRowHeight((daysTable.getHeight() - 7) /daysTable.getRowCount());
+        daysTable.setRowHeight((daysTable.getHeight() - 7) / daysTable.getRowCount());
+
         //table and list test
         List<Day> month = new ArrayList<Day>();
         Day day = new Day();

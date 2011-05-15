@@ -14,11 +14,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 public class CalendarManagerImpl implements CalendarManager {
-    private org.basex.core.Context context;
-    private String DBfile;
 
-    public CalendarManagerImpl(Context context){
+    private org.basex.core.Context context;
+    private String calendarXml;
+
+    public CalendarManagerImpl(Context context) {
         this.context = context;
+        String userDir = System.getProperty("user.home");
+        String separator = System.getProperty("file.separator");
+        calendarXml = userDir + separator + "DesKal" + separator + "calendar.xml";
     }
 
     public List<String> getAllTags() {
@@ -26,7 +30,7 @@ public class CalendarManagerImpl implements CalendarManager {
 
         String queryForLabels = "<labels> "
                 + "{ "
-                + "let $doc := doc('calendar.xml') "
+                + "let $doc := doc('" + calendarXml + "') "
                 + "for $x in $doc//label "
                 + "return <label> { $x/@name/string() } </label>"
                 + "} "
@@ -56,7 +60,7 @@ public class CalendarManagerImpl implements CalendarManager {
 
         NodeList nodes = doc.getElementsByTagName("label");
 
-        for(int i = 0; i < nodes.getLength(); i++){
+        for (int i = 0; i < nodes.getLength(); i++) {
             labels.add(nodes.item(i).getTextContent());
         }
 
@@ -78,5 +82,4 @@ public class CalendarManagerImpl implements CalendarManager {
     public void removeFilter(Filter filter) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }
