@@ -57,7 +57,27 @@ public class EventManagerImpl implements EventManager {
     }
 
     public Event getEventById(int id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        String queryForEvent = "<events> "
+                + "{ "
+                + "let $doc := doc('" + calendarXml + "') "
+                + "return $doc//event[@id="
+                + id
+                + "] "
+                + "} "
+                + "</events>";
+
+        Document doc = getDocumentFromQuery(queryForEvent);
+
+        String tag = null;
+        NodeList list = doc.getElementsByTagName("tag");
+        if(!(list.getLength()==0)){
+        Element el = (Element) list.item(0);
+        tag = el.getAttribute("tagref");
+        }
+        Event eventById = parseDocument(doc).get(0);
+        eventById.setTag(tag);
+        return eventById;
     }
 
     public List<Event> getAllEvents() {
