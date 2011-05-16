@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.xml.transform.Source;
@@ -16,6 +17,10 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import org.xml.sax.SAXException;
 
+/**
+ *
+ * 
+ */
 public class Main {
 
     /**
@@ -26,7 +31,6 @@ public class Main {
         //create DesKal/calendar.xml in user's directory if it doesn't exist
         String userDir = System.getProperty("user.home");
         String separator = System.getProperty("file.separator");
-
         File desKalDir = new File(userDir + separator + "DesKal");
         if (!desKalDir.exists()) {
             desKalDir.mkdir();
@@ -58,10 +62,10 @@ public class Main {
                 }
             }
         }
-        
+
         // Validate calendar.xml against calendar-schema.xsd
         SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-        File schemaLocation = new File("calendar-schema.xsd");
+        URL schemaLocation = ClassLoader.getSystemResource("calendar-schema.xsd");
         Schema schema = null;
         try {
             schema = factory.newSchema(schemaLocation);
@@ -71,7 +75,8 @@ public class Main {
         Validator validator = schema.newValidator();
         Source source = new StreamSource(calendar);
         try {validator.validate(source);
-        } //if invalid:
+        }
+        //if invalid:
         catch (SAXException ex) {
             String newline = System.getProperty("line.separator");
             JOptionPane.showMessageDialog(null, calendar.toURI() + newline +
