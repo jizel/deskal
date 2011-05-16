@@ -16,6 +16,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -42,53 +44,78 @@ public class MainFrame extends javax.swing.JFrame {
     private FiltersComboBoxModel comboModel;
     private List<Filter> filters = new ArrayList();
     private InitGuiSwingWorker initGuiSwingWorker;
+    private ManagerInitSwingWorker managerInitSwingWorker;
     private CalendarManager calManager;
     private EventManager evtManager;
     private CalendarDB calendarDB;
 
+    // <editor-fold defaultstate="collapsed" desc="GUI initialization swing worker">
     private class InitGuiSwingWorker extends SwingWorker<List<String>, Void> {
 
         @Override
         protected List<String> doInBackground() throws Exception {
             List<String> labels = new ArrayList<String>();
             Locale cz = new Locale("cs", "CZ");
+            if(date == null){
             date = GregorianCalendar.getInstance(cz);
             date.setTimeInMillis(System.currentTimeMillis());
+            }
             String thisDay = Integer.toString(date.get(Calendar.DAY_OF_MONTH)) + ". ";
             String thisMonth = getNameOfMonth(date.get(Calendar.MONTH)) + " ";
             String thisYear = Integer.toString(date.get(Calendar.YEAR));
             labels.add(thisDay);
             labels.add(thisMonth);
             labels.add(thisYear);
-
-            calendarDB = new CalendarDB();
-            calendarDB.ConnectToBaseX();
-            Context context = calendarDB.getContext();
-            calManager = new CalendarManagerImpl(context);
-            evtManager = new EventManagerImpl(context);
-
-            Filter none = new Filter("default"); //default filter
-            filters.add(none);
-            for (String name : calManager.getAllTags()) {
-                filters.add(new Filter(name));
-            }
             return labels;
         }
 
         protected void done() {
             try {
-                comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
                 yearLabel.setText(get().get(2));
                 monthLabel.setText(get().get(1));
                 currentDateLabel.setText(get().get(0) + get().get(1) + get().get(2));
-                comboModel.setFilters(filters);
-                filtersComboBox.setSelectedIndex(0);
 
             } catch (InterruptedException ex) {
             } catch (ExecutionException ex) {
             }
         }
-    }
+    }// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Managers initialization swing worker">
+    private class ManagerInitSwingWorker extends SwingWorker<List<Day>, Void> {
+
+        @Override
+        protected List<Day> doInBackground() throws Exception {
+            calendarDB = new CalendarDB();
+            calendarDB.ConnectToBaseX();
+            Context context = calendarDB.getContext();
+            evtManager = new EventManagerImpl(context);
+            calManager = new CalendarManagerImpl(context, evtManager);
+            Filter none = new Filter("default"); //default filter
+            filters.add(none);
+            for (String name : calManager.getAllTags()) {
+                filters.add(new Filter(name));
+            }
+            if(date == null){
+            date = GregorianCalendar.getInstance();
+            date.setTimeInMillis(System.currentTimeMillis());
+            }
+            return calManager.getDaysInMonthWithTag(date.get(Calendar.YEAR),
+                    date.get(Calendar.MONTH) + 1);
+        }
+
+        protected void done() {
+            comboModel = (FiltersComboBoxModel) filtersComboBox.getModel();
+            comboModel.setFilters(filters);
+            filtersComboBox.setSelectedIndex(0);            
+            listModel = (EventListModel) eventsList.getModel();
+            try {
+                tableModel.setMonth(get());
+            } catch (InterruptedException ex) {
+            } catch (ExecutionException ex) {
+            }
+        }
+    }// </editor-fold>
 
     /** Creates new form MainFrame */
     public MainFrame() {
@@ -102,11 +129,14 @@ public class MainFrame extends javax.swing.JFrame {
             throw new RuntimeException("GUI: look and feel error", ex);
         } catch (UnsupportedLookAndFeelException ex) {
             throw new RuntimeException("GUI: look and feel error", ex);
-        }
+        }        
         initComponents();
+        tableModel = (DaysTableModel) daysTable.getModel();
+        daysTable.setRowHeight((daysTable.getHeight() - 7) / daysTable.getRowCount());
         initGuiSwingWorker = new InitGuiSwingWorker();
         initGuiSwingWorker.execute();
-        daysTable.setRowHeight((daysTable.getHeight() - 7) / daysTable.getRowCount());
+        managerInitSwingWorker = new ManagerInitSwingWorker();
+        managerInitSwingWorker.execute();
 
         //table and list test
         List<Day> month = new ArrayList<Day>();
@@ -135,9 +165,6 @@ public class MainFrame extends javax.swing.JFrame {
         day.getDate().setMonth(5);
         day.getDate().setDay(1);
         month.add(day);
-        tableModel = (DaysTableModel) daysTable.getModel();
-        tableModel.setMonth(month);
-        listModel = (EventListModel) eventsList.getModel();
     }
 
     /** This method is called from within the constructor to
@@ -662,6 +689,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_removeEventButtonActionPerformed
 
     private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitMenuItemActionPerformed
+        calendarDB.closeDB();
         System.exit(0);
     }//GEN-LAST:event_ExitMenuItemActionPerformed
 
