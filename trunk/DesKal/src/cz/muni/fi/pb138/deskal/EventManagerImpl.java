@@ -105,7 +105,7 @@ public class EventManagerImpl implements EventManager {
 
         String queryForEvents2 = "<events> "
                 + "{ "
-                + "let $doc := doc('calendar.xml') "
+                + "let $doc := doc('" + calendarXml + "') "
                 + "return $doc//event[ "
                 + "(dateSince/text() >= '" + sSince + "' and dateTo/text() <= '" + sTo + "') " //cely event je mezi daty
                 + " or (dateTo/text() >= '" + sSince + "' and dateTo/text() < '" + sTo + "') "
@@ -128,7 +128,7 @@ public class EventManagerImpl implements EventManager {
             labelsParseXML = new XQuery(query).execute(context);
         } catch (BaseXException ex) {
         }
-        Document doc = null;                        
+        Document doc = null;
 
         InputSource iS = new InputSource();
         iS.setCharacterStream(new StringReader(labelsParseXML));

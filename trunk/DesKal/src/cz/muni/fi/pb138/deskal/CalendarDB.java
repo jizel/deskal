@@ -32,4 +32,8 @@ public class CalendarDB {
     public Context getContext() {
         return context;
     }
+
+    public void closeDB(){
+        context.close();
+    }
 }

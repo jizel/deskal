@@ -117,8 +117,7 @@ public class Event {
     }
 
     public void setTime(int hour,int minute){
-        this.date.setHour(hour);
-        this.date.setMinute(minute);
+        this.date.setTime(hour, minute, 0);
     }
 
     //equals and hashcode on all attributes
