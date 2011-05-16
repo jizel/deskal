@@ -71,13 +71,17 @@ public class EventManagerImpl implements EventManager {
 
         String tag = null;
         NodeList list = doc.getElementsByTagName("tag");
-        if(!(list.getLength()==0)){
-        Element el = (Element) list.item(0);
-        tag = el.getAttribute("tagref");
+        if (!(list.getLength() == 0)) {
+            Element tagElement = (Element) list.item(0);
+            tag = tagElement.getAttribute("tagref");
         }
-        Event eventById = parseDocument(doc).get(0);
-        eventById.setTag(tag);
-        return eventById;
+
+        List<Event> eventsById = parseDocument(doc);
+        if (eventsById.size() > 0) {
+            eventsById.get(0).setTag(tag);
+            return eventsById.get(0);
+        }
+        return null;
     }
 
     public List<Event> getAllEvents() {
