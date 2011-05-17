@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CalendarManager {
 
-    public List<Day> getDaysInMonthWithTag(int year, int month);
+    public List<Day> getDaysInMonthWithTag(int year, int month, String tag);
 
     public void addFilter(Filter filter);
 

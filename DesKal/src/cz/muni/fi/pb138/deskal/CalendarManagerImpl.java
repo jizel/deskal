@@ -4,10 +4,11 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -83,45 +84,72 @@ public class CalendarManagerImpl implements CalendarManager {
         return labels;
     }
 
-    public List<Day> getDaysInMonthWithTag(int year, int month) {
-        List<Day> days = new ArrayList<Day>();
-        List<Event> events = new ArrayList<Event>();
+    public List<Day> getDaysInMonthWithTag(int year, int month, String tag) {
+        List<Day> days = createDaysForMonth(year, month);
+        List<Event> events = eventManager.getEventsForMonth(year, month);
 
-
-
-
-        //ZMENIT NA GET EVENTS FOR MONTH AZ BUDE HOTOVA!!!
-        events = eventManager.getAllEvents();
-        GregorianCalendar date = new GregorianCalendar();
-        date.set(year, month - 1 , 1);
-        int lastDay = date.getActualMaximum(Calendar.DAY_OF_MONTH);
-        String monthStr = null;
-        if (month < 10) {
-            monthStr = "0" + month;
-        } else {
-            monthStr = Integer.toString(month);
-        }
-        String actDate = year + "-" + monthStr + "-";
-
-        for (int i = 1; i <= lastDay; i++) {
-            String xmlDate = null;
-            if (i > 9) {
-                xmlDate = actDate + i;
-            } else {
-                xmlDate = actDate + "0" + i;
+        for (Event event : events) {
+            XMLGregorianCalendar eventStartDate = (XMLGregorianCalendar) event.getDate().clone();
+            Duration eventDuration = event.getDuration();
+            int lastsDays = eventDuration.getDays();
+            //duration zasahuje do dalsiho dne
+            if (eventDuration.getHours() > 0 || eventDuration.getMinutes() > 0) {
+                lastsDays++;
+            } else {//cas zacatku zasahuje do dalsiho dne
+                if (eventStartDate.getHour() > 0 || eventStartDate.getMinute() > 0) {
+                    lastsDays++;
+                }
+            }//preteceni hodin a minut pres pulnoc
+            int hours = eventStartDate.getHour() + eventDuration.getHours();
+            int minutes = eventStartDate.getMinute() + eventDuration.getMinutes();
+            if (minutes >= 60) {
+                hours++;
             }
-            Day day = new Day();
-            XMLGregorianCalendar dayDate = df.newXMLGregorianCalendar(xmlDate);
-            day.setDate(dayDate);
-            Iterator it = events.iterator();
-            while (it.hasNext()) {
-                Event event = (Event) it.next();
-                if (event.getDate().getDay() == i) {
-                    day.addEvent(event);
-                    //events.remove(event); THREAD CONCURRENT EXCEPTION WTF??
+            if (hours >= 24) {
+                lastsDays++;
+            }
+
+            eventStartDate.setTime(0, 0, 0); //kvuli compare 
+            //udalost zacina prvniho
+            if (eventStartDate.compare(days.get(0).getDate()) == DatatypeConstants.EQUAL) {
+                if (eventDuration.getYears() > 0 || eventDuration.getMonths() > 0
+                        || lastsDays >= days.size()) {
+                    for (Day day : days) {
+                        day.addEvent(event);
+                    }
+                } else {
+                    for (int i = 0; i < lastsDays; i++) {
+                        days.get(i).addEvent(event);
+                    }
                 }
             }
-            days.add(day);
+            //udalost zacina po prvnim dni
+            if (eventStartDate.compare(days.get(0).getDate()) == DatatypeConstants.GREATER) {
+                if (eventDuration.getYears() > 0 || eventDuration.getMonths() > 0
+                        || lastsDays > days.size() - event.getDate().getDay()) {
+                    for (int i = eventStartDate.getDay(); i <= days.size(); i++) {
+                        days.get(i - 1).addEvent(event);
+                    }
+                } else {
+                    int startDay = eventStartDate.getDay();
+                    for (int i = startDay; i < startDay + lastsDays; i++) {
+                        days.get(i - 1).addEvent(event);
+                    }
+                }
+            }
+            //udalost zacala drive
+            if (eventStartDate.compare(days.get(0).getDate()) == DatatypeConstants.LESSER) {
+                XMLGregorianCalendar endDate = (XMLGregorianCalendar) event.getDate().clone();
+                endDate.add(eventDuration);
+                for (Day day : days) {
+                    if (day.getDate().compare(endDate) == DatatypeConstants.LESSER
+                            || day.getDate().compare(endDate) == DatatypeConstants.EQUAL) {
+                        day.addEvent(event);
+                    } else {
+                        break;
+                    }
+                }
+            }
         }
         return days;
     }
@@ -132,5 +160,34 @@ public class CalendarManagerImpl implements CalendarManager {
 
     public void removeFilter(Filter filter) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private List<Day> createDaysForMonth(int year, int month) {
+        List<Day> days = new ArrayList<Day>();
+        GregorianCalendar date = new GregorianCalendar();
+        date.set(year, month - 1, 1);
+        int lastDay = date.getActualMaximum(Calendar.DAY_OF_MONTH);
+        String monthStr = null;
+        if (month < 10) {
+            monthStr = "0" + month;
+        } else {
+            monthStr = Integer.toString(month);
+        }
+        String actDate = year + "-" + monthStr + "-";
+        //create days for given month
+        for (int i = 1; i <= lastDay; i++) {
+            String xmlDate = null;
+            if (i > 9) {
+                xmlDate = actDate + i + "Z";
+            } else {
+                xmlDate = actDate + "0" + i + "Z";
+            }
+            Day day = new Day();
+            XMLGregorianCalendar dayDate = df.newXMLGregorianCalendar(xmlDate);
+            dayDate.setTime(0, 0, 0);
+            day.setDate(dayDate);
+            days.add(day);
+        }
+        return days;
     }
 }

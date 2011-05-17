@@ -56,7 +56,7 @@ public class EventListSelectionListener implements ListSelectionListener {
                         String note = event.getNote()== null ? " " : event.getNote();
                         labels.get(0).setText(event.getName());
                         labels.get(1).setText(place);
-                        labels.get(2).setText(event.getTimeString());
+                        labels.get(2).setText(event.getStartString());
                         labels.get(3).setText(event.getDurationString());
                         labels.get(4).setText(tag);
                         labels.get(5).setText(note);

@@ -78,18 +78,17 @@ public class Event {
         this.tag = tag;
     }
 
-    public String getTimeString() {
+    public String getStartString() {
         int minute = date.getMinute();
         int hour = date.getHour();
+        String dateString = "    " + date.getYear()+" - "+date.getMonth()+" - "+date.getDay();
         String time;
-        if(minute != DatatypeConstants.FIELD_UNDEFINED && hour != DatatypeConstants.FIELD_UNDEFINED){
         if (minute < 10) {
             time = Integer.toString(hour) + " : 0" + Integer.toString(minute);
         } else {
             time = Integer.toString(hour) + " : " + Integer.toString(minute);
         }
-        return time;}
-        else return null;
+        return time + dateString;
     }
 
     public String getDurationString() {
