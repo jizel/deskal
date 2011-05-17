@@ -1,5 +1,6 @@
 package cz.muni.fi.pb138.deskal;
 
+import cz.muni.fi.pb138.deskal.Event;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,8 +108,9 @@ public class CalendarManagerImpl implements CalendarManager {
             }
             if (hours >= 24) {
                 lastsDays++;
-            }
-
+            } //udalost zacina o pulnoci s duration 0
+            if(lastsDays == 0) lastsDays++;
+            
             eventStartDate.setTime(0, 0, 0); //kvuli compare 
             //udalost zacina prvniho
             if (eventStartDate.compare(days.get(0).getDate()) == DatatypeConstants.EQUAL) {
