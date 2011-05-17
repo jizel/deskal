@@ -138,6 +138,48 @@ public class EventManagerImpl implements EventManager {
 
         return parseDocument(doc);
     }
+    
+    public List<Event> getEventsForMonth(int year, int month, String tag) {
+
+        GregorianCalendar sinceHelp = new GregorianCalendar();
+        sinceHelp.set(Calendar.YEAR,year);
+        sinceHelp.set(Calendar.MONTH,month-1);//XMLGregCal jine cislovani
+        sinceHelp.set(Calendar.DAY_OF_MONTH,1);
+
+        int lastDay = sinceHelp.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        XMLGregorianCalendar since = null;
+        XMLGregorianCalendar to = null;
+
+        since = df.newXMLGregorianCalendar(sinceHelp);
+        since.setTime(0,0,0);
+        to = df.newXMLGregorianCalendar();
+        to.setYear(year);
+        to.setMonth(month);
+        to.setDay(lastDay);
+
+        String sSince = since.toXMLFormat();
+        String sTo = to.toXMLFormat();
+
+        String queryForEvents3 = "<events> "               
+                + "{ "
+                + "let $doc := doc('" + calendarXml + "') "
+                + "return $doc//event[ "
+                + "(tag/@tagref='"+tag+"') and "
+                + "((dateSince/text() >= '" + sSince + "' and dateTo/text() <= '" + sTo + "') " //cely event je mezi daty
+                + " or (dateTo/text() >= '" + sSince + "' and dateTo/text() < '" + sTo + "') "
+                + " or (dateSince/text() >= '" + sSince + "' and dateSince/text() <= '" + sTo + "') "
+                + " or (dateSince/text() < '" + sSince + "' and dateTo/text() > '" + sTo + "')" //event zacina pred pocatecnim datem a konci po koncovym
+                + " )] "
+                + "} "
+                + "</events>";
+
+
+
+        Document doc = getDocumentFromQuery(queryForEvents3);
+
+        return parseDocument(doc);
+    }
 
 //help methods
     public Document getDocumentFromQuery(String query) {
