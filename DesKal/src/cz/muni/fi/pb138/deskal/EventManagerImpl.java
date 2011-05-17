@@ -68,20 +68,10 @@ public class EventManagerImpl implements EventManager {
                 + "</events>";
 
         Document doc = getDocumentFromQuery(queryForEvent);
-
-        String tag = null;
-        NodeList list = doc.getElementsByTagName("tag");
-        if (!(list.getLength() == 0)) {
-            Element tagElement = (Element) list.item(0);
-            tag = tagElement.getAttribute("tagref");
-        }
-
+        
         List<Event> eventsById = parseDocument(doc);
-        if (eventsById.size() > 0) {
-            eventsById.get(0).setTag(tag);
-            return eventsById.get(0);
-        }
-        return null;
+        
+        return eventsById.get(0);
     }
 
     public List<Event> getAllEvents() {
@@ -112,20 +102,24 @@ public class EventManagerImpl implements EventManager {
     public List<Event> getEventsForMonth(int year, int month) {
 
         GregorianCalendar sinceHelp = new GregorianCalendar();
-        sinceHelp.set(year, month, Calendar.DAY_OF_MONTH);
-        int lastDay = sinceHelp.getActualMaximum(Calendar.DAY_OF_MONTH);
+        sinceHelp.set(Calendar.YEAR,year);
+        sinceHelp.set(Calendar.MONTH,month-1);//XMLGregCal jine cislovani
+        sinceHelp.set(Calendar.DAY_OF_MONTH,1);
 
+        int lastDay = sinceHelp.getActualMaximum(Calendar.DAY_OF_MONTH);
+        
         XMLGregorianCalendar since = null;
         XMLGregorianCalendar to = null;
 
         since = df.newXMLGregorianCalendar(sinceHelp);
+        since.setTime(0,0,0);
         to = df.newXMLGregorianCalendar();
         to.setYear(year);
         to.setMonth(month);
         to.setDay(lastDay);
 
         String sSince = since.toXMLFormat();
-        String sTo = to.toXMLFormat();
+        String sTo = to.toXMLFormat();        
 
         String queryForEvents2 = "<events> "
                 + "{ "
@@ -190,7 +184,7 @@ public class EventManagerImpl implements EventManager {
             event.getDate().setTime(hoursFrom, minutesFrom, secondsFrom);
 
             n = eventEl.getElementsByTagName("dateTo");
-            String dateTo = n.item(0).getTextContent();
+            String dateToStr = n.item(0).getTextContent();
 
             n = eventEl.getElementsByTagName("timeTo");
             String[] timeToStr = (n.item(0).getTextContent()).split(":");
@@ -198,7 +192,7 @@ public class EventManagerImpl implements EventManager {
             int minutesTo = Integer.parseInt(timeToStr[1]);
             int secondsTo = Integer.parseInt(timeToStr[2]);
 
-            XMLGregorianCalendar to = df.newXMLGregorianCalendar(dateTo);
+            XMLGregorianCalendar to = df.newXMLGregorianCalendar(dateToStr);
             to.setTime(hoursTo, minutesTo, secondsTo);
             long duration = to.toGregorianCalendar().getTime().getTime() - dateSince.toGregorianCalendar().getTime().getTime();
             Duration dur = df.newDuration(duration);
@@ -209,14 +203,20 @@ public class EventManagerImpl implements EventManager {
             event.setName(n.item(0).getTextContent());
 
             n = eventEl.getElementsByTagName("place");
+            if(n.getLength()>0){
             event.setPlace(n.item(0).getTextContent());
+            }
 
             n = eventEl.getElementsByTagName("note");
+            if(n.getLength()>0){
             event.setNote(n.item(0).getTextContent());
+            }
 
             n = eventEl.getElementsByTagName("tag");
-            event.setTag(n.item(0).getTextContent());
-
+            if(n.getLength()>0){
+            Element tagElement = (Element) n.item(0);
+            event.setTag(tagElement.getAttribute("tagref"));
+            }
             events.add(event);
         }
 
