@@ -11,7 +11,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 public class Event {
 
-    private int id;
+    private String id;
     private String name;
     private String place;
     private XMLGregorianCalendar date;
@@ -46,11 +46,11 @@ public class Event {
         this.duration = duration;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -129,9 +129,10 @@ public class Event {
             return false;
         }
         final Event other = (Event) obj;
-        if (this.id != other.id) {
-            return false;
-        }
+//        equals by nemelo byt na id kvuli porovnavani eventu pri importu
+//        if (this.id != other.id) {
+//            return false;
+//        }
         if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
             return false;
         }
@@ -156,7 +157,7 @@ public class Event {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 29 * hash + this.id;
+//        hash = 29 * hash + this.id;
         hash = 29 * hash + (this.name != null ? this.name.hashCode() : 0);
         hash = 29 * hash + (this.place != null ? this.place.hashCode() : 0);
         hash = 29 * hash + (this.date != null ? this.date.hashCode() : 0);
