@@ -35,6 +35,7 @@ public class Main {
         if (!desKalDir.exists()) {
             desKalDir.mkdir();
         }
+
         File calendar = new File(userDir + separator + "DesKal" + separator + "calendar.xml");
         if (!calendar.exists()) {
             PrintWriter writer = null;
@@ -80,8 +81,8 @@ public class Main {
         catch (SAXException ex) {
             String newline = System.getProperty("line.separator");
             JOptionPane.showMessageDialog(null, calendar.toURI() + newline +
-                    "is corrupted, please delete it", "Calendar.xml error",
-                    JOptionPane.ERROR_MESSAGE);
+                    " Soubor je poškozený, smažte jej a spusťte program znovu", "DesKal - chyba",
+                    JOptionPane.ERROR_MESSAGE);            
             System.exit(1);
         }
         

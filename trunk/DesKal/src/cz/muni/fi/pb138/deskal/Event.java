@@ -1,7 +1,5 @@
 package cz.muni.fi.pb138.deskal;
 
-import java.text.MessageFormat;
-import java.util.Locale;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -18,16 +16,10 @@ public class Event {
     private Duration duration;
     private String note;
     private String tag;
-    private MessageFormat dateCzFormat;
+
 
     public Event() {
-        Locale czech = new Locale("cs", "CZ");
-        String sablonaTextu = "{0,choice,0#|1#{0} rok|2#{0} roky|3#{0} roky|4#{0} roky|4<{0} let}"
-                + "  {1,choice,0#|1#{1} měsíc|2#{1} měsíce|3#{1} měsíce|4#{1} měsíce|4<{1} měsíců}"
-                + "  {2,choice,0#|1#{2} den|2#{2} dny|3#{2} dny|4#{2} dny|4<{2} dní}"
-                + "  {3,choice,0#|1#{3} hodina|2#{3} hodiny|3#{3} hodiny|4#{3} hodiny|4<{3} hodin}"
-                + "  {4,choice,0#|1#{4} minuta|2#{4} minuty|3#{4} minuty|4#{4} minuty|4<{4} minut}";
-        dateCzFormat = new MessageFormat(sablonaTextu, czech);
+
     }
 
     public XMLGregorianCalendar getDate() {
@@ -99,14 +91,7 @@ public class Event {
         return dateString + "   " + time;
     }
 
-    public String getDurationString() {
-        int years = duration.getYears();
-        int months = duration.getMonths();
-        int days = duration.getDays();
-        int hours = duration.getHours();
-        int minutes = duration.getMinutes();
-        return dateCzFormat.format(new Object[]{ years , months, days, hours , minutes});
-    }
+
 
     public int[] getTime() {
         int[] time = new int[2];

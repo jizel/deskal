@@ -1,12 +1,13 @@
 package cz.muni.fi.pb138.deskal.gui;
 
+import cz.muni.fi.pb138.deskal.CalendarManager;
 import cz.muni.fi.pb138.deskal.Event;
+import cz.muni.fi.pb138.deskal.EventManager;
 import cz.muni.fi.pb138.deskal.Filter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import javax.swing.JFormattedTextField;
 import javax.swing.JList;
 import javax.swing.JSpinner;
@@ -32,11 +33,12 @@ public class AddDialog extends javax.swing.JDialog {
     private int col;
     private CreateEventSwingWorker createEventSwingWorker;
     private JList eventsList;
+    private EventManager evtManager;
 
-    private class CreateEventSwingWorker extends SwingWorker<Event, Void> {
+    private class CreateEventSwingWorker extends SwingWorker<Void, Void> {
 
         @Override
-        protected Event doInBackground() throws Exception {
+        protected Void doInBackground() throws Exception {
             int months = (Integer) monthsSpinner.getValue();
             int days = (Integer) daysSpinner.getValue();
             int hours = (Integer) hoursSpinner.getValue();
@@ -58,26 +60,23 @@ public class AddDialog extends javax.swing.JDialog {
             }
             Date time = (Date) timeSpinner.getValue();
             event.setTime(time.getHours(), time.getMinutes());
-            return event;
+            evtManager.addEvent(event);
+            return null;
         }
 
-        protected void done() {
-            try {
-                tableModel.addEventAt(row, col, get());
-            } catch (InterruptedException ex) {
-            } catch (ExecutionException ex) {
-            }
-            listModel.update();
-            eventsList.setSelectedIndex(listModel.getSize() - 1);
+        protected void done() {            
+            listModel.update();            
             dispose();
         }
     }
 
     /** Creates new form DesKalAddDialog */
     public AddDialog(java.awt.Frame parent, boolean modal, JTable daysTable,
-            JList eventsList, List<Filter> filters) {
+            JList eventsList, List<Filter> filters, EventManager evtManager,
+            CalendarManager calManager) {
         super(parent, modal);
         initComponents();
+        this.evtManager = evtManager;
         tableModel = (DaysTableModel) daysTable.getModel();
         row = daysTable.getSelectedRow();
         col = daysTable.getSelectedColumn();
@@ -128,6 +127,7 @@ public class AddDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DesKal");
+        setModal(true);
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Nová událost"));
