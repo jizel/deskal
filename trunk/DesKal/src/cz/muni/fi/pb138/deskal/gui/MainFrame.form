@@ -6,7 +6,7 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="FileMenu">
           <Properties>
-            <Property name="text" type="java.lang.String" value="File"/>
+            <Property name="text" type="java.lang.String" value="Soubor"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="FiltersMenuItem">
@@ -14,7 +14,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+F"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Filters"/>
+                <Property name="text" type="java.lang.String" value="Filtry"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="FiltersMenuItemActionPerformed"/>
@@ -47,7 +47,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+Q"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Exit"/>
+                <Property name="text" type="java.lang.String" value="Konec"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ExitMenuItemActionPerformed"/>
@@ -65,7 +65,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="F1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="About"/>
+                <Property name="text" type="java.lang.String" value="O programu.."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem5ActionPerformed"/>
@@ -124,7 +124,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="26" max="32767" attributes="0"/>
+                  <EmptySpace pref="15" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -155,16 +155,16 @@
                                   <Component id="filtersComboBox" alignment="0" pref="183" max="32767" attributes="1"/>
                               </Group>
                               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="1">
                                       <Component id="prevMonthButton" min="-2" pref="36" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
                                       <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
+                                      <EmptySpace pref="123" max="32767" attributes="0"/>
                                       <Component id="nextMonthButton" min="-2" pref="36" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="jPanel2" alignment="0" max="32767" attributes="1"/>
-                                  <Component id="jScrollPane1" alignment="0" pref="472" max="32767" attributes="1"/>
+                                  <Component id="jScrollPane1" alignment="0" pref="487" max="32767" attributes="1"/>
                               </Group>
                           </Group>
                       </Group>
@@ -265,7 +265,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Filter"/>
+                <Property name="text" type="java.lang.String" value="Filtr"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="filtersComboBox">
@@ -302,7 +302,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Event"/>
+                    <TitledBorder title="Ud&#xe1;lost"/>
                   </Border>
                 </Property>
               </Properties>
@@ -410,7 +410,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="11" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="note"/>
+                    <Property name="text" type="java.lang.String" value="pozn&#xe1;mka"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel8">
@@ -418,7 +418,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="11" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="tag"/>
+                    <Property name="text" type="java.lang.String" value="&#x161;t&#xed;tek"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel4">
@@ -426,7 +426,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="11" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="name"/>
+                    <Property name="text" type="java.lang.String" value="n&#xe1;zev"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel7">
@@ -434,7 +434,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="11" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="duration"/>
+                    <Property name="text" type="java.lang.String" value="d&#xe9;lka"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel5">
@@ -442,7 +442,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="11" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="place"/>
+                    <Property name="text" type="java.lang.String" value="m&#xed;sto"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel6">
@@ -450,7 +450,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="11" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="start"/>
+                    <Property name="text" type="java.lang.String" value="za&#x10d;&#xe1;tek"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -481,7 +481,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="22" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="TODAY"/>
+                    <Property name="text" type="java.lang.String" value="DNES"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -519,7 +519,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="editEventButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Edit"/>
+                    <Property name="text" type="java.lang.String" value="Upravit"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -528,7 +528,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="newEventButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="New event"/>
+                    <Property name="text" type="java.lang.String" value="Nov&#xe1; ud&#xe1;lost"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -537,7 +537,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="removeEventButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Remove"/>
+                    <Property name="text" type="java.lang.String" value="Odstranit"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -553,7 +553,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="monthLabel" pref="122" max="32767" attributes="0"/>
+                          <Component id="monthLabel" pref="139" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="yearLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -562,13 +562,13 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="yearLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="monthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="monthLabel" alignment="0" max="32767" attributes="1"/>
+                              <Component id="yearLabel" alignment="0" min="-2" max="-2" attributes="1"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -580,7 +580,7 @@
                       <Font name="Tahoma" size="22" style="0"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="MONTH"/>
+                    <Property name="text" type="java.lang.String" value="MESIC"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="yearLabel">
@@ -588,7 +588,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="22" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="YEAR"/>
+                    <Property name="text" type="java.lang.String" value="ROK"/>
                   </Properties>
                 </Component>
               </SubComponents>

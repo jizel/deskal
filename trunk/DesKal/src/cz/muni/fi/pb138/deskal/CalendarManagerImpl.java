@@ -87,69 +87,37 @@ public class CalendarManagerImpl implements CalendarManager {
 
     public List<Day> getDaysInMonthWithTag(int year, int month, String tag) {
         List<Day> days = createDaysForMonth(year, month);
-        List<Event> events = eventManager.getEventsForMonth(year, month);
+        List<Event> events = null;
+        if(tag == null || tag.equals("default")){
+        events = eventManager.getEventsForMonth(year, month);
+        } else {
+        events = eventManager.getEventsForMonth(year, month, tag);
+        }
 
         for (Event event : events) {
-            XMLGregorianCalendar eventStartDate = (XMLGregorianCalendar) event.getDate().clone();
+            XMLGregorianCalendar eventStartDate = event.getDate();
             Duration eventDuration = event.getDuration();
-            int lastsDays = eventDuration.getDays();
-            //duration zasahuje do dalsiho dne
-            if (eventDuration.getHours() > 0 || eventDuration.getMinutes() > 0) {
-                lastsDays++;
-            } else {//cas zacatku zasahuje do dalsiho dne
-                if (eventStartDate.getHour() > 0 || eventStartDate.getMinute() > 0) {
-                    lastsDays++;
-                }
-            }//preteceni hodin a minut pres pulnoc
-            int hours = eventStartDate.getHour() + eventDuration.getHours();
-            int minutes = eventStartDate.getMinute() + eventDuration.getMinutes();
-            if (minutes >= 60) {
-                hours++;
-            }
-            if (hours >= 24) {
-                lastsDays++;
-            } //udalost zacina o pulnoci s duration 0
-            if(lastsDays == 0) lastsDays++;
-            
-            eventStartDate.setTime(0, 0, 0); //kvuli compare 
-            //udalost zacina prvniho
-            if (eventStartDate.compare(days.get(0).getDate()) == DatatypeConstants.EQUAL) {
-                if (eventDuration.getYears() > 0 || eventDuration.getMonths() > 0
-                        || lastsDays >= days.size()) {
-                    for (Day day : days) {
-                        day.addEvent(event);
-                    }
-                } else {
-                    for (int i = 0; i < lastsDays; i++) {
-                        days.get(i).addEvent(event);
-                    }
-                }
-            }
-            //udalost zacina po prvnim dni
-            if (eventStartDate.compare(days.get(0).getDate()) == DatatypeConstants.GREATER) {
-                if (eventDuration.getYears() > 0 || eventDuration.getMonths() > 0
-                        || lastsDays > days.size() - event.getDate().getDay()) {
-                    for (int i = eventStartDate.getDay(); i <= days.size(); i++) {
-                        days.get(i - 1).addEvent(event);
-                    }
-                } else {
-                    int startDay = eventStartDate.getDay();
-                    for (int i = startDay; i < startDay + lastsDays; i++) {
-                        days.get(i - 1).addEvent(event);
-                    }
-                }
-            }
+            XMLGregorianCalendar endDate = (XMLGregorianCalendar) event.getDate().clone();
+            endDate.add(eventDuration);
             //udalost zacala drive
             if (eventStartDate.compare(days.get(0).getDate()) == DatatypeConstants.LESSER) {
-                XMLGregorianCalendar endDate = (XMLGregorianCalendar) event.getDate().clone();
-                endDate.add(eventDuration);
                 for (Day day : days) {
-                    if (day.getDate().compare(endDate) == DatatypeConstants.LESSER
-                            || day.getDate().compare(endDate) == DatatypeConstants.EQUAL) {
+                    int compare = day.getDate().compare(endDate);
+                    if (compare == DatatypeConstants.LESSER
+                            || compare == DatatypeConstants.EQUAL) {
                         day.addEvent(event);
                     } else {
                         break;
                     }
+                }
+            } //udalost zacina dany mesic
+            else {
+                int i = eventStartDate.getDay() - 1;
+                while (i < days.size()
+                        && (endDate.compare(days.get(i).getDate()) == DatatypeConstants.GREATER
+                        || endDate.compare(days.get(i).getDate()) == DatatypeConstants.EQUAL)) {
+                    days.get(i).addEvent(event);
+                    i++;
                 }
             }
         }

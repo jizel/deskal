@@ -50,7 +50,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Filters"/>
+            <TitledBorder title="Filtry"/>
           </Border>
         </Property>
       </Properties>
@@ -60,12 +60,12 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" min="-2" pref="182" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" min="-2" pref="166" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="removeFilterButton" alignment="0" max="32767" attributes="1"/>
-                      <Component id="newFilterButton" alignment="0" max="32767" attributes="1"/>
                       <Component id="closeFiltersButton" alignment="0" max="32767" attributes="1"/>
+                      <Component id="newFilterButton" alignment="1" min="-2" pref="87" max="-2" attributes="1"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -73,9 +73,8 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" pref="240" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="newFilterButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -83,6 +82,7 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="closeFiltersButton" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jScrollPane1" alignment="0" pref="240" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -112,7 +112,7 @@
         </Container>
         <Component class="javax.swing.JButton" name="newFilterButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="New"/>
+            <Property name="text" type="java.lang.String" value="Nov&#xfd; &#x161;t&#xed;tek"/>
             <Property name="focusCycleRoot" type="boolean" value="true"/>
           </Properties>
           <Events>
@@ -121,7 +121,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="removeFilterButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Remove"/>
+            <Property name="text" type="java.lang.String" value="Smazat"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -130,7 +130,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="closeFiltersButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Close"/>
+            <Property name="text" type="java.lang.String" value="Zp&#x11b;t"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeFiltersButtonActionPerformed"/>
