@@ -84,9 +84,9 @@ public class Event {
         String dateString = date.getDay() +"."+date.getMonth()+"."+date.getYear();
         String time;
         if (minute < 10) {
-            time = Integer.toString(hour) + " : 0" + Integer.toString(minute);
+            time = Integer.toString(hour) + ":0" + Integer.toString(minute);
         } else {
-            time = Integer.toString(hour) + " : " + Integer.toString(minute);
+            time = Integer.toString(hour) + ":" + Integer.toString(minute);
         }
         return  dateString + "    " + time;
     }

@@ -38,7 +38,7 @@ public class MainFrame extends javax.swing.JFrame {
     private FiltersComboBoxModel comboModel;
     private List<Filter> filters = new ArrayList();
     private ManagerInitSwingWorker managerInitSwingWorker;
-    private RefreshTableSwingWorker RefreshTableSwingWorker;
+    private RefreshTableSwingWorker refreshTableSwingWorker;
     private CalendarManager calManager;
     private EventManager evtManager;
     private CalendarDB calendarDB;
@@ -53,7 +53,7 @@ public class MainFrame extends javax.swing.JFrame {
             Context context = calendarDB.getContext();
             evtManager = new EventManagerImpl(context);
             calManager = new CalendarManagerImpl(context, evtManager);
-            Filter none = new Filter("default"); //default filter
+            Filter none = new Filter("bez filtru"); //default filter
             filters.add(none);
             for (String name : calManager.getAllTags()) {
                 filters.add(new Filter(name));
@@ -63,7 +63,7 @@ public class MainFrame extends javax.swing.JFrame {
                 date.setTimeInMillis(System.currentTimeMillis());
             }
             return calManager.getDaysInMonthWithTag(date.get(Calendar.YEAR),
-                    date.get(Calendar.MONTH) + 1, "default");
+                    date.get(Calendar.MONTH) + 1, null);
         }
 
         protected void done() {
@@ -78,7 +78,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
     }// </editor-fold>
-
 
     private class RefreshTableSwingWorker extends SwingWorker<List<Day>, Void> {
 
@@ -220,8 +219,18 @@ public class MainFrame extends javax.swing.JFrame {
 
             prevMonthButton.setForeground(new java.awt.Color(240, 240, 240));
             prevMonthButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/muni/fi/pb138/deskal/gui/larrowicon.gif"))); // NOI18N
+            prevMonthButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    prevMonthButtonActionPerformed(evt);
+                }
+            });
 
             nextMonthButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/muni/fi/pb138/deskal/gui/rarrowicon.gif"))); // NOI18N
+            nextMonthButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    nextMonthButtonActionPerformed(evt);
+                }
+            });
 
             jLabel3.setText("Filtr");
 
@@ -258,22 +267,22 @@ public class MainFrame extends javax.swing.JFrame {
 
             tagLabel.setText(" ");
 
-            jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+            jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11));
             jLabel9.setText("poznámka");
 
-            jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+            jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11));
             jLabel8.setText("štítek");
 
-            jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+            jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11));
             jLabel4.setText("název");
 
-            jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+            jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11));
             jLabel7.setText("délka");
 
-            jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+            jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11));
             jLabel5.setText("místo");
 
-            jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+            jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11));
             jLabel6.setText("začátek");
 
             javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -290,13 +299,13 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addComponent(jLabel5))
                     .addGap(26, 26, 26)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(placeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-                        .addComponent(timeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-                        .addComponent(durationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-                        .addComponent(tagLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-                        .addComponent(noteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
+                        .addComponent(nameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                        .addComponent(timeLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                        .addComponent(durationLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                        .addComponent(tagLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                        .addComponent(noteLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
                     .addContainerGap())
             );
             jPanel2Layout.setVerticalGroup(
@@ -304,14 +313,13 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(nameLabel)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(placeLabel))
+                        .addComponent(nameLabel)
                         .addGroup(jPanel2Layout.createSequentialGroup()
                             .addComponent(jLabel4)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jLabel5)))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel5)
+                                .addComponent(placeLabel))))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel6)
@@ -331,7 +339,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE))
             );
 
-            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
+            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22));
             currentDateLabel.setText("DNES");
 
             javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -397,11 +405,11 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(62, Short.MAX_VALUE))
             );
 
-            monthLabel.setFont(new java.awt.Font("Tahoma", 0, 22)); // NOI18N
+            monthLabel.setFont(new java.awt.Font("Tahoma", 0, 22));
             monthLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
             monthLabel.setText("MESIC");
 
-            yearLabel.setFont(new java.awt.Font("Tahoma", 0, 22)); // NOI18N
+            yearLabel.setFont(new java.awt.Font("Tahoma", 0, 22));
             yearLabel.setText("ROK");
 
             javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -570,7 +578,6 @@ public class MainFrame extends javax.swing.JFrame {
                 JDialog addDialog = new AddDialog(null, true, daysTable, eventsList, filters);
                 addDialog.setLocationRelativeTo(daysTable);
                 addDialog.setVisible(true);
-                eventsList.clearSelection();
             }
         });
     }//GEN-LAST:event_newEventButtonActionPerformed
@@ -583,7 +590,6 @@ public class MainFrame extends javax.swing.JFrame {
                 JDialog editDialog = new EditDialog(null, true, daysTable, eventsList, filters, event);
                 editDialog.setLocationRelativeTo(daysTable);
                 editDialog.setVisible(true);
-                eventsList.clearSelection();
             }
         });
     }//GEN-LAST:event_editEventButtonActionPerformed
@@ -601,7 +607,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void ImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImportMenuItemActionPerformed
         final JFileChooser importChooser = new JFileChooser();
-        importChooser.addChoosableFileFilter(new FileNameExtensionFilter("XML file in iCal or hCal format", "xml"));
+        importChooser.addChoosableFileFilter(new FileNameExtensionFilter("Soubor ve formátu iCal nebo hCal", ".ics, .xhtml"));
         importChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
 
@@ -613,7 +619,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void ExportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportMenuItemActionPerformed
         final JFileChooser exportChooser = new JFileChooser();
-        exportChooser.addChoosableFileFilter(new FileNameExtensionFilter(".xml", "xml"));
+        exportChooser.addChoosableFileFilter(new FileNameExtensionFilter(".xhtml", "hCal"));
+        exportChooser.addChoosableFileFilter(new FileNameExtensionFilter(".ics", "iCal"));
         exportChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
 
@@ -637,7 +644,7 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                int i = JOptionPane.showConfirmDialog(rootPane, "Remove event " + eventsList.getSelectedValue() + " ?", "Remove", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                int i = JOptionPane.showConfirmDialog(rootPane, "Odstranit událost  " + eventsList.getSelectedValue() + " ?", "Odstranit", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (i == JOptionPane.YES_OPTION) {
                     listModel.remove(eventsList.getSelectedIndex());
                     eventsList.clearSelection();
@@ -654,8 +661,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ExitMenuItemActionPerformed
 
     private void filtersComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersComboBoxActionPerformed
-         RefreshTableSwingWorker refreshTableSwingWorker = new RefreshTableSwingWorker();
-         refreshTableSwingWorker.execute();
+        refreshTableSwingWorker = new RefreshTableSwingWorker();
+        refreshTableSwingWorker.execute();
     }//GEN-LAST:event_filtersComboBoxActionPerformed
 
     private void daysTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_daysTableMouseReleased
@@ -667,7 +674,6 @@ public class MainFrame extends javax.swing.JFrame {
                     String thisMonth = getNameOfMonth(date.get(Calendar.MONTH));
                     monthLabel.setText(thisMonth);
                 } else {
-                    String thisDay = Integer.toString(date.get(Calendar.DAY_OF_MONTH));
                     String thisMonth = getNameOfMonth2(date.get(Calendar.MONTH));
                     monthLabel.setText(day + ". " + thisMonth);
                 }
@@ -686,7 +692,6 @@ public class MainFrame extends javax.swing.JFrame {
                     String thisMonth = getNameOfMonth(date.get(Calendar.MONTH));
                     monthLabel.setText(thisMonth);
                 } else {
-                    String thisDay = Integer.toString(date.get(Calendar.DAY_OF_MONTH));
                     String thisMonth = getNameOfMonth2(date.get(Calendar.MONTH));
                     monthLabel.setText(day + ". " + thisMonth);
                 }
@@ -695,6 +700,38 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_daysTableKeyReleased
+
+    private void prevMonthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevMonthButtonActionPerformed
+        int month = date.get(Calendar.MONTH);
+        int year = date.get(Calendar.YEAR);
+        month--;
+        if (month == -1) {
+            month = 11;
+            year--;
+        }
+        date.set(Calendar.MONTH, month);
+        date.set(Calendar.YEAR, year);
+        monthLabel.setText(getNameOfMonth(month));
+        yearLabel.setText(Integer.toString(year));
+        refreshTableSwingWorker = new RefreshTableSwingWorker();
+        refreshTableSwingWorker.execute();
+    }//GEN-LAST:event_prevMonthButtonActionPerformed
+
+    private void nextMonthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextMonthButtonActionPerformed
+        int month = date.get(Calendar.MONTH);
+        int year = date.get(Calendar.YEAR);
+        month++;
+        if (month == 12) {
+            month = 0;
+            year++;
+        }
+        date.set(Calendar.MONTH, month);
+        date.set(Calendar.YEAR, year);
+        monthLabel.setText(getNameOfMonth(month));
+        yearLabel.setText(Integer.toString(year));
+        refreshTableSwingWorker = new RefreshTableSwingWorker();
+        refreshTableSwingWorker.execute();       
+    }//GEN-LAST:event_nextMonthButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ExitMenuItem;
     private javax.swing.JMenuItem ExportMenuItem;
@@ -756,12 +793,9 @@ public class MainFrame extends javax.swing.JFrame {
 
         if (events != null) {
             listModel.setEvents(events);
-
-
+            eventsList.setSelectedIndex(0);
         } else {
             listModel.cleanList();
-
-
         }
     }
 
@@ -800,7 +834,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 
             case 8:
-                return "Září";
+                return "Září ";
 
 
             case 9:
@@ -857,7 +891,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 
             case 8:
-                return "Září";
+                return "Září ";
 
 
             case 9:

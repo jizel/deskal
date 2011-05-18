@@ -31,23 +31,28 @@ public class AddDialog extends javax.swing.JDialog {
     private int row;
     private int col;
     private CreateEventSwingWorker createEventSwingWorker;
+    private JList eventsList;
 
     private class CreateEventSwingWorker extends SwingWorker<Event, Void> {
 
         @Override
         protected Event doInBackground() throws Exception {
-            int hours = (Integer) daysSpinner.getValue();
+            int months = (Integer) monthsSpinner.getValue();
+            int days = (Integer) daysSpinner.getValue();
+            int hours = (Integer) hoursSpinner.getValue();
+            int minutes = (Integer) minutesSpinner.getValue();
+
             Event event = new Event();
             event.setDate(tableModel.getDateAt(row, col));
             event.setName(nameText.getText());
-            event.setDuration(df.newDuration("PT" + hours + "H"));
+            event.setDuration(df.newDuration("P" + months + "M" + days + "DT" + hours + "H" + minutes + "M"));
             event.setDate(tableModel.getDateAt(row, col));
             event.setNote(noteText.getText());
             event.setPlace(placeText.getText());
             int indexCombo = tagComboBox.getSelectedIndex();
             if (indexCombo >= 0) {
                 String tag = (String) comboModel.getElementAt(tagComboBox.getSelectedIndex());
-                if (!tag.equals("default")) {
+                if (!tag.equals("bez filtru")) {
                     event.setTag(tag);
                 }
             }
@@ -63,18 +68,21 @@ public class AddDialog extends javax.swing.JDialog {
             } catch (ExecutionException ex) {
             }
             listModel.update();
-            dispose();            
+            eventsList.setSelectedIndex(listModel.getSize() - 1);
+            dispose();
         }
     }
 
     /** Creates new form DesKalAddDialog */
-    public AddDialog(java.awt.Frame parent, boolean modal, JTable daysTable, JList eventsList, List<Filter> filters) {
+    public AddDialog(java.awt.Frame parent, boolean modal, JTable daysTable,
+            JList eventsList, List<Filter> filters) {
         super(parent, modal);
         initComponents();
         tableModel = (DaysTableModel) daysTable.getModel();
         row = daysTable.getSelectedRow();
         col = daysTable.getSelectedColumn();
         listModel = (EventListModel) eventsList.getModel();
+        this.eventsList = eventsList;
         comboModel = (FiltersComboBoxModel) tagComboBox.getModel();
         comboModel.setFilters(filters);
         tagComboBox.setSelectedIndex(0);
@@ -124,19 +132,19 @@ public class AddDialog extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Nová událost"));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("název *");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel2.setText("místo");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel3.setText("začátek");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel5.setText("poznámka");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel6.setText("štítek");
 
         tagComboBox.setModel(new FiltersComboBoxModel());
