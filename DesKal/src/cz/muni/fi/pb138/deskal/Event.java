@@ -81,14 +81,14 @@ public class Event {
     public String getStartString() {
         int minute = date.getMinute();
         int hour = date.getHour();
-        String dateString = "    " + date.getYear()+" - "+date.getMonth()+" - "+date.getDay();
+        String dateString = date.getDay() +"."+date.getMonth()+"."+date.getYear();
         String time;
         if (minute < 10) {
             time = Integer.toString(hour) + " : 0" + Integer.toString(minute);
         } else {
             time = Integer.toString(hour) + " : " + Integer.toString(minute);
         }
-        return time + dateString;
+        return  dateString + "    " + time;
     }
 
     public String getDurationString() {
@@ -98,6 +98,7 @@ public class Event {
         int hours = duration.getHours();
         int minutes = duration.getMinutes();
 
+        //todo: lokalizace
         String yearsString = years == 0 ? "" : (Integer.toString(years) + (years == 1 ? " Year   " : " Years   "));
         String monthsString = months == 0 ? "" : (Integer.toString(months) + (months == 1 ? " Month   " : " Months   "));
         String daysString = days == 0 ? "" : (Integer.toString(days) + (days == 1 ? " Day   " : " Days   "));

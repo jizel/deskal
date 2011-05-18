@@ -61,19 +61,19 @@ public class DaysTableModel extends AbstractTableModel {
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "Mon";
+                return "Pondělí";
             case 1:
-                return "Tue";
+                return "Úterý";
             case 2:
-                return "Wed";
+                return "Středa";
             case 3:
-                return "Thu";
+                return "Čtvrtek";
             case 4:
-                return "Fri";
+                return "Pátek";
             case 5:
-                return "Sat";
+                return "Sobota";
             case 6:
-                return "Sun";
+                return "Neděle";
             default:
                 throw new IllegalArgumentException("columnIndex");
         }

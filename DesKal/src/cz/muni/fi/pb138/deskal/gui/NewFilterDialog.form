@@ -33,8 +33,8 @@
               <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="122" max="32767" attributes="0"/>
-              <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="124" max="32767" attributes="0"/>
+              <Component id="cancelButton" min="-2" pref="63" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
               <Component id="addButton" min="-2" pref="65" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -61,7 +61,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="New filter:"/>
+        <Property name="text" type="java.lang.String" value="Nov&#xfd; &#x161;t&#xed;tek:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="filterText">
@@ -71,7 +71,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="addButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Add"/>
+        <Property name="text" type="java.lang.String" value="P&#x159;idat"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addButtonActionPerformed"/>
@@ -79,7 +79,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="cancelButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Cancel"/>
+        <Property name="text" type="java.lang.String" value="Zp&#x11b;t"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>

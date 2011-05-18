@@ -38,11 +38,11 @@ public class MainFrame extends javax.swing.JFrame {
     private FiltersComboBoxModel comboModel;
     private List<Filter> filters = new ArrayList();
     private ManagerInitSwingWorker managerInitSwingWorker;
+    private RefreshTableSwingWorker RefreshTableSwingWorker;
     private CalendarManager calManager;
     private EventManager evtManager;
     private CalendarDB calendarDB;
 
-   
     // <editor-fold defaultstate="collapsed" desc="Managers initialization swing worker">
     private class ManagerInitSwingWorker extends SwingWorker<List<Day>, Void> {
 
@@ -71,6 +71,26 @@ public class MainFrame extends javax.swing.JFrame {
             comboModel.setFilters(filters);
             filtersComboBox.setSelectedIndex(0);
             listModel = (EventListModel) eventsList.getModel();
+            try {
+                tableModel.setMonth(get());
+            } catch (InterruptedException ex) {
+            } catch (ExecutionException ex) {
+            }
+        }
+    }// </editor-fold>
+
+
+    private class RefreshTableSwingWorker extends SwingWorker<List<Day>, Void> {
+
+        @Override
+        protected List<Day> doInBackground() throws Exception {
+            String tag = (String) comboModel.getElementAt(filtersComboBox.getSelectedIndex());
+            List<Day> days = calManager.getDaysInMonthWithTag(
+                    date.get(Calendar.YEAR), date.get(Calendar.MONTH) + 1, tag);
+            return days;
+        }
+
+        protected void done() {
             try {
                 tableModel.setMonth(get());
             } catch (InterruptedException ex) {
@@ -108,6 +128,7 @@ public class MainFrame extends javax.swing.JFrame {
         String thisYear = Integer.toString(date.get(Calendar.YEAR));
         yearLabel.setText(thisYear);
         monthLabel.setText(thisMonth);
+        thisMonth = getNameOfMonth2(date.get(Calendar.MONTH)) + " ";
         currentDateLabel.setText(thisDay + thisMonth + thisYear);
     }
 
@@ -202,7 +223,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             nextMonthButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/muni/fi/pb138/deskal/gui/rarrowicon.gif"))); // NOI18N
 
-            jLabel3.setText("Filter");
+            jLabel3.setText("Filtr");
 
             filtersComboBox.setModel(new FiltersComboBoxModel());
             filtersComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -223,7 +244,7 @@ public class MainFrame extends javax.swing.JFrame {
             labels.add(noteLabel);
             eventsList.addListSelectionListener(new EventListSelectionListener(editEventButton,removeEventButton,eventsList,labels));
 
-            jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Event"));
+            jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Událost"));
 
             timeLabel.setText("  ");
 
@@ -238,22 +259,22 @@ public class MainFrame extends javax.swing.JFrame {
             tagLabel.setText(" ");
 
             jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-            jLabel9.setText("note");
+            jLabel9.setText("poznámka");
 
             jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-            jLabel8.setText("tag");
+            jLabel8.setText("štítek");
 
             jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-            jLabel4.setText("name");
+            jLabel4.setText("název");
 
             jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-            jLabel7.setText("duration");
+            jLabel7.setText("délka");
 
             jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-            jLabel5.setText("place");
+            jLabel5.setText("místo");
 
             jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-            jLabel6.setText("start");
+            jLabel6.setText("začátek");
 
             javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
             jPanel2.setLayout(jPanel2Layout);
@@ -262,15 +283,13 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel6)
-                            .addGap(22, 22, 22))
+                        .addComponent(jLabel6)
                         .addComponent(jLabel7)
                         .addComponent(jLabel8)
                         .addComponent(jLabel9)
                         .addComponent(jLabel4)
                         .addComponent(jLabel5))
-                    .addGap(24, 24, 24)
+                    .addGap(26, 26, 26)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
                         .addComponent(placeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
@@ -312,8 +331,8 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE))
             );
 
-            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22));
-            currentDateLabel.setText("TODAY");
+            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
+            currentDateLabel.setText("DNES");
 
             javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
             jPanel5.setLayout(jPanel5Layout);
@@ -330,7 +349,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
 
-            editEventButton.setText("Edit");
+            editEventButton.setText("Upravit");
             editEventButton.setEnabled(false);
             editEventButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -338,7 +357,7 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             });
 
-            newEventButton.setText("New event");
+            newEventButton.setText("Nová událost");
             newEventButton.setEnabled(false);
             newEventButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -346,7 +365,7 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             });
 
-            removeEventButton.setText("Remove");
+            removeEventButton.setText("Odstranit");
             removeEventButton.setEnabled(false);
             removeEventButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -378,12 +397,12 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(62, Short.MAX_VALUE))
             );
 
-            monthLabel.setFont(new java.awt.Font("Tahoma", 0, 22));
+            monthLabel.setFont(new java.awt.Font("Tahoma", 0, 22)); // NOI18N
             monthLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-            monthLabel.setText("MONTH");
+            monthLabel.setText("MESIC");
 
-            yearLabel.setFont(new java.awt.Font("Tahoma", 0, 22));
-            yearLabel.setText("YEAR");
+            yearLabel.setFont(new java.awt.Font("Tahoma", 0, 22)); // NOI18N
+            yearLabel.setText("ROK");
 
             javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
             jPanel3.setLayout(jPanel3Layout);
@@ -391,7 +410,7 @@ public class MainFrame extends javax.swing.JFrame {
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(monthLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(monthLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(yearLabel)
                     .addContainerGap())
@@ -400,10 +419,10 @@ public class MainFrame extends javax.swing.JFrame {
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(yearLabel)
-                        .addComponent(monthLabel))
-                    .addContainerGap())
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(monthLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(yearLabel, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
 
             javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -421,15 +440,15 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel3)
                                 .addComponent(filtersComboBox, 0, 183, Short.MAX_VALUE))
                             .addGap(36, 36, 36)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(prevMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(84, 84, 84)
                                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
                                     .addComponent(nextMonthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE))))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE))))
                     .addContainerGap())
             );
             jPanel1Layout.setVerticalGroup(
@@ -466,7 +485,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createSequentialGroup()
                     .addGap(24, 24, 24)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(26, Short.MAX_VALUE))
+                    .addContainerGap(15, Short.MAX_VALUE))
             );
             jPanel7Layout.setVerticalGroup(
                 jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -475,10 +494,10 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(24, Short.MAX_VALUE))
             );
 
-            FileMenu.setText("File");
+            FileMenu.setText("Soubor");
 
             FiltersMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
-            FiltersMenuItem.setText("Filters");
+            FiltersMenuItem.setText("Filtry");
             FiltersMenuItem.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     FiltersMenuItemActionPerformed(evt);
@@ -505,7 +524,7 @@ public class MainFrame extends javax.swing.JFrame {
             FileMenu.add(ExportMenuItem);
 
             ExitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
-            ExitMenuItem.setText("Exit");
+            ExitMenuItem.setText("Konec");
             ExitMenuItem.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     ExitMenuItemActionPerformed(evt);
@@ -518,7 +537,7 @@ public class MainFrame extends javax.swing.JFrame {
             jMenu2.setText("Info");
 
             jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
-            jMenuItem5.setText("About");
+            jMenuItem5.setText("O programu..");
             jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     jMenuItem5ActionPerformed(evt);
@@ -608,7 +627,7 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                JOptionPane.showMessageDialog(rootPane, "DesKal - version 1.0", "DesKal", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "DesKal - verze 1.0", "DesKal", JOptionPane.PLAIN_MESSAGE);
             }
         });
 
@@ -635,13 +654,24 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ExitMenuItemActionPerformed
 
     private void filtersComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersComboBoxActionPerformed
-        // TODO add your handling code here:
+         RefreshTableSwingWorker refreshTableSwingWorker = new RefreshTableSwingWorker();
+         refreshTableSwingWorker.execute();
     }//GEN-LAST:event_filtersComboBoxActionPerformed
 
     private void daysTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_daysTableMouseReleased
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
+                Integer day = (Integer) daysTable.getValueAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn());
+                if (day == null) {
+                    String thisMonth = getNameOfMonth(date.get(Calendar.MONTH));
+                    monthLabel.setText(thisMonth);
+                } else {
+                    String thisDay = Integer.toString(date.get(Calendar.DAY_OF_MONTH));
+                    String thisMonth = getNameOfMonth2(date.get(Calendar.MONTH));
+                    monthLabel.setText(day + ". " + thisMonth);
+                }
+
                 loadEvents();
             }
         });
@@ -651,6 +681,16 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
+                Integer day = (Integer) daysTable.getValueAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn());
+                if (day == null) {
+                    String thisMonth = getNameOfMonth(date.get(Calendar.MONTH));
+                    monthLabel.setText(thisMonth);
+                } else {
+                    String thisDay = Integer.toString(date.get(Calendar.DAY_OF_MONTH));
+                    String thisMonth = getNameOfMonth2(date.get(Calendar.MONTH));
+                    monthLabel.setText(day + ". " + thisMonth);
+                }
+
                 loadEvents();
             }
         });
@@ -700,47 +740,141 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void loadEvents() {
         eventsList.clearSelection();
+
+
         if (tableModel.isDayAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn())) {
             newEventButton.setEnabled(true);
+
+
         } else {
             newEventButton.setEnabled(false);
+
+
         }
         List<Event> events = tableModel.getEventsAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn());
+
+
         if (events != null) {
             listModel.setEvents(events);
+
+
         } else {
             listModel.cleanList();
+
+
         }
     }
 
     private String getNameOfMonth(int get) {
         switch (get) {
             case 0:
-                return "January";
+                return "Leden";
+
+
             case 1:
-                return "February";
+                return "Únor";
+
+
             case 2:
-                return "March";
+                return "Březen";
+
+
             case 3:
-                return "April";
+                return "Duben";
+
+
             case 4:
-                return "May";
+                return "Květen";
+
+
             case 5:
-                return "June";
+                return "Červen";
+
+
             case 6:
-                return "July";
+                return "Červenec";
+
+
             case 7:
-                return "August";
+                return "Srpen";
+
+
             case 8:
-                return "September";
+                return "Září";
+
+
             case 9:
-                return "October";
+                return "Říjen";
+
+
             case 10:
-                return "November";
+                return "Listopad";
+
+
             case 11:
-                return "December";
+                return "Prosinec";
+
+
             default:
                 return "";
+
+
+        }
+    }
+
+    private String getNameOfMonth2(int get) {
+        switch (get) {
+            case 0:
+                return "Ledna";
+
+
+            case 1:
+                return "Února";
+
+
+            case 2:
+                return "Března";
+
+
+            case 3:
+                return "Dubna";
+
+
+            case 4:
+                return "Května";
+
+
+            case 5:
+                return "Června";
+
+
+            case 6:
+                return "Července";
+
+
+            case 7:
+                return "Srpna";
+
+
+            case 8:
+                return "Září";
+
+
+            case 9:
+                return "Října";
+
+
+            case 10:
+                return "Listopadu";
+
+
+            case 11:
+                return "Prosince";
+
+
+            default:
+                return "";
+
         }
     }
 }

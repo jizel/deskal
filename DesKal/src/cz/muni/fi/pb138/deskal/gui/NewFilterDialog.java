@@ -49,7 +49,7 @@ public class NewFilterDialog extends javax.swing.JDialog {
         setTitle("DesKal");
         setResizable(false);
 
-        jLabel1.setText("New filter:");
+        jLabel1.setText("Nový štítek:");
 
         filterText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -57,14 +57,14 @@ public class NewFilterDialog extends javax.swing.JDialog {
             }
         });
 
-        addButton.setText("Add");
+        addButton.setText("Přidat");
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText("Zpět");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -82,8 +82,8 @@ public class NewFilterDialog extends javax.swing.JDialog {
                     .addComponent(jLabel1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(122, Short.MAX_VALUE)
-                .addComponent(cancelButton)
+                .addContainerGap(124, Short.MAX_VALUE)
+                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())

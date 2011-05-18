@@ -16,4 +16,5 @@ public interface EventManager {
     
     public List<Event> getEventsForMonth(int year, int month);
 
+    public List<Event> getEventsForMonth(int year, int month, String tag);
 }
