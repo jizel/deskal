@@ -255,6 +255,9 @@
                   <Image iconType="3" name="/cz/muni/fi/pb138/deskal/gui/larrowicon.gif"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="prevMonthButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="nextMonthButton">
               <Properties>
@@ -262,6 +265,9 @@
                   <Image iconType="3" name="/cz/muni/fi/pb138/deskal/gui/rarrowicon.gif"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nextMonthButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
@@ -321,9 +327,9 @@
                               <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="placeLabel" pref="370" max="32767" attributes="1"/>
                               <Component id="nameLabel" alignment="0" pref="370" max="32767" attributes="1"/>
-                              <Component id="placeLabel" alignment="0" pref="370" max="32767" attributes="1"/>
                               <Component id="timeLabel" alignment="0" pref="370" max="32767" attributes="1"/>
                               <Component id="durationLabel" alignment="0" pref="370" max="32767" attributes="1"/>
                               <Component id="tagLabel" alignment="0" pref="370" max="32767" attributes="1"/>
@@ -338,15 +344,14 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="placeLabel" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="placeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>

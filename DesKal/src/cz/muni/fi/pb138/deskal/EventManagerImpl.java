@@ -165,7 +165,7 @@ public class EventManagerImpl implements EventManager {
                 + "{ "
                 + "let $doc := doc('" + calendarXml + "') "
                 + "return $doc//event[ "
-                + "(tag/@tagref='"+tag+"') and "
+                + "(tags/tag/@tagref='"+tag+"') and "
                 + "((dateSince/text() >= '" + sSince + "' and dateTo/text() <= '" + sTo + "') " //cely event je mezi daty
                 + " or (dateTo/text() >= '" + sSince + "' and dateTo/text() < '" + sTo + "') "
                 + " or (dateSince/text() >= '" + sSince + "' and dateSince/text() <= '" + sTo + "') "

@@ -88,7 +88,7 @@ public class CalendarManagerImpl implements CalendarManager {
     public List<Day> getDaysInMonthWithTag(int year, int month, String tag) {
         List<Day> days = createDaysForMonth(year, month);
         List<Event> events = null;
-        if(tag == null || tag.equals("default")){
+        if(tag == null || tag.equals("bez filtru")){
         events = eventManager.getEventsForMonth(year, month);
         } else {
         events = eventManager.getEventsForMonth(year, month, tag);
