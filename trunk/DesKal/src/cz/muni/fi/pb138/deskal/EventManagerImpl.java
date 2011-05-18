@@ -1,10 +1,13 @@
 package cz.muni.fi.pb138.deskal;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -14,6 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
+import org.basex.core.cmd.Export;
 import org.basex.core.cmd.XQuery;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -26,7 +30,7 @@ public class EventManagerImpl implements EventManager {
     private String calendarXml;
     private DatatypeFactory df;
     private DocumentBuilderFactory docFactory;
-    DocumentBuilder builder;
+    DocumentBuilder builder;    
 
     public EventManagerImpl(Context context) {
         this.context = context;
@@ -45,7 +49,64 @@ public class EventManagerImpl implements EventManager {
     }
 
     public void addEvent(Event e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        //create dateSince without time
+        XMLGregorianCalendar dateFrom = df.newXMLGregorianCalendar();
+        dateFrom.setYear(e.getDate().getYear());
+        dateFrom.setMonth(e.getDate().getMonth());
+        dateFrom.setDay(e.getDate().getDay());
+        String dateFromStr = dateFrom.toXMLFormat() + "Z";
+
+        //getHour()/minute/second vraci jen int
+        String hourStr = e.getDate().getHour() == 0 ? "00" : Integer.toString(e.getDate().getHour());
+        String minuteStr = e.getDate().getMinute() == 0 ? "00" : Integer.toString(e.getDate().getMinute());
+        String timeFromStr = hourStr + ":" + minuteStr + ":00";
+
+        Duration dur = e.getDuration();
+        XMLGregorianCalendar dateTo = (XMLGregorianCalendar) e.getDate().clone();
+        dateTo.add(dur);
+
+        //create dateTo without time
+        XMLGregorianCalendar dateToHelp = df.newXMLGregorianCalendar();
+        dateToHelp.setYear(dateTo.getYear());
+        dateToHelp.setMonth(dateTo.getMonth());
+        dateToHelp.setDay(dateTo.getDay());
+        String dateToStr = dateToHelp.toXMLFormat() + "Z";
+
+        String hoursToStr = dateTo.getHour() == 0 ? "00" : Integer.toString(dateTo.getHour());
+        String minutesToStr = dateTo.getMinute() == 0 ? "00" : Integer.toString(dateTo.getMinute());
+        String timeToStr = hoursToStr + ":" + minutesToStr + ":00";
+
+        //some attributes can be null
+        String place = e.getPlace() == null ? "" : e.getPlace();
+        String note = e.getNote() == null ? "" : e.getNote();
+        String tag = e.getTag() == null ? "" : "tagref='" + e.getTag() + "'";
+
+        String xquery =                
+                 "insert node <event id=\"{generate-id()}\">"
+                + "<dateSince>" + dateFromStr + "</dateSince>"
+                + "<dateTo>" + dateToStr + "</dateTo>"
+                + "<timeFrom>" + timeFromStr + "</timeFrom>"
+                + "<timeTo>" + timeToStr + "</timeTo>"
+                + "<title>" + e.getName() + "</title>"
+                + "<place>" + place + "</place>"
+                + "<note>" + note + "</note>"
+                + "<tag " + tag + "/>"
+                + "</event> "
+                + "as last into /calendar";
+
+        XQuery xQuery = new XQuery(xquery);
+        try {
+            xQuery.execute(context);
+        } catch (BaseXException ex) {
+            Logger.getLogger(EventManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Err while adding node" + ex.getCause());
+        }
+        try {
+            Export.export(context, context.data);
+        } catch (IOException ex) {
+            Logger.getLogger(EventManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void editEvent(Event e) {
@@ -56,7 +117,11 @@ public class EventManagerImpl implements EventManager {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Event getEventById(int id) {
+    /*
+     * nefunguje se stringem
+     * a neni ani potreba
+     * 
+    public Event getEventById(String id) {
 
         String queryForEvent = "<events> "
                 + "{ "
@@ -68,11 +133,13 @@ public class EventManagerImpl implements EventManager {
                 + "</events>";
 
         Document doc = getDocumentFromQuery(queryForEvent);
-        
+
         List<Event> eventsById = parseDocument(doc);
-        
+
         return eventsById.get(0);
     }
+     * 
+     */
 
     public List<Event> getAllEvents() {
 
@@ -102,24 +169,24 @@ public class EventManagerImpl implements EventManager {
     public List<Event> getEventsForMonth(int year, int month) {
 
         GregorianCalendar sinceHelp = new GregorianCalendar();
-        sinceHelp.set(Calendar.YEAR,year);
-        sinceHelp.set(Calendar.MONTH,month-1);//XMLGregCal jine cislovani
-        sinceHelp.set(Calendar.DAY_OF_MONTH,1);
+        sinceHelp.set(Calendar.YEAR, year);
+        sinceHelp.set(Calendar.MONTH, month - 1);//XMLGregCal jine cislovani
+        sinceHelp.set(Calendar.DAY_OF_MONTH, 1);
 
         int lastDay = sinceHelp.getActualMaximum(Calendar.DAY_OF_MONTH);
-        
+
         XMLGregorianCalendar since = null;
         XMLGregorianCalendar to = null;
 
         since = df.newXMLGregorianCalendar(sinceHelp);
-        since.setTime(0,0,0);
+        since.setTime(0, 0, 0);
         to = df.newXMLGregorianCalendar();
         to.setYear(year);
         to.setMonth(month);
         to.setDay(lastDay);
 
         String sSince = since.toXMLFormat();
-        String sTo = to.toXMLFormat();        
+        String sTo = to.toXMLFormat();
 
         String queryForEvents2 = "<events> "
                 + "{ "
@@ -138,13 +205,13 @@ public class EventManagerImpl implements EventManager {
 
         return parseDocument(doc);
     }
-    
+
     public List<Event> getEventsForMonth(int year, int month, String tag) {
 
         GregorianCalendar sinceHelp = new GregorianCalendar();
-        sinceHelp.set(Calendar.YEAR,year);
-        sinceHelp.set(Calendar.MONTH,month-1);//XMLGregCal jine cislovani
-        sinceHelp.set(Calendar.DAY_OF_MONTH,1);
+        sinceHelp.set(Calendar.YEAR, year);
+        sinceHelp.set(Calendar.MONTH, month - 1);//XMLGregCal jine cislovani
+        sinceHelp.set(Calendar.DAY_OF_MONTH, 1);
 
         int lastDay = sinceHelp.getActualMaximum(Calendar.DAY_OF_MONTH);
 
@@ -152,7 +219,7 @@ public class EventManagerImpl implements EventManager {
         XMLGregorianCalendar to = null;
 
         since = df.newXMLGregorianCalendar(sinceHelp);
-        since.setTime(0,0,0);
+        since.setTime(0, 0, 0);
         to = df.newXMLGregorianCalendar();
         to.setYear(year);
         to.setMonth(month);
@@ -161,11 +228,11 @@ public class EventManagerImpl implements EventManager {
         String sSince = since.toXMLFormat();
         String sTo = to.toXMLFormat();
 
-        String queryForEvents3 = "<events> "               
+        String queryForEvents3 = "<events> "
                 + "{ "
                 + "let $doc := doc('" + calendarXml + "') "
                 + "return $doc//event[ "
-                + "(tags/tag/@tagref='"+tag+"') and "
+                + "(tag/@tagref='" + tag + "') and "
                 + "((dateSince/text() >= '" + sSince + "' and dateTo/text() <= '" + sTo + "') " //cely event je mezi daty
                 + " or (dateTo/text() >= '" + sSince + "' and dateTo/text() < '" + sTo + "') "
                 + " or (dateSince/text() >= '" + sSince + "' and dateSince/text() <= '" + sTo + "') "
@@ -209,7 +276,8 @@ public class EventManagerImpl implements EventManager {
             Element eventEl = (Element) eventNodes.item(i);
             Event event = new Event();
 
-            Integer id = Integer.parseInt(eventEl.getAttribute("id"));
+           // Integer id = Integer.parseInt(eventEl.getAttribute("id"));
+            String id=eventEl.getAttribute("id");
             event.setId(id);
 
             NodeList n = eventEl.getElementsByTagName("dateSince");
@@ -245,19 +313,19 @@ public class EventManagerImpl implements EventManager {
             event.setName(n.item(0).getTextContent());
 
             n = eventEl.getElementsByTagName("place");
-            if(n.getLength()>0){
-            event.setPlace(n.item(0).getTextContent());
+            if (n.getLength() > 0) {
+                event.setPlace(n.item(0).getTextContent());
             }
 
             n = eventEl.getElementsByTagName("note");
-            if(n.getLength()>0){
-            event.setNote(n.item(0).getTextContent());
+            if (n.getLength() > 0) {
+                event.setNote(n.item(0).getTextContent());
             }
 
             n = eventEl.getElementsByTagName("tag");
-            if(n.getLength()>0){
-            Element tagElement = (Element) n.item(0);
-            event.setTag(tagElement.getAttribute("tagref"));
+            if (n.getLength() > 0) {
+                Element tagElement = (Element) n.item(0);
+                event.setTag(tagElement.getAttribute("tagref"));
             }
             events.add(event);
         }
