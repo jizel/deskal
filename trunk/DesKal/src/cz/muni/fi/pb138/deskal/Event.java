@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pb138.deskal;
 
-import javax.xml.datatype.DatatypeConstants;
+import java.text.MessageFormat;
+import java.util.Locale;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -21,6 +18,17 @@ public class Event {
     private Duration duration;
     private String note;
     private String tag;
+    private MessageFormat dateCzFormat;
+
+    public Event() {
+        Locale czech = new Locale("cs", "CZ");
+        String sablonaTextu = "{0,choice,0#|1#{0} rok|2#{0} roky|3#{0} roky|4#{0} roky|4<{0} let}"
+                + "  {1,choice,0#|1#{1} měsíc|2#{1} měsíce|3#{1} měsíce|4#{1} měsíce|4<{1} měsíců}"
+                + "  {2,choice,0#|1#{2} den|2#{2} dny|3#{2} dny|4#{2} dny|4<{2} dní}"
+                + "  {3,choice,0#|1#{3} hodina|2#{3} hodiny|3#{3} hodiny|4#{3} hodiny|4<{3} hodin}"
+                + "  {4,choice,0#|1#{4} minuta|2#{4} minuty|3#{4} minuty|4#{4} minuty|4<{4} minut}";
+        dateCzFormat = new MessageFormat(sablonaTextu, czech);
+    }
 
     public XMLGregorianCalendar getDate() {
         return date;
@@ -81,14 +89,14 @@ public class Event {
     public String getStartString() {
         int minute = date.getMinute();
         int hour = date.getHour();
-        String dateString = date.getDay() +"."+date.getMonth()+"."+date.getYear();
+        String dateString = date.getDay() + "." + date.getMonth() + "." + date.getYear();
         String time;
         if (minute < 10) {
             time = Integer.toString(hour) + ":0" + Integer.toString(minute);
         } else {
             time = Integer.toString(hour) + ":" + Integer.toString(minute);
         }
-        return  dateString + "    " + time;
+        return dateString + "   " + time;
     }
 
     public String getDurationString() {
@@ -97,26 +105,17 @@ public class Event {
         int days = duration.getDays();
         int hours = duration.getHours();
         int minutes = duration.getMinutes();
-
-        //todo: lokalizace
-        String yearsString = years == 0 ? "" : (Integer.toString(years) + (years == 1 ? " Year   " : " Years   "));
-        String monthsString = months == 0 ? "" : (Integer.toString(months) + (months == 1 ? " Month   " : " Months   "));
-        String daysString = days == 0 ? "" : (Integer.toString(days) + (days == 1 ? " Day   " : " Days   "));
-        String hoursString = hours == 0 ? "" : (Integer.toString(hours) + (hours == 1 ? " Hour   " : " Hours   "));
-        String minutesString = minutes == 0 ? "" : (Integer.toString(minutes) + (minutes == 1 ? " Minute   " : " Minutes   "));
-
-        String duration =  yearsString + monthsString + daysString + hoursString + minutesString;
-        return duration;
+        return dateCzFormat.format(new Object[]{ years , months, days, hours , minutes});
     }
 
-    public int[] getTime(){
+    public int[] getTime() {
         int[] time = new int[2];
         time[0] = date.getHour();
         time[1] = date.getMinute();
         return time;
     }
 
-    public void setTime(int hour,int minute){
+    public void setTime(int hour, int minute) {
         this.date.setTime(hour, minute, 0);
     }
 
@@ -166,6 +165,4 @@ public class Event {
         hash = 29 * hash + (this.tag != null ? this.tag.hashCode() : 0);
         return hash;
     }
-
-    
 }
