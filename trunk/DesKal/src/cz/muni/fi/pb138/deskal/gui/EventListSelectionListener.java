@@ -76,7 +76,7 @@ public class EventListSelectionListener implements ListSelectionListener {
                         labels.get(0).setText(event.getName());
                         labels.get(1).setText(event.getPlace());
                         labels.get(2).setText(event.getStartString());
-                        labels.get(3).setText(getDurationString(event));
+                        labels.get(3).setText(getDurationString(event).trim());
                         labels.get(4).setText(event.getTag());
                         labels.get(5).setText(event.getNote());
                     }
