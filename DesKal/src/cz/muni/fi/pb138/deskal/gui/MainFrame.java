@@ -79,6 +79,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }// </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Table and list refresh swing worker">
     private class RefreshTableSwingWorker extends SwingWorker<List<Day>, Void> {
 
         @Override
@@ -91,12 +92,20 @@ public class MainFrame extends javax.swing.JFrame {
 
         protected void done() {
             try {
+                int row = daysTable.getSelectedRow();
+                int column = daysTable.getSelectedColumn();
+                int eventIndex = eventsList.getSelectedIndex();
                 tableModel.setMonth(get());
+                daysTable.getSelectionModel().setSelectionInterval(row, row);
+                daysTable.getColumnModel().getSelectionModel().setSelectionInterval(column, column);
+                loadEvents();
+                eventsList.setSelectedIndex(eventIndex);
             } catch (InterruptedException ex) {
             } catch (ExecutionException ex) {
             }
         }
     }// </editor-fold>
+
 
     /** Creates new form MainFrame */
     public MainFrame() {
@@ -128,7 +137,7 @@ public class MainFrame extends javax.swing.JFrame {
         yearLabel.setText(thisYear);
         monthLabel.setText(thisMonth);
         thisMonth = getNameOfMonth2(date.get(Calendar.MONTH)) + " ";
-        currentDateLabel.setText(thisDay + thisMonth + thisYear);
+        currentDateLabel.setText(thisDay + thisMonth + thisYear);        
     }
 
     /** This method is called from within the constructor to
@@ -575,9 +584,12 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                JDialog addDialog = new AddDialog(null, true, daysTable, eventsList, filters);
+                JDialog addDialog = new AddDialog(null, true, daysTable, eventsList,
+                        filters, evtManager, calManager);
                 addDialog.setLocationRelativeTo(daysTable);
                 addDialog.setVisible(true);
+                refreshTableSwingWorker = new RefreshTableSwingWorker();
+                refreshTableSwingWorker.execute();
             }
         });
     }//GEN-LAST:event_newEventButtonActionPerformed
@@ -590,6 +602,8 @@ public class MainFrame extends javax.swing.JFrame {
                 JDialog editDialog = new EditDialog(null, true, daysTable, eventsList, filters, event);
                 editDialog.setLocationRelativeTo(daysTable);
                 editDialog.setVisible(true);
+                refreshTableSwingWorker = new RefreshTableSwingWorker();
+                refreshTableSwingWorker.execute();
             }
         });
     }//GEN-LAST:event_editEventButtonActionPerformed
@@ -730,7 +744,7 @@ public class MainFrame extends javax.swing.JFrame {
         monthLabel.setText(getNameOfMonth(month));
         yearLabel.setText(Integer.toString(year));
         refreshTableSwingWorker = new RefreshTableSwingWorker();
-        refreshTableSwingWorker.execute();       
+        refreshTableSwingWorker.execute();
     }//GEN-LAST:event_nextMonthButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ExitMenuItem;
