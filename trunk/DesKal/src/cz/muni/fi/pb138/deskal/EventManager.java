@@ -12,7 +12,7 @@ public interface EventManager {
 
     public List<Event> getAllEvents();
 
-    public Event getEventById(int id);
+//    public Event getEventById(int id);
     
     public List<Event> getEventsForMonth(int year, int month);
 
