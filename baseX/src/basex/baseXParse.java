@@ -26,14 +26,15 @@ public class baseXParse {
             System.out.println(event.toStringAll());
 */
 
-        XMLGregorianCalendar since;
+        /*XMLGregorianCalendar since;
         XMLGregorianCalendar to;
         DatatypeFactory df = DatatypeFactory.newInstance();
         since = df.newXMLGregorianCalendarDate(2011, 05, 8, 0);
         to = df.newXMLGregorianCalendarDate(2011, 05, 9, 0);
 
         DB.GetEventsByInterval(since, to);
-
+*/
+        DB.insert();
 
         //labels----------------------------------------------------------------
         /*String queryForLabels = "<labels> "

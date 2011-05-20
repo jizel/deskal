@@ -21,10 +21,7 @@
         <title>a</title>
         <place>Brno</place>
         <note>Nix</note>
-        <tags>
-            <tag tagref="blue"/>
-            <tag tagref="white"/>
-        </tags>
+        <tag tagref="blue"/>
     </event>
    <event id="2">
         <dateSince>2011-05-09Z</dateSince>
@@ -34,9 +31,7 @@
         <title>b</title>
         <place>tu</place>
         <note>nout</note>
-         <tags>
-            <tag tagref="white"/>
-        </tags>
+        <tag tagref="white"/>
     </event>
     <event id="3">
         <dateSince>2011-05-07Z</dateSince>

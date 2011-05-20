@@ -34,6 +34,24 @@ public class baseXDB{
         context = con;
     }
 
+    public void insert() throws BaseXException, IOException{
+
+        String xquery = "insert node <label name='purple'></label> into /calendar/labels";
+        String res = new XQuery(xquery).execute(context);
+        System.out.println(res);
+
+        String queryForLabels = "<labels> "
+                + "{ "
+                + "let $doc := doc('calendar.xml') "
+                + "return $doc"
+                + "} "
+                + "</labels>";
+
+        System.out.println(new XQuery(queryForLabels).execute(context));
+        Export.export(context, context.data);
+        
+    }
+
     public ArrayList<String> ReturnLabels() throws BaseXException, ParserConfigurationException, SAXException, IOException{
         ArrayList<String> labels = new ArrayList<String>();
 
