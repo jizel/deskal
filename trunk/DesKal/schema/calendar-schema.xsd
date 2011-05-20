@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <xsd:element name="calendar">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="labels" type="userTypeTag"/>
+                <xsd:element name="event" minOccurs="0" maxOccurs="unbounded" type="userTypeEvent" />
+            </xsd:sequence>
+        </xsd:complexType>
+        <xsd:unique name="eventID">
+            <xsd:selector xpath="event"/>
+            <xsd:field xpath="@id"/>
+        </xsd:unique>
+        <xsd:unique name="tag">
+            <xsd:selector xpath="labels/label"/>
+            <xsd:field xpath="text"/>
+        </xsd:unique>
+        <xsd:key name="tagKey">
+            <xsd:selector xpath="labels/label" />
+            <xsd:field xpath="@name" />
+        </xsd:key>
+        <xsd:keyref name="tagKeyRef" refer="tagKey">
+            <xsd:selector xpath="event/tag"/>
+            <xsd:field xpath="@tagref"/>
+        </xsd:keyref>
+    </xsd:element>
+
+    <xsd:element name="tag" type="xsd:string"/>
+
+    <xsd:complexType name="userTypeEvent">
+        <xsd:sequence>
+            <xsd:element name="dateSince" type="xsd:date"/>
+            <xsd:element name="dateTo" type="xsd:date"/>
+            <xsd:element name="timeFrom" type="xsd:time"/>
+            <xsd:element name="timeTo" type="xsd:time"/>
+            <xsd:element name="title" type="userTypeTitle" />
+            <xsd:element name="place" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="note" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="tag" minOccurs="0" maxOccurs="1" type="userTypeTags"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:integer" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="userTypeTag">
+        <xsd:sequence>
+            <xsd:element name="label" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                     <xsd:attribute name="name" type="xsd:NCName"  use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="userTypeTitle">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+     <xsd:complexType name="userTypeTags">
+            <xsd:attribute name="tagref" type="xsd:NCName" use="required"/>
+    </xsd:complexType>
+
+
+
+</xsd:schema>
