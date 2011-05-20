@@ -58,8 +58,10 @@ public class EventManagerImpl implements EventManager {
         String dateFromStr = dateFrom.toXMLFormat() + "Z";
 
         //getHour()/minute/second vraci jen int
-        String hourStr = e.getDate().getHour() == 0 ? "00" : Integer.toString(e.getDate().getHour());
-        String minuteStr = e.getDate().getMinute() == 0 ? "00" : Integer.toString(e.getDate().getMinute());
+        String hourStr = e.getDate().getHour() < 10 ? "0" + Integer.toString(e.getDate().getHour())
+                : Integer.toString(e.getDate().getHour());
+        String minuteStr = e.getDate().getMinute() < 10 ? "0" + Integer.toString(e.getDate().getMinute())
+                : Integer.toString(e.getDate().getMinute());
         String timeFromStr = hourStr + ":" + minuteStr + ":00";
 
         Duration dur = e.getDuration();
@@ -73,15 +75,22 @@ public class EventManagerImpl implements EventManager {
         dateToHelp.setDay(dateTo.getDay());
         String dateToStr = dateToHelp.toXMLFormat() + "Z";
 
-        String hoursToStr = dateTo.getHour() == 0 ? "00" : Integer.toString(dateTo.getHour());
-        String minutesToStr = dateTo.getMinute() == 0 ? "00" : Integer.toString(dateTo.getMinute());
+        String hoursToStr = dateTo.getHour() < 10 ? "0" + Integer.toString(dateTo.getHour())
+                : Integer.toString(dateTo.getHour());
+        String minutesToStr = dateTo.getMinute() < 10 ? "0" + Integer.toString(dateTo.getMinute())
+                : Integer.toString(dateTo.getMinute());
         String timeToStr = hoursToStr + ":" + minutesToStr + ":00";
 
         //some attributes can be null
         String place = e.getPlace() == null ? "" : e.getPlace();
         String note = e.getNote() == null ? "" : e.getNote();
-        String tag = e.getTag() == null ? "" : "tagref='" + e.getTag() + "'";
 
+        String tagNode = null;
+        if(e.getTag() != null){
+        String tag = e.getTag() == null ? "" : "tagref='" + e.getTag() + "'";
+        tagNode = "<tag " + tag + "/>";
+        }
+        
         String xquery =                
                  "insert node <event id=\"{generate-id()}\">"
                 + "<dateSince>" + dateFromStr + "</dateSince>"
@@ -91,7 +100,7 @@ public class EventManagerImpl implements EventManager {
                 + "<title>" + e.getName() + "</title>"
                 + "<place>" + place + "</place>"
                 + "<note>" + note + "</note>"
-                + "<tag " + tag + "/>"
+                + (tagNode == null ? "" : tagNode)
                 + "</event> "
                 + "as last into /calendar";
 
