@@ -154,7 +154,7 @@ public class FiltersDialog extends javax.swing.JDialog {
             public void run() {
                 int index = filtersList.getSelectedIndex();
                 String name = (String) model.getElementAt(index);
-                if(!name.equals("default")){
+                if(!name.equals("bez filtru")){
                 model.remove(index);
                 filtersList.clearSelection();
                 if(activeFilterName.equals(name))

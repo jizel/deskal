@@ -9,6 +9,8 @@ import cz.muni.fi.pb138.deskal.EventManager;
 import cz.muni.fi.pb138.deskal.EventManagerImpl;
 import cz.muni.fi.pb138.deskal.Filter;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -106,7 +108,6 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }// </editor-fold>
 
-
     /** Creates new form MainFrame */
     public MainFrame() {
         try {
@@ -121,6 +122,15 @@ public class MainFrame extends javax.swing.JFrame {
             throw new RuntimeException("GUI: look and feel error", ex);
         }
         initComponents();
+        this.addWindowListener(new WindowAdapter() {
+
+            public void windowClosing(WindowEvent e) {
+                if (calendarDB.getContext() != null) {
+                    calendarDB.closeDB();
+                }
+                dispose();
+            }
+        });
         tableModel = (DaysTableModel) daysTable.getModel();
         daysTable.setRowHeight((daysTable.getHeight() - 7) / daysTable.getRowCount());
         managerInitSwingWorker = new ManagerInitSwingWorker();
@@ -137,7 +147,7 @@ public class MainFrame extends javax.swing.JFrame {
         yearLabel.setText(thisYear);
         monthLabel.setText(thisMonth);
         thisMonth = getNameOfMonth2(date.get(Calendar.MONTH)) + " ";
-        currentDateLabel.setText(thisDay + thisMonth + thisYear);        
+        currentDateLabel.setText(thisDay + thisMonth + thisYear);
     }
 
     /** This method is called from within the constructor to
@@ -197,7 +207,7 @@ public class MainFrame extends javax.swing.JFrame {
             jMenu2 = new javax.swing.JMenu();
             jMenuItem5 = new javax.swing.JMenuItem();
 
-            setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+            setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
             setTitle("DesKal");
             setBackground(new java.awt.Color(153, 153, 153));
             setForeground(new java.awt.Color(153, 153, 153));
@@ -615,6 +625,8 @@ public class MainFrame extends javax.swing.JFrame {
                 JDialog filtersDialog = new FiltersDialog(null, true, filters, filtersComboBox);
                 filtersDialog.setLocationRelativeTo(daysTable);
                 filtersDialog.setVisible(true);
+                refreshTableSwingWorker = new RefreshTableSwingWorker();
+                refreshTableSwingWorker.execute();
             }
         });
     }//GEN-LAST:event_FiltersMenuItemActionPerformed
@@ -671,7 +683,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitMenuItemActionPerformed
         calendarDB.closeDB();
-        System.exit(0);
+        dispose();
     }//GEN-LAST:event_ExitMenuItemActionPerformed
 
     private void filtersComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersComboBoxActionPerformed
