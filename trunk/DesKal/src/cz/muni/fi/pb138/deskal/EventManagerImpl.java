@@ -87,7 +87,7 @@ public class EventManagerImpl implements EventManager {
 
         String tagNode = null;
         if(e.getTag() != null){
-        String tag = e.getTag() == null ? "" : "tagref='" + e.getTag() + "'";
+        String tag = "tagref='" + e.getTag() + "'";
         tagNode = "<tag " + tag + "/>";
         }
         
