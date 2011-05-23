@@ -670,7 +670,7 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                int i = JOptionPane.showConfirmDialog(rootPane, "Odstranit událost  " + eventsList.getSelectedValue() + " ?", "Odstranit", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                int i = JOptionPane.showConfirmDialog(rootPane, "Odstranit událost  " + eventsList.getSelectedValue() + " ?", "Odstranit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (i == JOptionPane.YES_OPTION) {
                     listModel.remove(eventsList.getSelectedIndex());
                     eventsList.clearSelection();
