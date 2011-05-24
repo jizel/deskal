@@ -13,6 +13,7 @@ package cz.muni.fi.pb138.deskal.gui;
 import cz.muni.fi.pb138.deskal.CalendarManager;
 import cz.muni.fi.pb138.deskal.Filter;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -163,6 +164,9 @@ public class NewFilterDialog extends javax.swing.JDialog {
                 addFilterWorker = new AddFilterWorker();
                 addFilterWorker.execute();
                 dispose();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Štítek " + name + " již existuje", "DesKal", JOptionPane.ERROR_MESSAGE);
+                filterText.requestFocus();
             }
         } else {
             filterText.requestFocus();
