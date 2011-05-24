@@ -123,7 +123,21 @@ public class EventManagerImpl implements EventManager {
     }
 
     public void removeEvent(Event e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        String xquery = "delete node /calendar/event[@id='" + e.getId() + "']";
+
+        XQuery xQuery = new XQuery(xquery);
+
+        try {
+            xQuery.execute(context);
+        } catch (BaseXException ex) {
+            throw new RuntimeException("Error while adding label to calendar.xml", ex);
+        }
+        try {
+            Export.export(context, context.data);
+        } catch (IOException ex) {
+            throw new RuntimeException("Error while adding label to calendar.xml", ex);
+        }
     }
 
     /*
