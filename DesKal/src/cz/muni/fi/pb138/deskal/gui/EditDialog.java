@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.deskal.gui;
 
 import cz.muni.fi.pb138.deskal.Event;
+import cz.muni.fi.pb138.deskal.EventManager;
 import cz.muni.fi.pb138.deskal.Filter;
 import java.lang.Void;
 import java.text.SimpleDateFormat;
@@ -33,6 +34,7 @@ public class EditDialog extends javax.swing.JDialog {
     private int col;
     private EditEventSwingWorker editEventSwingWorker;
     private JList eventsList;
+    private EventManager evtManager;
 
     private class EditEventSwingWorker extends SwingWorker<Void, Void> {
 
@@ -58,6 +60,7 @@ public class EditDialog extends javax.swing.JDialog {
             }
             Date time = (Date) timeSpinner.getValue();
             event.setTime(time.getHours(), time.getMinutes());
+            evtManager.editEvent(event);
             return null;
         }
 
@@ -72,9 +75,10 @@ public class EditDialog extends javax.swing.JDialog {
 
     /** Creates new form DesKalAddDialog */
     public EditDialog(java.awt.Frame parent, boolean modal, JTable daysTable, JList eventsList,
-            List<Filter> filters, Event event) {
+            List<Filter> filters, Event event, EventManager evtManager) {
         super(parent, modal);
         initComponents();
+        this.evtManager = evtManager;
         row = daysTable.getSelectedRow();
         col = daysTable.getSelectedColumn();
         this.event = event;
