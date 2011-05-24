@@ -628,7 +628,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             public void run() {
                 Event event = listModel.getEventAt(eventsList.getSelectedIndex());
-                JDialog editDialog = new EditDialog(null, true, daysTable, eventsList, filters, event);
+                JDialog editDialog = new EditDialog(null, true, daysTable, eventsList, filters, event, evtManager);
                 editDialog.setLocationRelativeTo(daysTable);
                 editDialog.setVisible(true);
                 refreshTableSwingWorker = new RefreshTableSwingWorker();
