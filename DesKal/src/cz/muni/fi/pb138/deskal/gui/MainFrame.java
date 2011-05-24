@@ -41,6 +41,7 @@ public class MainFrame extends javax.swing.JFrame {
     private List<Filter> filters = new ArrayList();
     private ManagerInitSwingWorker managerInitSwingWorker;
     private RefreshTableSwingWorker refreshTableSwingWorker;
+    private RemoveEventWorker removeEventWorker;
     private CalendarManager calManager;
     private EventManager evtManager;
     private CalendarDB calendarDB;
@@ -105,6 +106,24 @@ public class MainFrame extends javax.swing.JFrame {
             } catch (InterruptedException ex) {
             } catch (ExecutionException ex) {
             }
+        }
+    }// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Remove event swing worker">
+    private class RemoveEventWorker extends SwingWorker<Void, Void> {
+
+        private Event event;
+
+        public RemoveEventWorker(Event event) {
+            this.event = event;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            evtManager.removeEvent(event);
+            refreshTableSwingWorker = new RefreshTableSwingWorker();
+            refreshTableSwingWorker.execute();
+            return null;
         }
     }// </editor-fold>
 
@@ -672,9 +691,10 @@ public class MainFrame extends javax.swing.JFrame {
             public void run() {
                 int i = JOptionPane.showConfirmDialog(rootPane, "Odstranit událost  " + eventsList.getSelectedValue() + " ?", "Odstranit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (i == JOptionPane.YES_OPTION) {
-                    listModel.remove(eventsList.getSelectedIndex());
-                    eventsList.clearSelection();
-                    tableModel.fireTableCellUpdated(daysTable.getSelectedRow(), daysTable.getSelectedColumn());
+                    int index = eventsList.getSelectedIndex();
+                    removeEventWorker = new RemoveEventWorker(listModel.getEventAt(index));
+                    removeEventWorker.execute();
+                    listModel.remove(index);
                 }
             }
         });
