@@ -50,144 +50,27 @@ public class EventManagerImpl implements EventManager {
 
     public void addEvent(Event e) {
 
-        //create dateSince without time
-        XMLGregorianCalendar dateFrom = df.newXMLGregorianCalendar();
-        dateFrom.setYear(e.getDate().getYear());
-        dateFrom.setMonth(e.getDate().getMonth());
-        dateFrom.setDay(e.getDate().getDay());
-        String dateFromStr = dateFrom.toXMLFormat() + "Z";
-
-        //getHour()/minute/second vraci jen int
-        String hourStr = e.getDate().getHour() < 10 ? "0" + Integer.toString(e.getDate().getHour())
-                : Integer.toString(e.getDate().getHour());
-        String minuteStr = e.getDate().getMinute() < 10 ? "0" + Integer.toString(e.getDate().getMinute())
-                : Integer.toString(e.getDate().getMinute());
-        String timeFromStr = hourStr + ":" + minuteStr + ":00";
-
-        Duration dur = e.getDuration();
-        XMLGregorianCalendar dateTo = (XMLGregorianCalendar) e.getDate().clone();
-        dateTo.add(dur);
-
-        //create dateTo without time
-        XMLGregorianCalendar dateToHelp = df.newXMLGregorianCalendar();
-        dateToHelp.setYear(dateTo.getYear());
-        dateToHelp.setMonth(dateTo.getMonth());
-        dateToHelp.setDay(dateTo.getDay());
-        String dateToStr = dateToHelp.toXMLFormat() + "Z";
-
-        String hoursToStr = dateTo.getHour() < 10 ? "0" + Integer.toString(dateTo.getHour())
-                : Integer.toString(dateTo.getHour());
-        String minutesToStr = dateTo.getMinute() < 10 ? "0" + Integer.toString(dateTo.getMinute())
-                : Integer.toString(dateTo.getMinute());
-        String timeToStr = hoursToStr + ":" + minutesToStr + ":00";
-
-        //some attributes can be null
-        String place = e.getPlace() == null ? "" : e.getPlace();
-        String note = e.getNote() == null ? "" : e.getNote();
-
-        String tagNode = null;
-        if (e.getTag() != null) {
-            String tag = "tagref='" + e.getTag() + "'";
-            tagNode = "<tag " + tag + "/>";
-        }
+        String newNode = eventToXml(e);
 
         String xquery =
-                "insert node <event id=\"{generate-id()}\">"
-                + "<dateSince>" + dateFromStr + "</dateSince>"
-                + "<dateTo>" + dateToStr + "</dateTo>"
-                + "<timeFrom>" + timeFromStr + "</timeFrom>"
-                + "<timeTo>" + timeToStr + "</timeTo>"
-                + "<title>" + e.getName() + "</title>"
-                + "<place>" + place + "</place>"
-                + "<note>" + note + "</note>"
-                + (tagNode == null ? "" : tagNode)
-                + "</event> "
+                "insert node " + newNode
                 + "as last into /calendar";
 
         XQuery xQuery = new XQuery(xquery);
-        try {
-            xQuery.execute(context);
-        } catch (BaseXException ex) {
-            Logger.getLogger(EventManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Err while adding node" + ex.getCause());
-        }
-        try {
-            Export.export(context, context.data);
-        } catch (IOException ex) {
-            Logger.getLogger(EventManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        executeUpdate(xQuery);
     }
 
     public void editEvent(Event e) {
 
-        //create dateSince without time
-        XMLGregorianCalendar dateFrom = df.newXMLGregorianCalendar();
-        dateFrom.setYear(e.getDate().getYear());
-        dateFrom.setMonth(e.getDate().getMonth());
-        dateFrom.setDay(e.getDate().getDay());
-        String dateFromStr = dateFrom.toXMLFormat() + "Z";
-
-        //getHour()/minute/second vraci jen int
-        String hourStr = e.getDate().getHour() < 10 ? "0" + Integer.toString(e.getDate().getHour())
-                : Integer.toString(e.getDate().getHour());
-        String minuteStr = e.getDate().getMinute() < 10 ? "0" + Integer.toString(e.getDate().getMinute())
-                : Integer.toString(e.getDate().getMinute());
-        String timeFromStr = hourStr + ":" + minuteStr + ":00";
-
-        Duration dur = e.getDuration();
-        XMLGregorianCalendar dateTo = (XMLGregorianCalendar) e.getDate().clone();
-        dateTo.add(dur);
-
-        //create dateTo without time
-        XMLGregorianCalendar dateToHelp = df.newXMLGregorianCalendar();
-        dateToHelp.setYear(dateTo.getYear());
-        dateToHelp.setMonth(dateTo.getMonth());
-        dateToHelp.setDay(dateTo.getDay());
-        String dateToStr = dateToHelp.toXMLFormat() + "Z";
-
-        String hoursToStr = dateTo.getHour() < 10 ? "0" + Integer.toString(dateTo.getHour())
-                : Integer.toString(dateTo.getHour());
-        String minutesToStr = dateTo.getMinute() < 10 ? "0" + Integer.toString(dateTo.getMinute())
-                : Integer.toString(dateTo.getMinute());
-        String timeToStr = hoursToStr + ":" + minutesToStr + ":00";
-
-        //some attributes can be null
-        String place = e.getPlace() == null ? "" : e.getPlace();
-        String note = e.getNote() == null ? "" : e.getNote();
-
-        String tagNode = null;
-        if (e.getTag() != null) {
-            String tag = "tagref='" + e.getTag() + "'";
-            tagNode = "<tag " + tag + "/>";
-        }
-
-        String newNode =
-                "<event id='" + e.getId() + "'>"
-                + "<dateSince>" + dateFromStr + "</dateSince>"
-                + "<dateTo>" + dateToStr + "</dateTo>"
-                + "<timeFrom>" + timeFromStr + "</timeFrom>"
-                + "<timeTo>" + timeToStr + "</timeTo>"
-                + "<title>" + e.getName() + "</title>"
-                + "<place>" + place + "</place>"
-                + "<note>" + note + "</note>"
-                + (tagNode == null ? "" : tagNode)
-                + "</event> ";
+        String newNode = eventToXml(e);
 
         String xquery = "replace node /calendar/event[@id='" + e.getId() + "']"
                 + "with" + newNode;
 
         XQuery xQuery = new XQuery(xquery);
 
-        try {
-            xQuery.execute(context);
-        } catch (BaseXException ex) {
-            throw new RuntimeException("Error while adding label to calendar.xml", ex);
-        }
-        try {
-            Export.export(context, context.data);
-        } catch (IOException ex) {
-            throw new RuntimeException("Error while adding label to calendar.xml", ex);
-        }
+        executeUpdate(xQuery);
     }
 
     public void removeEvent(Event e) {
@@ -196,41 +79,9 @@ public class EventManagerImpl implements EventManager {
 
         XQuery xQuery = new XQuery(xquery);
 
-        try {
-            xQuery.execute(context);
-        } catch (BaseXException ex) {
-            throw new RuntimeException("Error while adding label to calendar.xml", ex);
-        }
-        try {
-            Export.export(context, context.data);
-        } catch (IOException ex) {
-            throw new RuntimeException("Error while adding label to calendar.xml", ex);
-        }
+        executeUpdate(xQuery);
     }
 
-    /*
-     * nefunguje se stringem
-     * a neni ani potreba
-     * 
-    public Event getEventById(String id) {
-
-    String queryForEvent = "<events> "
-    + "{ "
-    + "let $doc := doc('" + calendarXml + "') "
-    + "return $doc//event[@id="
-    + id
-    + "] "
-    + "} "
-    + "</events>";
-
-    Document doc = getDocumentFromQuery(queryForEvent);
-
-    List<Event> eventsById = parseDocument(doc);
-
-    return eventsById.get(0);
-    }
-     * 
-     */
     public List<Event> getAllEvents() {
 
         String queryForEvents = "<events>"
@@ -338,8 +189,85 @@ public class EventManagerImpl implements EventManager {
         return parseDocument(doc);
     }
 
-//help methods
-    public Document getDocumentFromQuery(String query) {
+    //help methods
+    private void executeUpdate(XQuery xQuery) {
+        try {
+            xQuery.execute(context);
+        } catch (BaseXException ex) {
+            throw new RuntimeException("Error while updating db", ex);
+        }
+        try {
+            Export.export(context, context.data);
+        } catch (IOException ex) {
+            throw new RuntimeException("Error while updating db", ex);
+        }
+    }
+
+    private String eventToXml(Event e) {
+        //create dateSince without time
+        XMLGregorianCalendar dateFrom = df.newXMLGregorianCalendar();
+        dateFrom.setYear(e.getDate().getYear());
+        dateFrom.setMonth(e.getDate().getMonth());
+        dateFrom.setDay(e.getDate().getDay());
+        String dateFromStr = dateFrom.toXMLFormat() + "Z";
+
+        //getHour()/minute/second vraci jen int
+        String hourStr = e.getDate().getHour() < 10 ? "0" + Integer.toString(e.getDate().getHour())
+                : Integer.toString(e.getDate().getHour());
+        String minuteStr = e.getDate().getMinute() < 10 ? "0" + Integer.toString(e.getDate().getMinute())
+                : Integer.toString(e.getDate().getMinute());
+        String timeFromStr = hourStr + ":" + minuteStr + ":00";
+
+        Duration dur = e.getDuration();
+        XMLGregorianCalendar dateTo = (XMLGregorianCalendar) e.getDate().clone();
+        dateTo.add(dur);
+
+        //create dateTo without time
+        XMLGregorianCalendar dateToHelp = df.newXMLGregorianCalendar();
+        dateToHelp.setYear(dateTo.getYear());
+        dateToHelp.setMonth(dateTo.getMonth());
+        dateToHelp.setDay(dateTo.getDay());
+        String dateToStr = dateToHelp.toXMLFormat() + "Z";
+
+        String hoursToStr = dateTo.getHour() < 10 ? "0" + Integer.toString(dateTo.getHour())
+                : Integer.toString(dateTo.getHour());
+        String minutesToStr = dateTo.getMinute() < 10 ? "0" + Integer.toString(dateTo.getMinute())
+                : Integer.toString(dateTo.getMinute());
+        String timeToStr = hoursToStr + ":" + minutesToStr + ":00";
+
+        //some attributes can be null
+        String place = e.getPlace() == null ? "" : e.getPlace();
+        String note = e.getNote() == null ? "" : e.getNote();
+
+        String tagNode = null;
+        if (e.getTag() != null) {
+            String tag = "tagref='" + e.getTag() + "'";
+            tagNode = "<tag " + tag + "/>";
+        }
+
+        String eventId = null;
+        if (e.getId() == null) {
+            eventId = "<event id=\"{generate-id()}\">";
+        } else {
+            eventId = "<event id='" + e.getId() + "'>";
+        }
+
+        String newNode =
+                eventId
+                + "<dateSince>" + dateFromStr + "</dateSince>"
+                + "<dateTo>" + dateToStr + "</dateTo>"
+                + "<timeFrom>" + timeFromStr + "</timeFrom>"
+                + "<timeTo>" + timeToStr + "</timeTo>"
+                + "<title>" + e.getName() + "</title>"
+                + "<place>" + place + "</place>"
+                + "<note>" + note + "</note>"
+                + (tagNode == null ? "" : tagNode)
+                + "</event> ";
+
+        return newNode;
+    }
+
+    private Document getDocumentFromQuery(String query) {
         String labelsParseXML = null;
         try {
             labelsParseXML = new XQuery(query).execute(context);
@@ -353,6 +281,7 @@ public class EventManagerImpl implements EventManager {
         try {
             doc = builder.parse(iS);
         } catch (Exception ex) {
+            throw new RuntimeException("Error while parsing document", ex);
         }
         return doc;
     }
