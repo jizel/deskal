@@ -1,46 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <!--
     Document   : calendar-schema1.11.xml
     Created on : 28. duben 2011, 19:43
     Author     : AdiC
     Description:
         Purpose of the document follows.
--->
-
-<calendar xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='calendar-schema.xsd' >
-    <labels>
-        <label name="blue"/>
-        <label name="white"/>
-    </labels>
-    <event id="1">
-        <dateSince>2011-05-10Z</dateSince>
-        <dateTo>2011-05-11Z</dateTo>
-        <timeFrom>12:12:00</timeFrom>
-        <timeTo>13:00:00</timeTo>
-        <title>a</title>
-        <place>Brno</place>
-        <note>Nix</note>
-        <tag tagref="blue"/>
-    </event>
-   <event id="2">
-        <dateSince>2011-05-09Z</dateSince>
-        <dateTo>2011-05-10Z</dateTo>
-        <timeFrom>12:12:00</timeFrom>
-        <timeTo>13:00:00</timeTo>
-        <title>b</title>
-        <place>tu</place>
-        <note>nout</note>
-        <tag tagref="white"/>
-    </event>
-    <event id="3">
-        <dateSince>2011-05-07Z</dateSince>
-        <dateTo>2011-05-22Z</dateTo>
-        <timeFrom>12:12:00</timeFrom>
-        <timeTo>13:00:00</timeTo>
-        <title>C</title>
-        <place></place>
-        <note></note>
-    </event>
-
+--><calendar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="calendar-schema.xsd">
+  <labels>
+    <label name="blue"/>
+    <label name="white"/>
+    <label name="purple"/>
+    <label name="purple"/>
+  </labels>
+  <event id="1">
+    <dateSince>2011-05-10Z</dateSince>
+    <dateTo>2011-05-11Z</dateTo>
+    <timeFrom>12:12:00</timeFrom>
+    <timeTo>13:00:00</timeTo>
+    <title>title a</title>
+    <place>Brno</place>
+    <note>Nix</note>
+    <tag tagref="blue"/>
+  </event>
+  <event id="2">
+    <dateSince>2011-05-09Z</dateSince>
+    <dateTo>2011-05-10Z</dateTo>
+    <timeFrom>12:12:00</timeFrom>
+    <timeTo>13:00:00</timeTo>
+    <title>b</title>
+    <place>tu</place>
+    <note>nout</note>
+    <tag tagref="white"/>
+  </event>
+  <event id="3">
+    <dateSince>2011-05-07Z</dateSince>
+    <dateTo>2011-05-22Z</dateTo>
+    <timeFrom>12:12:00</timeFrom>
+    <timeTo>13:00:00</timeTo>
+    <title>C</title>
+    <place/>
+    <note/>
+  </event>
 </calendar>

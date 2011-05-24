@@ -1,6 +1,7 @@
 package baseX;
 
 import basex.Event;
+import java.io.File;
 import java.text.ParseException;
 import java.util.List;
 import java.io.IOException;
@@ -14,6 +15,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import org.basex.core.cmd.*;
 import org.basex.core.BaseXException;
 import org.basex.core.cmd.XQuery;
@@ -320,4 +328,25 @@ public class baseXDB{
       
         return daysInterval;
     }
+
+
+    private static final String sourceFile = "calendar.xml";
+
+    private static final String styleFile = "iCal.xsl";
+
+    private static final String destFile = "iCal.txt";
+
+    public void exportICAL() throws TransformerConfigurationException, TransformerException {
+        TransformerFactory factory = TransformerFactory.newInstance();
+
+        Templates templates = factory.newTemplates(new StreamSource(new File(styleFile)));
+
+        Transformer transformer = templates.newTransformer();
+
+
+        transformer.transform(
+                new StreamSource(new File(sourceFile)),
+                new StreamResult(new File(destFile)));
+    }
+
 }
