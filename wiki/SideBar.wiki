@@ -8,4 +8,4 @@
   * Export:
    * [hCalendar]
    * [iCalendar]
-   * [ExportiCal XSL iCal]
+   * [ExportiCal XSL iCalendar]
