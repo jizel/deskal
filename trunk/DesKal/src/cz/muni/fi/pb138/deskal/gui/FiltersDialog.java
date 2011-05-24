@@ -1,24 +1,41 @@
 package cz.muni.fi.pb138.deskal.gui;
 
+import cz.muni.fi.pb138.deskal.CalendarManager;
 import cz.muni.fi.pb138.deskal.Filter;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author Drak
  */
 public class FiltersDialog extends javax.swing.JDialog {
+
+    private Filter filter = new Filter();
     private FiltersListModel model;
     private FiltersComboBoxModel comboModel;
     private JComboBox filtersComboBox;
     private String activeFilterName;
+    private CalendarManager calManager;
+    private RemoveFilterWorker removeFilterWorker;
+
+    private class RemoveFilterWorker extends SwingWorker<Void, Void> {
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            calManager.removeFilter(filter);
+            return null;
+        }
+    }
 
     /** Creates new form FiltersDialog */
-    public FiltersDialog(java.awt.Frame parent, boolean modal, List<Filter> filters, JComboBox filtersComboBox) {
+    public FiltersDialog(java.awt.Frame parent, boolean modal, List<Filter> filters,
+            JComboBox filtersComboBox, CalendarManager calManager) {
         super(parent, modal);
         initComponents();
+        this.calManager = calManager;
         model = (FiltersListModel) filtersList.getModel();
         newFilterButton.requestFocus();
         model.setFilters(filters);
@@ -131,9 +148,9 @@ public class FiltersDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-               JDialog newFilterDialog = new NewFilterDialog(null, true, filtersList);
-               newFilterDialog.setLocationRelativeTo(filtersList);
-               newFilterDialog.setVisible(true);
+                JDialog newFilterDialog = new NewFilterDialog(null, true, filtersList, calManager);
+                newFilterDialog.setLocationRelativeTo(filtersList);
+                newFilterDialog.setVisible(true);
             }
         });
 }//GEN-LAST:event_newFilterButtonActionPerformed
@@ -154,15 +171,19 @@ public class FiltersDialog extends javax.swing.JDialog {
             public void run() {
                 int index = filtersList.getSelectedIndex();
                 String name = (String) model.getElementAt(index);
-                if(!name.equals("bez filtru")){
-                model.remove(index);
-                filtersList.clearSelection();
-                if(activeFilterName.equals(name))
-                    filtersComboBox.setSelectedIndex(0);}
+                if (!name.equals("bez filtru")) {
+                    filter.setName(name);
+                    model.remove(index);
+                    removeFilterWorker = new RemoveFilterWorker();
+                    removeFilterWorker.execute();
+                    filtersList.clearSelection();
+                    if (activeFilterName.equals(name)) {
+                        filtersComboBox.setSelectedIndex(0);
+                    }
+                }
             }
         });
     }//GEN-LAST:event_removeFilterButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeFiltersButton;
     private javax.swing.JList filtersList;

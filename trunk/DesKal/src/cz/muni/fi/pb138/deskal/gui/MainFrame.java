@@ -622,7 +622,7 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                JDialog filtersDialog = new FiltersDialog(null, true, filters, filtersComboBox);
+                JDialog filtersDialog = new FiltersDialog(null, true, filters, filtersComboBox, calManager);
                 filtersDialog.setLocationRelativeTo(daysTable);
                 filtersDialog.setVisible(true);
                 refreshTableSwingWorker = new RefreshTableSwingWorker();
