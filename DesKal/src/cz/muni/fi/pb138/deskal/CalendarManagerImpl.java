@@ -1,6 +1,6 @@
 package cz.muni.fi.pb138.deskal;
 
-import cz.muni.fi.pb138.deskal.Event;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +16,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
+import org.basex.core.cmd.Export;
 import org.basex.core.cmd.XQuery;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -88,10 +89,10 @@ public class CalendarManagerImpl implements CalendarManager {
     public List<Day> getDaysInMonthWithTag(int year, int month, String tag) {
         List<Day> days = createDaysForMonth(year, month);
         List<Event> events = null;
-        if(tag == null || tag.equals("bez filtru")){
-        events = eventManager.getEventsForMonth(year, month);
+        if (tag == null || tag.equals("bez filtru")) {
+            events = eventManager.getEventsForMonth(year, month);
         } else {
-        events = eventManager.getEventsForMonth(year, month, tag);
+            events = eventManager.getEventsForMonth(year, month, tag);
         }
 
         for (Event event : events) {
@@ -125,11 +126,40 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     public void addFilter(Filter filter) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        String xquery = "insert node (<label name='" + filter.getName() 
+                + "'/>) into /calendar/labels";
+
+        XQuery xQuery = new XQuery(xquery);
+        try {
+            xQuery.execute(context);
+        } catch (BaseXException ex) {
+            throw new RuntimeException("Error while adding label to calendar.xml", ex);
+        }
+        try {
+            Export.export(context, context.data);
+        } catch (IOException ex) {
+            throw new RuntimeException("Error while adding label to calendar.xml", ex);
+        }
     }
 
     public void removeFilter(Filter filter) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        String xquery = "delete node /calendar/labels/label[@name='" + filter.getName() + "']";
+        String xquery2 = "delete node //tag[@tagref='" + filter.getName() + "']";
+        XQuery xQuery = new XQuery(xquery);
+        XQuery xQuery2 = new XQuery(xquery2);
+        try {
+            xQuery.execute(context);
+            xQuery2.execute(context);
+        } catch (BaseXException ex) {
+            throw new RuntimeException("Error while adding label to calendar.xml", ex);
+        }
+        try {
+            Export.export(context, context.data);
+        } catch (IOException ex) {
+            throw new RuntimeException("Error while adding label to calendar.xml", ex);
+        }
     }
 
     private List<Day> createDaysForMonth(int year, int month) {

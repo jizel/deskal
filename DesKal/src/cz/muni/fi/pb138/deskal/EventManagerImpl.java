@@ -30,7 +30,7 @@ public class EventManagerImpl implements EventManager {
     private String calendarXml;
     private DatatypeFactory df;
     private DocumentBuilderFactory docFactory;
-    DocumentBuilder builder;    
+    private DocumentBuilder builder;
 
     public EventManagerImpl(Context context) {
         this.context = context;

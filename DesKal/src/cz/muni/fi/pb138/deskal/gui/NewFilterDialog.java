@@ -10,8 +10,10 @@
  */
 package cz.muni.fi.pb138.deskal.gui;
 
+import cz.muni.fi.pb138.deskal.CalendarManager;
 import cz.muni.fi.pb138.deskal.Filter;
 import javax.swing.JList;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -19,13 +21,31 @@ import javax.swing.JList;
  */
 public class NewFilterDialog extends javax.swing.JDialog {
 
+    private Filter filter = new Filter();
     private JList list;
     private FiltersListModel model;
+    private CalendarManager calManager;
+    private AddFilterWorker addFilterWorker;
+
+    private class AddFilterWorker extends SwingWorker<Void, Void> {
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            calManager.addFilter(filter);
+            return null;
+        }
+
+        protected void done() {
+            model.addFilter(filter);
+        }
+    }
 
     /** Creates new form NewFilterDialog */
-    public NewFilterDialog(java.awt.Frame parent, boolean modal, JList filtersList) {
+    public NewFilterDialog(java.awt.Frame parent, boolean modal, JList filtersList,
+            CalendarManager calManager) {
         super(parent, modal);
         initComponents();
+        this.calManager = calManager;
         list = filtersList;
         model = (FiltersListModel) list.getModel();
         filterText.requestFocus();
@@ -113,7 +133,7 @@ public class NewFilterDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                addFilterAndDispose();
+                addAndDispose();
             }
         });
 
@@ -124,26 +144,28 @@ public class NewFilterDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                addFilterAndDispose();
+                addAndDispose();
             }
         });
     }//GEN-LAST:event_filterTextActionPerformed
-    private void addFilterAndDispose() {
-
-        String name = filterText.getText();
-        if (!name.trim().equals("")) {
-            Filter filter = new Filter();
-            filter.setName(name);
-            if (!model.containsFilter(filter)) {
-                model.addFilter(filter);
-            }
-            dispose();
-        } else filterText.requestFocus();
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextField filterText;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
+
+    private void addAndDispose() {
+        String name = filterText.getText();
+        if (!name.trim().equals("")) {
+            filter.setName(name);
+            if (!model.containsFilter(filter)) {
+                addFilterWorker = new AddFilterWorker();
+                addFilterWorker.execute();
+                dispose();
+            }
+        } else {
+            filterText.requestFocus();
+        }
+    }
 }
