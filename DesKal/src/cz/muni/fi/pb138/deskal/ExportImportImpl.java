@@ -13,42 +13,45 @@ import javax.xml.transform.stream.StreamSource;
 
 public class ExportImportImpl implements ExportImport {
 
-    private String userDir = System.getProperty("user.home");
-    private String separator = System.getProperty("file.separator");
-    private String calendarXml = userDir + separator + "DesKal" + separator + "calendar.xml";
-    private InputStream iCalStyleFile;
-    private InputStream hCalStyleFile;
+
     private Transformer iCalTransformer;
     private Transformer hCalTransformer;
+    private File calendarXml;
 
     public ExportImportImpl() {
-        TransformerFactory factory = TransformerFactory.newInstance();
+        String userDir = System.getProperty("user.home");
+        String separator = System.getProperty("file.separator");
+        calendarXml = new File(userDir + separator + "DesKal" + separator + "calendar.xml");
 
-        iCalStyleFile = ClassLoader.getSystemResourceAsStream("iCal.xsl");
-        hCalStyleFile = ClassLoader.getSystemResourceAsStream("hCal.xsl");
+        TransformerFactory factory = TransformerFactory.newInstance();
+        
+        InputStream iCalStyleStream = ClassLoader.getSystemResourceAsStream("iCal.xsl");
+        InputStream hCalStyleStream= ClassLoader.getSystemResourceAsStream("hCal.xsl");
 
         Templates iCalExport;
         Templates hCalExport;
 
         try {
-            iCalExport = factory.newTemplates(new StreamSource(iCalStyleFile));
-            hCalExport = factory.newTemplates(new StreamSource(hCalStyleFile));
+            iCalExport = factory.newTemplates(new StreamSource(iCalStyleStream));
+            hCalExport = factory.newTemplates(new StreamSource(hCalStyleStream));
             iCalTransformer = iCalExport.newTransformer();
             hCalTransformer = hCalExport.newTransformer();
         } catch (TransformerConfigurationException ex) {
             throw new RuntimeException("Error while building transformers", ex);
         } finally {
-            if(iCalStyleFile != null)
+            if (iCalStyleStream != null) {
                 try {
-                iCalStyleFile.close();
-            } catch (IOException ex) {
-               throw new RuntimeException("Error while closing input stream", ex);
+                    iCalStyleStream.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException("Error while closing input stream", ex);
+                }
             }
-            if(hCalStyleFile != null)
+            if (hCalStyleStream != null) {
                 try {
-                hCalStyleFile.close();
-            } catch (IOException ex) {
-               throw new RuntimeException("Error while closing input stream", ex);
+                    hCalStyleStream.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException("Error while closing input stream", ex);
+                }
             }
         }
     }
@@ -63,7 +66,7 @@ public class ExportImportImpl implements ExportImport {
 
     public void exportToHCal(File file) {
         try {
-            hCalTransformer.transform(new StreamSource(new File(calendarXml)), new StreamResult(file));
+            hCalTransformer.transform(new StreamSource(calendarXml), new StreamResult(file));
         } catch (TransformerException ex) {
             throw new RuntimeException("Error during transformation to hCal", ex);
         }
@@ -71,9 +74,9 @@ public class ExportImportImpl implements ExportImport {
 
     public void exportToICal(File file) {
         try {
-            iCalTransformer.transform(new StreamSource(new File(calendarXml)), new StreamResult(file));
+            iCalTransformer.transform(new StreamSource(calendarXml), new StreamResult(file));
         } catch (TransformerException ex) {
             throw new RuntimeException("Error during transformation to iCal", ex);
         }
-    }    
+    }
 }

@@ -125,7 +125,6 @@ public class AddDialog extends javax.swing.JDialog {
         monthsSpinner = new javax.swing.JSpinner();
         jLabel11 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DesKal");
         setModal(true);
         setResizable(false);
