@@ -50,6 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
     private ExportImport exportImport;
     private CalendarDB calendarDB;
     private ExportICalEventWorker exportICalEventWorker;
+    private ExportHCalEventWorker exportHCalEventWorker;
 
     // <editor-fold defaultstate="collapsed" desc="Managers initialization swing worker">
     private class ManagerInitSwingWorker extends SwingWorker<List<Day>, Void> {
@@ -146,6 +147,23 @@ public class MainFrame extends javax.swing.JFrame {
         protected Void doInBackground() throws Exception {
             File file = new File(fileName + ".ics");
             exportImport.exportToICal(file);
+            return null;
+        }
+    }// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Export to hCal swing worker">
+    private class ExportHCalEventWorker extends SwingWorker<Void, Void> {
+
+        private String fileName;
+
+        public ExportHCalEventWorker(String fileName) {
+            this.fileName = fileName;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            File file = new File(fileName + ".xhtml");
+            exportImport.exportToHCal(file);
             return null;
         }
     }// </editor-fold>
@@ -402,7 +420,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE))
             );
 
-            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
+            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22));
             currentDateLabel.setText("DNES");
 
             javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -587,6 +605,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             exportMenu.setText("Export ");
 
+            iCalExportMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
             iCalExportMenu.setText("iCal");
             iCalExportMenu.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -595,7 +614,13 @@ public class MainFrame extends javax.swing.JFrame {
             });
             exportMenu.add(iCalExportMenu);
 
+            hCalExportMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
             hCalExportMenu.setText("hCal");
+            hCalExportMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    hCalExportMenuActionPerformed(evt);
+                }
+            });
             exportMenu.add(hCalExportMenu);
 
             FileMenu.add(exportMenu);
@@ -799,7 +824,9 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void iCalExportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iCalExportMenuActionPerformed
         final JFileChooser exportChooser = new JFileChooser();
+        exportChooser.setFileFilter(new FileNameExtensionFilter(".ics", "iCal"));
         exportChooser.addChoosableFileFilter(new FileNameExtensionFilter(".ics", "iCal"));
+        exportChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         exportChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
 
@@ -826,6 +853,25 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_filtersMenuItemActionPerformed
+
+    private void hCalExportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hCalExportMenuActionPerformed
+        final JFileChooser exportChooser = new JFileChooser();
+        exportChooser.setFileFilter(new FileNameExtensionFilter(".xhtml", "hCal"));
+        exportChooser.addChoosableFileFilter(new FileNameExtensionFilter(".xhtml", "hCal"));
+        exportChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        exportChooser.setAcceptAllFileFilterUsed(false);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                int i = exportChooser.showSaveDialog(hCalExportMenu);
+                if (i == JFileChooser.APPROVE_OPTION) {
+                    String fileName = exportChooser.getSelectedFile().getAbsolutePath();
+                    exportHCalEventWorker = new ExportHCalEventWorker(fileName);
+                    exportHCalEventWorker.execute();
+                }
+            }
+        });        // TODO add your handling code here:
+    }//GEN-LAST:event_hCalExportMenuActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ExitMenuItem;
     private javax.swing.JMenu FileMenu;

@@ -38,6 +38,9 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="iCalExportMenu">
                   <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Ctrl+I"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="iCal"/>
                   </Properties>
                   <Events>
@@ -46,8 +49,14 @@
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="hCalExportMenu">
                   <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Ctrl+H"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="hCal"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hCalExportMenuActionPerformed"/>
+                  </Events>
                 </MenuItem>
               </SubComponents>
             </Menu>
