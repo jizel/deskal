@@ -332,9 +332,9 @@ public class baseXDB{
 
     private static final String sourceFile = "calendar.xml";
 
-    private static final String styleFile = "iCal.xsl";
+    private static final String styleFile = "hCal.xsl";
 
-    private static final String destFile = "iCal.txt";
+    private static final String destFile = "iCal.hcs";
 
     public void exportICAL() throws TransformerConfigurationException, TransformerException {
         TransformerFactory factory = TransformerFactory.newInstance();
