@@ -1,6 +1,10 @@
 package cz.muni.fi.pb138.deskal;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -14,20 +18,29 @@ public class ExportImportImpl implements ExportImport {
     private String userDir = System.getProperty("user.home");
     private String separator = System.getProperty("file.separator");
     private String calendarXml = userDir + separator + "DesKal" + separator + "calendar.xml";
-    private static final String styleFile = "stylesheet/iCal.xsl";
+    private InputStream iCalStyleFile;
     private Transformer iCalTransformer;
 
     public ExportImportImpl() {
         TransformerFactory factory = TransformerFactory.newInstance();
 
+        iCalStyleFile = ClassLoader.getSystemResourceAsStream("iCal.xsl");
+
         Templates iCalExport;
         try {
-            iCalExport = factory.newTemplates(new StreamSource(new File(styleFile)));
+            iCalExport = factory.newTemplates(new StreamSource(iCalStyleFile));
             iCalTransformer = iCalExport.newTransformer();
         } catch (TransformerConfigurationException ex) {
             throw new RuntimeException("Error while building iCal transformer", ex);
+        } finally {
+            if(iCalStyleFile != null)
+                try {
+                iCalStyleFile.close();
+            } catch (IOException ex) {
+               throw new RuntimeException("Error while closing input stream", ex);
+            }
         }
-}
+    }
 
     public void importFromHCal(File file) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -47,5 +60,5 @@ public class ExportImportImpl implements ExportImport {
         } catch (TransformerException ex) {
             throw new RuntimeException("Error during transformation to iCal", ex);
         }
-    }
+    }    
 }
