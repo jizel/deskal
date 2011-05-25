@@ -22,6 +22,6 @@ DESCRIPTION:<xsl:value-of select="note" />
 <xsl:if test="tag">
 CATEGORIES:<xsl:value-of select="tag/@tagref" />
 </xsl:if>
-END:VEVENT</xsl:for-each>
-END:VCALENDAR</xsl:template>
+END:VEVENT
+</xsl:for-each>END:VCALENDAR</xsl:template>
 </xsl:stylesheet>
