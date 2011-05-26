@@ -6,7 +6,6 @@
             <name>DesKal</name>
             <source-roots>
                 <root id="src.stylesheet.dir"/>
-                <root id="src.lib.dir"/>
                 <root id="src.schema.dir"/>
                 <root id="src.dir"/>
             </source-roots>
