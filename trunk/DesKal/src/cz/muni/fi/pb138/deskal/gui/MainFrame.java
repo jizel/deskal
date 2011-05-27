@@ -794,6 +794,7 @@ public class MainFrame extends javax.swing.JFrame {
         yearLabel.setText(Integer.toString(year));
         refreshTableSwingWorker = new RefreshTableSwingWorker();
         refreshTableSwingWorker.execute();
+        daysTable.clearSelection();
     }//GEN-LAST:event_prevMonthButtonActionPerformed
 
     private void nextMonthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextMonthButtonActionPerformed
@@ -810,6 +811,7 @@ public class MainFrame extends javax.swing.JFrame {
         yearLabel.setText(Integer.toString(year));
         refreshTableSwingWorker = new RefreshTableSwingWorker();
         refreshTableSwingWorker.execute();
+        daysTable.clearSelection();
     }//GEN-LAST:event_nextMonthButtonActionPerformed
 
     private void iCalExportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iCalExportMenuActionPerformed

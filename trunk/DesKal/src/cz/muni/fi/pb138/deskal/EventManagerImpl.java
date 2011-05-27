@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -126,8 +124,8 @@ public class EventManagerImpl implements EventManager {
         to.setMonth(month);
         to.setDay(lastDay);
 
-        String sSince = since.toXMLFormat();
-        String sTo = to.toXMLFormat();
+        String sSince = since.toXMLFormat() + "Z";
+        String sTo = to.toXMLFormat() + "Z";
 
         String queryForEvents2 = "<events> "
                 + "{ "
@@ -166,8 +164,8 @@ public class EventManagerImpl implements EventManager {
         to.setMonth(month);
         to.setDay(lastDay);
 
-        String sSince = since.toXMLFormat();
-        String sTo = to.toXMLFormat();
+        String sSince = since.toXMLFormat() + "Z";
+        String sTo = to.toXMLFormat() + "Z";
 
         String queryForEvents3 = "<events> "
                 + "{ "
