@@ -14,6 +14,10 @@
         <jar jarfile="dist/DesKalComplete.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="lib/basex.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/backport-util-concurrent.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/commons-lang-2.4.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/commons-logging-1.1.1.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/ical4j-1.0.jar" excludes="META-INF/*" />
             <manifest>
                 <attribute name="Main-Class" value="cz.muni.fi.pb138.deskal.Main"/>
             </manifest>

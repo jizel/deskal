@@ -104,8 +104,7 @@ public class Event {
         this.date.setTime(hour, minute, 0);
     }
 
-    //equals and hashcode on all attributes
-    @Override
+    @Override //equals pouze na atributech Name, Date a Duration - kvuli importu!!
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -114,14 +113,7 @@ public class Event {
             return false;
         }
         final Event other = (Event) obj;
-//        equals by nemelo byt na id kvuli porovnavani eventu pri importu
-//        if (this.id != other.id) {
-//            return false;
-//        }
         if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
-            return false;
-        }
-        if ((this.place == null) ? (other.place != null) : !this.place.equals(other.place)) {
             return false;
         }
         if (this.date != other.date && (this.date == null || !this.date.equals(other.date))) {
@@ -130,25 +122,16 @@ public class Event {
         if (this.duration != other.duration && (this.duration == null || !this.duration.equals(other.duration))) {
             return false;
         }
-        if ((this.note == null) ? (other.note != null) : !this.note.equals(other.note)) {
-            return false;
-        }
-        if ((this.tag == null) ? (other.tag != null) : !this.tag.equals(other.tag)) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-//        hash = 29 * hash + this.id;
-        hash = 29 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 29 * hash + (this.place != null ? this.place.hashCode() : 0);
-        hash = 29 * hash + (this.date != null ? this.date.hashCode() : 0);
-        hash = 29 * hash + (this.duration != null ? this.duration.hashCode() : 0);
-        hash = 29 * hash + (this.note != null ? this.note.hashCode() : 0);
-        hash = 29 * hash + (this.tag != null ? this.tag.hashCode() : 0);
+        int hash = 7;
+        hash = 13 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 13 * hash + (this.date != null ? this.date.hashCode() : 0);
+        hash = 13 * hash + (this.duration != null ? this.duration.hashCode() : 0);
         return hash;
     }
+
 }

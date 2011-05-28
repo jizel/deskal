@@ -26,7 +26,7 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) {
 
         //create DesKal/calendar.xml in user's directory if it doesn't exist
         String userDir = System.getProperty("user.home");
@@ -84,6 +84,9 @@ public class Main {
                     " Soubor je poškozený, smažte jej a spusťte program znovu", "DesKal - chyba",
                     JOptionPane.ERROR_MESSAGE);            
             System.exit(1);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null,"Chyba při validaci souboru - program může být nestabilní",
+                    "DesKal - chyba", JOptionPane.ERROR_MESSAGE);
         }
         
         //starting swing gui in message dispatcher thread
