@@ -51,6 +51,8 @@ public class MainFrame extends javax.swing.JFrame {
     private CalendarDB calendarDB;
     private ExportICalWorker exportICalWorker;
     private ExportHCalWorker exportHCalWorker;
+    private ImportICalWorker importICalWorker;
+    private RefreshFiltersAndTableWorker refreshFiltersAndTableWorker;
 
     // <editor-fold defaultstate="collapsed" desc="Managers initialization swing worker">
     private class ManagerInitSwingWorker extends SwingWorker<List<Day>, Void> {
@@ -62,7 +64,7 @@ public class MainFrame extends javax.swing.JFrame {
             Context context = calendarDB.getContext();
             evtManager = new EventManagerImpl(context);
             calManager = new CalendarManagerImpl(context, evtManager);
-            exportImport = new ExportImportImpl();
+            exportImport = new ExportImportImpl(evtManager,calManager);
             Filter none = new Filter("bez filtru"); //default filter
             filters.add(none);
             for (String name : calManager.getAllTags()) {
@@ -168,6 +170,46 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }// </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Import from iCal swing worker">
+    private class ImportICalWorker extends SwingWorker<Void, Void> {
+
+        private File file;
+
+        public ImportICalWorker(File file) {
+            this.file = file;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            exportImport.importFromICal(file);
+            return null;
+        }
+
+        protected void done(){
+            refreshFiltersAndTableWorker = new RefreshFiltersAndTableWorker();
+            refreshFiltersAndTableWorker.execute();
+        }
+}// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Refresh filters swing worker">
+    private class RefreshFiltersAndTableWorker extends SwingWorker<Void, Void> {
+        @Override
+        protected Void doInBackground() throws Exception {
+            filters.clear();
+            Filter none = new Filter("bez filtru"); //default filter
+            filters.add(none);
+            for (String name : calManager.getAllTags()) {
+                filters.add(new Filter(name));
+            }
+            return null;
+        }
+
+        protected void done(){
+            comboModel.setFilters(filters);
+            refreshTableSwingWorker = new RefreshTableSwingWorker();
+            refreshTableSwingWorker.execute();
+        }
+}// </editor-fold>
     /** Creates new form MainFrame */
     public MainFrame() {
         try {
@@ -261,7 +303,9 @@ public class MainFrame extends javax.swing.JFrame {
             MenuBar = new javax.swing.JMenuBar();
             FileMenu = new javax.swing.JMenu();
             filtersMenuItem = new javax.swing.JMenuItem();
-            ImportMenuItem = new javax.swing.JMenuItem();
+            importMenu = new javax.swing.JMenu();
+            iCalImportMenu = new javax.swing.JMenuItem();
+            hCalImportMenu = new javax.swing.JMenuItem();
             exportMenu = new javax.swing.JMenu();
             iCalExportMenu = new javax.swing.JMenuItem();
             hCalExportMenu = new javax.swing.JMenuItem();
@@ -420,7 +464,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE))
             );
 
-            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
+            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22));
             currentDateLabel.setText("DNES");
 
             javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -594,16 +638,24 @@ public class MainFrame extends javax.swing.JFrame {
             });
             FileMenu.add(filtersMenuItem);
 
-            ImportMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
-            ImportMenuItem.setText("Import");
-            ImportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            importMenu.setText("Import");
+
+            iCalImportMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.SHIFT_MASK));
+            iCalImportMenu.setText("iCalendar");
+            iCalImportMenu.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    ImportMenuItemActionPerformed(evt);
+                    iCalImportMenuActionPerformed(evt);
                 }
             });
-            FileMenu.add(ImportMenuItem);
+            importMenu.add(iCalImportMenu);
 
-            exportMenu.setText("Export ");
+            hCalImportMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.SHIFT_MASK));
+            hCalImportMenu.setText("hCalendar");
+            importMenu.add(hCalImportMenu);
+
+            FileMenu.add(importMenu);
+
+            exportMenu.setText("Export");
 
             iCalExportMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
             iCalExportMenu.setText("iCalendar");
@@ -622,6 +674,8 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             });
             exportMenu.add(hCalExportMenu);
+
+            exportMenu.setText("Export");
 
             FileMenu.add(exportMenu);
 
@@ -695,18 +749,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void FiltersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FiltersMenuItemActionPerformed
     }//GEN-LAST:event_FiltersMenuItemActionPerformed
-
-    private void ImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImportMenuItemActionPerformed
-        final JFileChooser importChooser = new JFileChooser();
-        importChooser.addChoosableFileFilter(new FileNameExtensionFilter("Soubor ve formátu iCal nebo hCal", ".ics, .xhtml"));
-        importChooser.setAcceptAllFileFilterUsed(false);
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                importChooser.showOpenDialog(ImportMenuItem);
-            }
-        });
-    }//GEN-LAST:event_ImportMenuItemActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -816,7 +858,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void iCalExportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iCalExportMenuActionPerformed
         final JFileChooser exportChooser = new JFileChooser();
-        exportChooser.setFileFilter(new FileNameExtensionFilter(".ics", "iCal"));
+        exportChooser.setFileFilter(new FileNameExtensionFilter("iCalendar","ics"));
         exportChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         exportChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -847,7 +889,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void hCalExportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hCalExportMenuActionPerformed
         final JFileChooser exportChooser = new JFileChooser();
-        exportChooser.setFileFilter(new FileNameExtensionFilter(".xhtml", "hCal"));
+        exportChooser.setFileFilter(new FileNameExtensionFilter("hCalendar","xhtml"));
         exportChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         exportChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -860,12 +902,29 @@ public class MainFrame extends javax.swing.JFrame {
                     exportHCalWorker.execute();
                 }
             }
-        });        // TODO add your handling code here:
+        });        
     }//GEN-LAST:event_hCalExportMenuActionPerformed
+
+    private void iCalImportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iCalImportMenuActionPerformed
+        final JFileChooser importChooser = new JFileChooser();
+        importChooser.addChoosableFileFilter(new FileNameExtensionFilter("Soubor ve formátu iCal", "ics"));
+        importChooser.setAcceptAllFileFilterUsed(false);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                int i = importChooser.showOpenDialog(iCalImportMenu);
+                if (i == JFileChooser.APPROVE_OPTION) {
+                    File file = importChooser.getSelectedFile();
+                    importICalWorker = new ImportICalWorker(file);
+                    importICalWorker.execute();
+                }
+            }
+        });
+    }//GEN-LAST:event_iCalImportMenuActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ExitMenuItem;
     private javax.swing.JMenu FileMenu;
-    private javax.swing.JMenuItem ImportMenuItem;
     private javax.swing.JMenuBar MenuBar;
     private javax.swing.JLabel currentDateLabel;
     private javax.swing.JTable daysTable;
@@ -876,7 +935,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox filtersComboBox;
     private javax.swing.JMenuItem filtersMenuItem;
     private javax.swing.JMenuItem hCalExportMenu;
+    private javax.swing.JMenuItem hCalImportMenu;
     private javax.swing.JMenuItem iCalExportMenu;
+    private javax.swing.JMenuItem iCalImportMenu;
+    private javax.swing.JMenu importMenu;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
