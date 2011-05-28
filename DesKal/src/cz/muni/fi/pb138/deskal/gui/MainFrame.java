@@ -64,7 +64,7 @@ public class MainFrame extends javax.swing.JFrame {
             Context context = calendarDB.getContext();
             evtManager = new EventManagerImpl(context);
             calManager = new CalendarManagerImpl(context, evtManager);
-            exportImport = new ExportImportImpl(evtManager,calManager);
+            exportImport = new ExportImportImpl(evtManager, calManager);
             Filter none = new Filter("bez filtru"); //default filter
             filters.add(none);
             for (String name : calManager.getAllTags()) {
@@ -151,6 +151,11 @@ public class MainFrame extends javax.swing.JFrame {
             exportImport.exportToICal(file);
             return null;
         }
+
+        protected void done() {
+            JOptionPane.showMessageDialog(rootPane, "Export dokončen",
+                    "iCalendar", JOptionPane.INFORMATION_MESSAGE);
+        }
     }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Export to hCal swing worker">
@@ -167,6 +172,11 @@ public class MainFrame extends javax.swing.JFrame {
             File file = new File(fileName + ".xhtml");
             exportImport.exportToHCal(file);
             return null;
+        }
+
+        protected void done() {
+            JOptionPane.showMessageDialog(rootPane, "Export dokončen",
+                    "hCalendar", JOptionPane.INFORMATION_MESSAGE);
         }
     }// </editor-fold>
 
@@ -185,14 +195,17 @@ public class MainFrame extends javax.swing.JFrame {
             return null;
         }
 
-        protected void done(){
+        protected void done() {
             refreshFiltersAndTableWorker = new RefreshFiltersAndTableWorker();
             refreshFiltersAndTableWorker.execute();
+            JOptionPane.showMessageDialog(rootPane, "Import dokončen",
+                    "iCalendar",JOptionPane.INFORMATION_MESSAGE);
         }
-}// </editor-fold>
+    }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Refresh filters swing worker">
     private class RefreshFiltersAndTableWorker extends SwingWorker<Void, Void> {
+
         @Override
         protected Void doInBackground() throws Exception {
             filters.clear();
@@ -204,12 +217,13 @@ public class MainFrame extends javax.swing.JFrame {
             return null;
         }
 
-        protected void done(){
+        protected void done() {
             comboModel.setFilters(filters);
             refreshTableSwingWorker = new RefreshTableSwingWorker();
             refreshTableSwingWorker.execute();
         }
-}// </editor-fold>
+    }// </editor-fold>
+
     /** Creates new form MainFrame */
     public MainFrame() {
         try {
@@ -858,7 +872,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void iCalExportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iCalExportMenuActionPerformed
         final JFileChooser exportChooser = new JFileChooser();
-        exportChooser.setFileFilter(new FileNameExtensionFilter("iCalendar","ics"));
+        exportChooser.setFileFilter(new FileNameExtensionFilter("iCalendar", "ics"));
         exportChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         exportChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -889,7 +903,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void hCalExportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hCalExportMenuActionPerformed
         final JFileChooser exportChooser = new JFileChooser();
-        exportChooser.setFileFilter(new FileNameExtensionFilter("hCalendar","xhtml"));
+        exportChooser.setFileFilter(new FileNameExtensionFilter("hCalendar", "xhtml"));
         exportChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         exportChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -902,7 +916,7 @@ public class MainFrame extends javax.swing.JFrame {
                     exportHCalWorker.execute();
                 }
             }
-        });        
+        });
     }//GEN-LAST:event_hCalExportMenuActionPerformed
 
     private void iCalImportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iCalImportMenuActionPerformed
@@ -921,7 +935,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_iCalImportMenuActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ExitMenuItem;
     private javax.swing.JMenu FileMenu;
