@@ -1,11 +1,13 @@
 package cz.muni.fi.pb138.deskal;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,11 +38,21 @@ public class ExportImportImpl implements ExportImport {
     private DatatypeFactory df;
     private EventManager evtManager;
     private CalendarManager calManager;
+    private String charset;
 
     public ExportImportImpl(EventManager evtManager, CalendarManager calManager) {
         String userDir = System.getProperty("user.home");
         String separator = System.getProperty("file.separator");
         calendarXml = new File(userDir + separator + "DesKal" + separator + "calendar.xml");
+        if(isWindows()){
+			charset =  "windows-1250";
+		}else if(isMac()){
+			charset = "MacCentralEurope";
+		}else if(isUnix()){
+			charset =  "utf-8";
+		}else{
+			charset =  "utf-8";
+		}
 
         this.evtManager = evtManager;
         this.calManager = calManager;
@@ -92,23 +104,23 @@ public class ExportImportImpl implements ExportImport {
     }
 
     public void importFromICal(File file) {
-        Reader fileReader = null;
         Calendar calendar = null;
+        InputStreamReader stream = null;
         try {
-            fileReader = new FileReader(file);
-            calendar = iCalBuilder.build(fileReader);
+            stream = new InputStreamReader(new FileInputStream(file), charset);
+            calendar = iCalBuilder.build(stream);
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Chyba pri importu - soubor nebyl nalezen",
+            JOptionPane.showMessageDialog(null, "Chyba při importu - soubor nebyl nalezen",
                     "Chyba", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Chyba pri importu - vstup/vystup",
+            JOptionPane.showMessageDialog(null, "Chyba při importu - vstup/výstup",
                     "Chyba", JOptionPane.ERROR_MESSAGE);
         } catch (ParserException ex) {
-            JOptionPane.showMessageDialog(null, "Chyba pri importu - spatny format souboru",
+            JOptionPane.showMessageDialog(null, "Chyba při importu - špatný format souboru",
                     "Chyba", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
-                fileReader.close();
+                stream.close();
             } catch (IOException ex) {
                 throw new RuntimeException("Error while closing input file", ex);
             }
@@ -144,7 +156,7 @@ public class ExportImportImpl implements ExportImport {
                         event.setTag(tag.getValue());
                     }
                     if (event.getName() == null) {
-                        event.setName("Bez názvu");                        
+                        event.setName("Bez názvu");
                     }
                     String dateString = start.getValue();
                     String startDate = dateString.substring(0, 4) + "-" + dateString.substring(4, 6)
@@ -183,7 +195,7 @@ public class ExportImportImpl implements ExportImport {
             if (!dataEvents.contains(event)) {
                 evtManager.addEvent(event);
                 String tag = event.getTag();
-                if(!tag.equals("null") && !tags.contains(tag)){
+                if (!tag.equals("null") && !tags.contains(tag)) {
                     tags.add(tag);
                     calManager.addFilter(new Filter(tag));
                 }
@@ -192,18 +204,65 @@ public class ExportImportImpl implements ExportImport {
     }
 
     public void exportToHCal(File file) {
+        OutputStreamWriter stream = null;
         try {
-            hCalTransformer.transform(new StreamSource(calendarXml), new StreamResult(file));
+            stream = new OutputStreamWriter(new FileOutputStream(file), charset);
+            hCalTransformer.transform(new StreamSource(calendarXml),
+                    new StreamResult(stream));
         } catch (TransformerException ex) {
-            throw new RuntimeException("Error during transformation to hCal", ex);
+            throw new RuntimeException("Error during transformation to iCal", ex);
+        } catch (IOException ex) {
+            throw new RuntimeException("Error during transformation to iCal", ex);
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException ex) {
+                throw new RuntimeException("Error while closing output stream", ex);
+            }
         }
     }
 
     public void exportToICal(File file) {
+        OutputStreamWriter stream = null;
         try {
-            iCalTransformer.transform(new StreamSource(calendarXml), new StreamResult(file));
+            stream = new OutputStreamWriter(new FileOutputStream(file), charset);
+            iCalTransformer.transform(new StreamSource(calendarXml),
+                    new StreamResult(stream));
         } catch (TransformerException ex) {
             throw new RuntimeException("Error during transformation to iCal", ex);
+        } catch (IOException ex) {
+            throw new RuntimeException("Error during transformation to iCal", ex);
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException ex) {
+                throw new RuntimeException("Error while closing output stream", ex);
+            }
         }
+    }
+
+    //help methods
+    private boolean isWindows() {
+
+        String os = System.getProperty("os.name").toLowerCase();
+        //windows
+        return (os.indexOf("win") >= 0);
+
+    }
+
+    private boolean isMac() {
+
+        String os = System.getProperty("os.name").toLowerCase();
+        //Mac
+        return (os.indexOf("mac") >= 0);
+
+    }
+
+    private boolean isUnix() {
+
+        String os = System.getProperty("os.name").toLowerCase();
+        //linux or unix
+        return (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0);
+
     }
 }

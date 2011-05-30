@@ -27,7 +27,6 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
         //create DesKal/calendar.xml in user's directory if it doesn't exist
         String userDir = System.getProperty("user.home");
         String separator = System.getProperty("file.separator");
