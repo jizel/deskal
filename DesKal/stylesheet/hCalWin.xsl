@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="Windows-1250"?>
 <!--
     Document   : iCal.xsl
-    Created on : 24. kvÄ›ten 2011, 15:50
+    Created on : 24. kvìten 2011, 15:50
     Author     : AdiC
     Description:
         Export XML calendar to hCal format
@@ -10,20 +10,11 @@
     <!--
     output method xml, because when method is html, parser insert incorrect tag <META ... > without endind /, so entire document is incorrect
     -->
-    <xsl:output method="xml" media-type="text/calendar"/>
+    <xsl:output method="xml" media-type="text/calendar" encoding="Windows-1250" />
 <xsl:template match="/calendar">
-    <xsl:text disable-output-escaping="yes">
-        <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">]]>
-    </xsl:text>
-    <html xmlns="http://www.w3.org/1999/xhtml">
-        <head>           
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-            <title>hCalendar export</title>
-        </head>
-        <body>
+    <div>
     <xsl:for-each select="event">
-        <p class="vevent">
+        <div class="vevent">
             <abbr class="dtstart"><xsl:value-of select="translate(dateSince,'Z','T')"/><xsl:value-of select="timeFrom"/>+01:00</abbr>
             <abbr class="dtend"><xsl:value-of select="translate(dateTo,'Z','T')"/><xsl:value-of select="timeTo"/>+01:00</abbr>
             <span class="summary"><xsl:value-of select="title" /></span>
@@ -34,11 +25,10 @@
                 <abbr class="description"><xsl:value-of select="note" /></abbr>
             </xsl:if>
             <xsl:if test="tag">
-                <abbr class="category"><xsl:value-of select="tag/@tagref" /></abbr>
+                <abbr class="categories"><xsl:value-of select="tag/@tagref" /></abbr>
             </xsl:if>
-        </p>
+        </div>
     </xsl:for-each>
-        </body>
-    </html>
+    </div>
 </xsl:template>
 </xsl:stylesheet>
