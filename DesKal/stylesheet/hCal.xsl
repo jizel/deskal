@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="maccentraleurope"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
     Document   : iCal.xsl
-    Created on : 24. kvžten 2011, 15:50
+    Created on : 24. kvÄ›ten 2011, 15:50
     Author     : AdiC
     Description:
         Export XML calendar to hCal format
@@ -10,7 +10,7 @@
     <!--
     output method xml, because when method is html, parser insert incorrect tag <META ... > without endind /, so entire document is incorrect
     -->
-    <xsl:output method="xml" media-type="text/calendar" encoding="maccentraleurope"/>
+    <xsl:output method="xml" media-type="text/calendar" encoding="utf-8"/>
 <xsl:template match="/calendar">
     <div>
     <xsl:for-each select="event">
