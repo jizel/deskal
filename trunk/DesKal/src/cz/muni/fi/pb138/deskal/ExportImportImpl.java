@@ -1,9 +1,11 @@
 package cz.muni.fi.pb138.deskal;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +16,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -33,36 +36,46 @@ public class ExportImportImpl implements ExportImport {
 
     private Transformer iCalTransformer;
     private Transformer hCalTransformer;
+    private Transformer hCalTokensTransformer;
     private CalendarBuilder iCalBuilder;
     private File calendarXml;
     private DatatypeFactory df;
     private EventManager evtManager;
     private CalendarManager calManager;
     private String charset;
+    private String userDir;
+    private String separator;
 
     public ExportImportImpl(EventManager evtManager, CalendarManager calManager) {
-        String userDir = System.getProperty("user.home");
-        String separator = System.getProperty("file.separator");
+        userDir = System.getProperty("user.home");
+        separator = System.getProperty("file.separator");
         calendarXml = new File(userDir + separator + "DesKal" + separator + "calendar.xml");
-        if(isWindows()){
-			charset =  "windows-1250";
-		}else if(isMac()){
-			charset = "MacCentralEurope";
-		}else if(isUnix()){
-			charset =  "utf-8";
-		}else{
-			charset =  "utf-8";
-		}
+        InputStream hCalStyleStream = null;
+        if (isWindows()) {
+            charset = "windows-1250";
+            hCalStyleStream = ClassLoader.getSystemResourceAsStream("hCalWin.xsl");
+        } else if (isMac()) {
+            charset = "MacCentralEurope";
+            hCalStyleStream = ClassLoader.getSystemResourceAsStream("hCalMac.xsl");
+        } else if (isUnix()) {
+            charset = "utf-8";
+            hCalStyleStream = ClassLoader.getSystemResourceAsStream("hCal.xsl");
+        } else {
+            charset = "utf-8";
+            hCalStyleStream = ClassLoader.getSystemResourceAsStream("hCal.xsl");
+        }
 
         this.evtManager = evtManager;
         this.calManager = calManager;
         TransformerFactory factory = TransformerFactory.newInstance();
 
         InputStream iCalStyleStream = ClassLoader.getSystemResourceAsStream("iCal.xsl");
-        InputStream hCalStyleStream = ClassLoader.getSystemResourceAsStream("hCal.xsl");
+
+        InputStream hCalTokensStyleStream = ClassLoader.getSystemResourceAsStream("hCalGetTokens.xsl");
 
         Templates iCalExport;
         Templates hCalExport;
+        Templates hCalTokens;
 
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
@@ -73,8 +86,11 @@ public class ExportImportImpl implements ExportImport {
         try {
             iCalExport = factory.newTemplates(new StreamSource(iCalStyleStream));
             hCalExport = factory.newTemplates(new StreamSource(hCalStyleStream));
+            hCalTokens = factory.newTemplates(new StreamSource(hCalTokensStyleStream));
             iCalTransformer = iCalExport.newTransformer();
             hCalTransformer = hCalExport.newTransformer();
+            hCalTokensTransformer = hCalTokens.newTransformer();
+
             df = DatatypeFactory.newInstance();
 
         } catch (TransformerConfigurationException ex) {
@@ -96,11 +112,102 @@ public class ExportImportImpl implements ExportImport {
                     throw new RuntimeException("Error while closing input stream", ex);
                 }
             }
+            if (hCalTokensStyleStream != null) {
+                try {
+                    hCalTokensStyleStream.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException("Error while closing input stream", ex);
+                }
+            }
         }
     }
 
     public void importFromHCal(File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Event> events = new ArrayList<Event>();
+        InputStreamReader stream = null;
+        BufferedReader reader = null;
+        File tmp = null;
+        try {
+            tmp = new File(userDir + separator + "hCalImp");
+            stream = new InputStreamReader(new FileInputStream(file), charset);
+            hCalTokensTransformer.transform(new StreamSource(stream), new StreamResult(
+                    new OutputStreamWriter(new FileOutputStream(tmp), "utf-8")));
+            reader = new BufferedReader(new FileReader(tmp));
+            String line = reader.readLine();
+            while (line != null) {
+                if (!line.equals("---")) {
+                    Event event = new Event();
+                    String[] ev = line.split(";");
+                    XMLGregorianCalendar dtStart = null;
+                    XMLGregorianCalendar dtEnd = null;
+                    for (int i = 1; i < ev.length; i++) {
+                        if (ev[i].equals("SUMMARY")) {
+                            event.setName(ev[i + 1]);
+                        } else if (ev[i].equals("DESCRIPTION")) {
+                            event.setNote(ev[i + 1]);
+                        } else if (ev[i].equals("LOCATION")) {
+                            event.setPlace(ev[i + 1]);
+                        } else if (ev[i].equals("CATEGORIES")) {
+                            event.setTag(ev[i + 1]);
+                        } else if (ev[i].equals("DTSTART")) {
+                            dtStart = df.newXMLGregorianCalendar(ev[i + 1]);
+                            dtStart.setTimezone(0);
+                            event.setDate(dtStart);
+                        } else if (ev[i].equals("DTEND")) {
+                            dtEnd = df.newXMLGregorianCalendar(ev[i + 1]);
+                            dtEnd.setTimezone(0);
+                        }
+                    }
+                    long duration = dtEnd.toGregorianCalendar().getTime().getTime() - dtStart.toGregorianCalendar().getTime().getTime();
+                    Duration dur = df.newDuration(duration);
+                    event.setDuration(dur);
+
+                    events.add(event);
+                }
+                line = reader.readLine();
+            }
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Chyba při importu - soubor nebyl nalezen",
+                    "Chyba", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Chyba při importu - vstup/výstup",
+                    "Chyba", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Chyba při importu - špatný formát souboru",
+                    "Chyba", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException("Error during closing temp file", ex);
+                }
+            }
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException("Error during closing temp file", ex);
+                }
+            }
+            if (tmp != null) {
+                tmp.delete();
+            }
+        }
+
+        List<Event> dataEvents = evtManager.getAllEvents();
+        List<String> tags = calManager.getAllTags();
+
+        for (Event event : events) {
+            if (!dataEvents.contains(event)) {
+                evtManager.addEvent(event);
+                String tag = event.getTag();
+                if (tag != null && !tag.equals("null") && !tags.contains(tag)) {
+                    tags.add(tag);
+                    calManager.addFilter(new Filter(tag));
+                }
+            }
+        }
     }
 
     public void importFromICal(File file) {
@@ -133,18 +240,14 @@ public class ExportImportImpl implements ExportImport {
 
                 if (component.getName().equals(Component.VEVENT)) {
                     Event event = new Event();
-                    Property name1 = component.getProperty(Property.NAME);
-                    Property name2 = component.getProperty(Property.SUMMARY);
+                    Property name = component.getProperty(Property.SUMMARY);
                     Property place = component.getProperty(Property.LOCATION);
                     Property note = component.getProperty(Property.DESCRIPTION);
                     Property tag = component.getProperty(Property.CATEGORIES);
                     Property start = component.getProperty(Property.DTSTART);
                     Property end = component.getProperty(Property.DTEND);
-                    if (name2 != null) {
-                        event.setName(name2.getValue());
-                    }
-                    if (name1 != null) {
-                        event.setName(name1.getValue());
+                    if (name != null) {
+                        event.setName(name.getValue());
                     }
                     if (place != null) {
                         event.setPlace(place.getValue());
@@ -195,7 +298,7 @@ public class ExportImportImpl implements ExportImport {
             if (!dataEvents.contains(event)) {
                 evtManager.addEvent(event);
                 String tag = event.getTag();
-                if (!tag.equals("null") && !tags.contains(tag)) {
+                if (tag != null && !tag.equals("null") && !tags.contains(tag)) {
                     tags.add(tag);
                     calManager.addFilter(new Filter(tag));
                 }

@@ -37,7 +37,7 @@ import org.basex.core.Context;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    private Calendar date;
+    private Calendar date = null;
     private DaysTableModel tableModel;
     private EventListModel listModel;
     private FiltersComboBoxModel comboModel;
@@ -52,6 +52,7 @@ public class MainFrame extends javax.swing.JFrame {
     private ExportICalWorker exportICalWorker;
     private ExportHCalWorker exportHCalWorker;
     private ImportICalWorker importICalWorker;
+    private ImportHCalWorker importHCalWorker;
     private RefreshFiltersAndTableWorker refreshFiltersAndTableWorker;
 
     // <editor-fold defaultstate="collapsed" desc="Managers initialization swing worker">
@@ -70,6 +71,7 @@ public class MainFrame extends javax.swing.JFrame {
             for (String name : calManager.getAllTags()) {
                 filters.add(new Filter(name));
             }
+            Calendar date = null;
             if (date == null) {
                 date = GregorianCalendar.getInstance();
                 date.setTimeInMillis(System.currentTimeMillis());
@@ -94,6 +96,12 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Table and list refresh swing worker">
     private class RefreshTableSwingWorker extends SwingWorker<List<Day>, Void> {
 
+        private Calendar date;
+
+        public RefreshTableSwingWorker(Calendar date) {
+            this.date = date;
+        }
+
         @Override
         protected List<Day> doInBackground() throws Exception {
             String tag = (String) comboModel.getElementAt(filtersComboBox.getSelectedIndex());
@@ -108,12 +116,18 @@ public class MainFrame extends javax.swing.JFrame {
                 int column = daysTable.getSelectedColumn();
                 int eventIndex = eventsList.getSelectedIndex();
                 tableModel.setMonth(get());
-                daysTable.getSelectionModel().setSelectionInterval(row, row);
-                daysTable.getColumnModel().getSelectionModel().setSelectionInterval(column, column);
+                if (row != -1) {
+                    daysTable.getSelectionModel().setSelectionInterval(row, row);
+                }
+                if (column != -1) {
+                    daysTable.getColumnModel().getSelectionModel().setSelectionInterval(column, column);
+                }
                 loadEvents();
                 eventsList.setSelectedIndex(eventIndex);
             } catch (InterruptedException ex) {
+                throw new RuntimeException("Refresh table: Interrupted", ex);
             } catch (ExecutionException ex) {
+                throw new RuntimeException("Refresh table: cannot execute", ex);
             }
         }
     }// </editor-fold>
@@ -130,7 +144,7 @@ public class MainFrame extends javax.swing.JFrame {
         @Override
         protected Void doInBackground() throws Exception {
             evtManager.removeEvent(event);
-            refreshTableSwingWorker = new RefreshTableSwingWorker();
+            refreshTableSwingWorker = new RefreshTableSwingWorker(date);
             refreshTableSwingWorker.execute();
             return null;
         }
@@ -199,7 +213,30 @@ public class MainFrame extends javax.swing.JFrame {
             refreshFiltersAndTableWorker = new RefreshFiltersAndTableWorker();
             refreshFiltersAndTableWorker.execute();
             JOptionPane.showMessageDialog(rootPane, "Import dokončen",
-                    "iCalendar",JOptionPane.INFORMATION_MESSAGE);
+                    "iCalendar", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Import from iCal swing worker">
+    private class ImportHCalWorker extends SwingWorker<Void, Void> {
+
+        private File file;
+
+        public ImportHCalWorker(File file) {
+            this.file = file;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            exportImport.importFromHCal(file);
+            return null;
+        }
+
+        protected void done() {
+            refreshFiltersAndTableWorker = new RefreshFiltersAndTableWorker();
+            refreshFiltersAndTableWorker.execute();
+            JOptionPane.showMessageDialog(rootPane, "Import dokončen",
+                    "iCalendar", JOptionPane.INFORMATION_MESSAGE);
         }
     }// </editor-fold>
 
@@ -219,7 +256,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         protected void done() {
             comboModel.setFilters(filters);
-            refreshTableSwingWorker = new RefreshTableSwingWorker();
+            refreshTableSwingWorker = new RefreshTableSwingWorker(date);
             refreshTableSwingWorker.execute();
         }
     }// </editor-fold>
@@ -478,7 +515,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE))
             );
 
-            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22));
+            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
             currentDateLabel.setText("DNES");
 
             javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -491,9 +528,7 @@ public class MainFrame extends javax.swing.JFrame {
             );
             jPanel5Layout.setVerticalGroup(
                 jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel5Layout.createSequentialGroup()
-                    .addComponent(currentDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(currentDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
             );
 
             editEventButton.setText("Upravit");
@@ -601,7 +636,7 @@ public class MainFrame extends javax.swing.JFrame {
             jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(18, 18, 18)
+                    .addContainerGap()
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -638,7 +673,7 @@ public class MainFrame extends javax.swing.JFrame {
                 jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel7Layout.createSequentialGroup()
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(24, Short.MAX_VALUE))
+                    .addContainerGap(20, Short.MAX_VALUE))
             );
 
             FileMenu.setText("Soubor");
@@ -665,6 +700,11 @@ public class MainFrame extends javax.swing.JFrame {
 
             hCalImportMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.SHIFT_MASK));
             hCalImportMenu.setText("hCalendar");
+            hCalImportMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    hCalImportMenuActionPerformed(evt);
+                }
+            });
             importMenu.add(hCalImportMenu);
 
             FileMenu.add(importMenu);
@@ -741,7 +781,7 @@ public class MainFrame extends javax.swing.JFrame {
                         filters, evtManager, calManager);
                 addDialog.setLocationRelativeTo(daysTable);
                 addDialog.setVisible(true);
-                refreshTableSwingWorker = new RefreshTableSwingWorker();
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
                 refreshTableSwingWorker.execute();
             }
         });
@@ -755,7 +795,7 @@ public class MainFrame extends javax.swing.JFrame {
                 JDialog editDialog = new EditDialog(null, true, daysTable, eventsList, filters, event, evtManager);
                 editDialog.setLocationRelativeTo(daysTable);
                 editDialog.setVisible(true);
-                refreshTableSwingWorker = new RefreshTableSwingWorker();
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
                 refreshTableSwingWorker.execute();
             }
         });
@@ -796,7 +836,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ExitMenuItemActionPerformed
 
     private void filtersComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersComboBoxActionPerformed
-        refreshTableSwingWorker = new RefreshTableSwingWorker();
+        refreshTableSwingWorker = new RefreshTableSwingWorker(date);
         refreshTableSwingWorker.execute();
     }//GEN-LAST:event_filtersComboBoxActionPerformed
 
@@ -837,37 +877,51 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_daysTableKeyReleased
 
     private void prevMonthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevMonthButtonActionPerformed
-        int month = date.get(Calendar.MONTH);
-        int year = date.get(Calendar.YEAR);
-        month--;
-        if (month == -1) {
-            month = 11;
-            year--;
-        }
-        date.set(Calendar.MONTH, month);
-        date.set(Calendar.YEAR, year);
-        monthLabel.setText(getNameOfMonth(month));
-        yearLabel.setText(Integer.toString(year));
-        refreshTableSwingWorker = new RefreshTableSwingWorker();
-        refreshTableSwingWorker.execute();
-        daysTable.clearSelection();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                int month = date.get(Calendar.MONTH);
+                int year = date.get(Calendar.YEAR);
+                month--;
+                if (month == -1) {
+                    month = 11;
+                    year--;
+                }
+                date.set(Calendar.MONTH, month);
+                date.set(Calendar.YEAR, year);
+                monthLabel.setText(getNameOfMonth(date.get(Calendar.MONTH)));
+                yearLabel.setText(Integer.toString(date.get(Calendar.YEAR)));
+                daysTable.clearSelection();
+                eventsList.clearSelection();
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
+                refreshTableSwingWorker.execute();
+            }
+        });
+
     }//GEN-LAST:event_prevMonthButtonActionPerformed
 
     private void nextMonthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextMonthButtonActionPerformed
-        int month = date.get(Calendar.MONTH);
-        int year = date.get(Calendar.YEAR);
-        month++;
-        if (month == 12) {
-            month = 0;
-            year++;
-        }
-        date.set(Calendar.MONTH, month);
-        date.set(Calendar.YEAR, year);
-        monthLabel.setText(getNameOfMonth(month));
-        yearLabel.setText(Integer.toString(year));
-        refreshTableSwingWorker = new RefreshTableSwingWorker();
-        refreshTableSwingWorker.execute();
-        daysTable.clearSelection();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                int month = date.get(Calendar.MONTH);
+                int year = date.get(Calendar.YEAR);
+                month++;
+                if (month == 12) {
+                    month = 0;
+                    year++;
+                }
+                date.set(Calendar.YEAR, year);
+                date.set(Calendar.MONTH, month);
+                monthLabel.setText(getNameOfMonth(date.get(Calendar.MONTH)));
+                yearLabel.setText(Integer.toString(date.get(Calendar.YEAR)));
+                daysTable.clearSelection();
+                eventsList.clearSelection();
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
+                refreshTableSwingWorker.execute();
+            }
+        });
+
     }//GEN-LAST:event_nextMonthButtonActionPerformed
 
     private void iCalExportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iCalExportMenuActionPerformed
@@ -895,7 +949,7 @@ public class MainFrame extends javax.swing.JFrame {
                 JDialog filtersDialog = new FiltersDialog(null, true, filters, filtersComboBox, calManager);
                 filtersDialog.setLocationRelativeTo(daysTable);
                 filtersDialog.setVisible(true);
-                refreshTableSwingWorker = new RefreshTableSwingWorker();
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
                 refreshTableSwingWorker.execute();
             }
         });
@@ -921,7 +975,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void iCalImportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iCalImportMenuActionPerformed
         final JFileChooser importChooser = new JFileChooser();
-        importChooser.addChoosableFileFilter(new FileNameExtensionFilter("Soubor ve formátu iCal", "ics"));
+        importChooser.addChoosableFileFilter(new FileNameExtensionFilter("Soubor ve formátu iCalendar", "ics"));
         importChooser.setAcceptAllFileFilterUsed(false);
         java.awt.EventQueue.invokeLater(new Runnable() {
 
@@ -935,6 +989,23 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_iCalImportMenuActionPerformed
+
+    private void hCalImportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hCalImportMenuActionPerformed
+        final JFileChooser importChooser = new JFileChooser();
+        importChooser.addChoosableFileFilter(new FileNameExtensionFilter("Soubor ve formátu hCalalendar", "xhtml"));
+        importChooser.setAcceptAllFileFilterUsed(false);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                int i = importChooser.showOpenDialog(iCalImportMenu);
+                if (i == JFileChooser.APPROVE_OPTION) {
+                    File file = importChooser.getSelectedFile();
+                    importHCalWorker = new ImportHCalWorker(file);
+                    importHCalWorker.execute();
+                }
+            }
+        });
+    }//GEN-LAST:event_hCalImportMenuActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ExitMenuItem;
     private javax.swing.JMenu FileMenu;
