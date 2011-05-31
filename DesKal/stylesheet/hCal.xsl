@@ -24,8 +24,8 @@
         <body>
     <xsl:for-each select="event">
         <p class="vevent">
-            <abbr class="dtstart"><xsl:value-of select="substring(translate(dateSince,'-',''),1,8)"/>T<xsl:value-of select="translate(timeFrom,':','')"/><xsl:value-of select="substring(dateSince,11,1)"/></abbr>
-            <abbr class="dtend"><xsl:value-of select="substring(translate(dateTo,'-',''),1,8)"/>T<xsl:value-of select="translate(timeTo,':','')"/><xsl:value-of select="substring(dateTo,11,1)"/></abbr>
+            <abbr class="dtstart"><xsl:value-of select="translate(dateSince,'Z','T')"/><xsl:value-of select="timeFrom"/>+01:00</abbr>
+            <abbr class="dtend"><xsl:value-of select="translate(dateTo,'Z','T')"/><xsl:value-of select="timeTo"/>+01:00</abbr>
             <span class="summary"><xsl:value-of select="title" /></span>
             <xsl:if test="place != ''">
                 <abbr class="location"><xsl:value-of select="place" /></abbr>
