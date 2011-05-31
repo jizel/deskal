@@ -7,7 +7,7 @@
         Export XML calendar to iCal format
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-    <xsl:output method="xml" media-type="text/calendar"/>
+    <xsl:output method="text" media-type="text/calendar"/>
 <xsl:template match="/calendar">BEGIN:VCALENDAR
 <xsl:for-each select="event">BEGIN:VEVENT
 DTSTART:<xsl:value-of select="substring(translate(dateSince,'-',''),1,8)"/>T<xsl:value-of select="translate(timeFrom,':','')"/><xsl:value-of select="substring(dateSince,11,1)"/>
