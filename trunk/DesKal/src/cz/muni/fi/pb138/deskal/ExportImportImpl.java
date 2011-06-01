@@ -131,8 +131,8 @@ public class ExportImportImpl implements ExportImport {
             tmp = new File(userDir + separator + "hCalImp");
             stream = new InputStreamReader(new FileInputStream(file), charset);
             hCalTokensTransformer.transform(new StreamSource(stream), new StreamResult(
-                    new OutputStreamWriter(new FileOutputStream(tmp), "utf-8")));
-            reader = new BufferedReader(new FileReader(tmp));
+                    new OutputStreamWriter(new FileOutputStream(tmp))));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(tmp)));
             String line = reader.readLine();
             while (line != null) {
                 if (!line.equals("---")) {
