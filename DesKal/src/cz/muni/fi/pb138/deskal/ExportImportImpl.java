@@ -313,9 +313,9 @@ public class ExportImportImpl implements ExportImport {
             hCalTransformer.transform(new StreamSource(calendarXml),
                     new StreamResult(stream));
         } catch (TransformerException ex) {
-            throw new RuntimeException("Error during transformation to iCal", ex);
+            throw new RuntimeException("Error during transformation to hCal", ex);
         } catch (IOException ex) {
-            throw new RuntimeException("Error during transformation to iCal", ex);
+            throw new RuntimeException("Error during transformation to hCal", ex);
         } finally {
             try {
                 stream.close();
