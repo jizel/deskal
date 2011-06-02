@@ -6,6 +6,7 @@
   * [XMLSchema XML Schema]
   * Used technologies and libraries:
    * [BaseX]  
+   * [Swing]
   * Export/Import:
    * [hCalendar hCalendar format]
    * [iCalendar iCalendar format]
