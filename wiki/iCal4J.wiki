@@ -5,8 +5,8 @@ Copyright (c) 2011, Ben Fortuna.
 iCal4j is a Java API that provides support for the iCalendar specification as defined in RFC2445. This support includes a Parser, Object Model and Generator for iCalendar data streams. 
 
 = libraries used by iCal4J =
-commons-logging-1.1.1
-commons-lang-2.4
+commons-logging-1.1.1,
+commons-lang-2.4,
 backport-util-concurrent
 
 
