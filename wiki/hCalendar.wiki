@@ -58,3 +58,5 @@ extrahovat informace z webových stránek a pracovat s nimi (např. vyexportovat
 </p>
 
 </code>
+
+Převzato z Wikipedie
