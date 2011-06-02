@@ -1,6 +1,6 @@
 = Class Diagram =
 
-_This page introduces layout of class diagram for DesKal._
+_This page introduces layout of class diagram for [ProjectSummary DesKal]._
 
 https://deskal.googlecode.com/svn/image/DesKalClassDiagram4.jpg
 
