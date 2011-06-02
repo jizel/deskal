@@ -1,11 +1,15 @@
 #summary SideBar
 
   * [ProjectSummary Project Summary]
-  * [XMLSchema XML Schema]
-  * [BaseX]
-  * [GUI]
   * [ClassDiagram Class Diagram]
-  * Export:
-   * [hCalendar]
-   * [iCalendar]
-   * [ExportiCal XSL iCalendar]
+  * [GUI]
+  * [XMLSchema XML Schema]
+  * Used technologies and libraries:
+   * [BaseX]  
+  * Export/Import:
+   * [hCalendar hCalendar format]
+   * [iCalendar iCalendar format]
+   * [ExportiCal XSL to iCalendar]
+   * [ExporthCal XSL to hCalendar]
+   * [ImportiCal Import from iCalendar]
+   * [ImporthCal Import from hCalendar]
