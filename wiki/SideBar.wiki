@@ -7,10 +7,9 @@
   * Used technologies and libraries:
    * [BaseX]  
    * [Swing]
+   * [iCal4J]
   * Export/Import:
    * [hCalendar hCalendar format]
    * [iCalendar iCalendar format]
    * [ExportiCal XSL to iCalendar]
    * [ExporthCal XSL to hCalendar]
-   * [ImportiCal Import from iCalendar]
-   * [ImporthCal Import from hCalendar]
