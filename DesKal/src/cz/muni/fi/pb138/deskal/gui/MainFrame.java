@@ -45,6 +45,7 @@ public class MainFrame extends javax.swing.JFrame {
     private ManagerInitSwingWorker managerInitSwingWorker;
     private RefreshTableSwingWorker refreshTableSwingWorker;
     private RemoveEventWorker removeEventWorker;
+    private RemoveAllEventsWorker removeAllEvents;
     private CalendarManager calManager;
     private EventManager evtManager;
     private ExportImport exportImport;
@@ -125,9 +126,7 @@ public class MainFrame extends javax.swing.JFrame {
                 loadEvents();
                 eventsList.setSelectedIndex(eventIndex);
             } catch (InterruptedException ex) {
-                throw new RuntimeException("Refresh table: Interrupted", ex);
             } catch (ExecutionException ex) {
-                throw new RuntimeException("Refresh table: cannot execute", ex);
             }
         }
     }// </editor-fold>
@@ -261,6 +260,21 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }// </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Remove all events swing worker">
+    private class RemoveAllEventsWorker extends SwingWorker<Void, Void> {
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            List<Event> events = evtManager.getAllEvents();
+            for (Event event : events) {
+                evtManager.removeEvent(event);
+            }
+            refreshTableSwingWorker = new RefreshTableSwingWorker(date);
+            refreshTableSwingWorker.execute();
+            return null;
+        }
+    }// </editor-fold>
+
     /** Creates new form MainFrame */
     public MainFrame() {
         try {
@@ -282,6 +296,7 @@ public class MainFrame extends javax.swing.JFrame {
                     calendarDB.closeDB();
                 }
                 dispose();
+                System.exit(0);
             }
         });
         tableModel = (DaysTableModel) daysTable.getModel();
@@ -361,6 +376,15 @@ public class MainFrame extends javax.swing.JFrame {
             iCalExportMenu = new javax.swing.JMenuItem();
             hCalExportMenu = new javax.swing.JMenuItem();
             ExitMenuItem = new javax.swing.JMenuItem();
+            jMenu3 = new javax.swing.JMenu();
+            goToMonthMenu = new javax.swing.JMenuItem();
+            prevMonthMenu = new javax.swing.JMenuItem();
+            nextMonthMenu = new javax.swing.JMenuItem();
+            jMenu1 = new javax.swing.JMenu();
+            newEventMenu = new javax.swing.JMenuItem();
+            editEventMenu = new javax.swing.JMenuItem();
+            removeEventMenu = new javax.swing.JMenuItem();
+            removeAllEventsMenu = new javax.swing.JMenuItem();
             jMenu2 = new javax.swing.JMenu();
             jMenuItem5 = new javax.swing.JMenuItem();
 
@@ -427,7 +451,7 @@ public class MainFrame extends javax.swing.JFrame {
             labels.add(durationLabel);
             labels.add(tagLabel);
             labels.add(noteLabel);
-            eventsList.addListSelectionListener(new EventListSelectionListener(editEventButton,removeEventButton,eventsList,labels));
+            eventsList.addListSelectionListener(new EventListSelectionListener(editEventButton,removeEventButton,eventsList,labels,editEventMenu,removeEventMenu));
 
             jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Událost"));
 
@@ -515,7 +539,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE))
             );
 
-            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22)); // NOI18N
+            currentDateLabel.setFont(new java.awt.Font("Tahoma", 1, 22));
             currentDateLabel.setText("DNES");
 
             javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -744,6 +768,80 @@ public class MainFrame extends javax.swing.JFrame {
 
             MenuBar.add(FileMenu);
 
+            jMenu3.setText("Měsíc");
+
+            goToMonthMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_J, java.awt.event.InputEvent.CTRL_MASK));
+            goToMonthMenu.setText("Jít na..");
+            goToMonthMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    goToMonthMenuActionPerformed(evt);
+                }
+            });
+            jMenu3.add(goToMonthMenu);
+
+            prevMonthMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+            prevMonthMenu.setText("Předchozí");
+            prevMonthMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    prevMonthMenuActionPerformed(evt);
+                }
+            });
+            jMenu3.add(prevMonthMenu);
+
+            nextMonthMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+            nextMonthMenu.setText("Další");
+            nextMonthMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    nextMonthMenuActionPerformed(evt);
+                }
+            });
+            jMenu3.add(nextMonthMenu);
+
+            MenuBar.add(jMenu3);
+
+            jMenu1.setText("Událost");
+
+            newEventMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+            newEventMenu.setText("Nová událost");
+            newEventMenu.setEnabled(false);
+            newEventMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    newEventMenuActionPerformed(evt);
+                }
+            });
+            jMenu1.add(newEventMenu);
+
+            editEventMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+            editEventMenu.setText("Upravit");
+            editEventMenu.setEnabled(false);
+            editEventMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    editEventMenuActionPerformed(evt);
+                }
+            });
+            jMenu1.add(editEventMenu);
+
+            removeEventMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
+            removeEventMenu.setText("Odstranit");
+            removeEventMenu.setEnabled(false);
+            removeEventMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    removeEventMenuActionPerformed(evt);
+                }
+            });
+            jMenu1.add(removeEventMenu);
+
+            removeAllEventsMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, java.awt.event.InputEvent.CTRL_MASK));
+            removeAllEventsMenu.setText("Odstranit vše");
+            removeAllEventsMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    removeAllEventsMenuActionPerformed(evt);
+                }
+            });
+            jMenu1.add(removeAllEventsMenu);
+
+            MenuBar.add(jMenu1);
+
             jMenu2.setText("Info");
 
             jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
@@ -808,7 +906,10 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                JOptionPane.showMessageDialog(rootPane, "DesKal - verze 1.0", "DesKal", JOptionPane.PLAIN_MESSAGE);
+                String newline = System.getProperty("line.separator");
+                JOptionPane.showMessageDialog(rootPane, "DesKal - desktopový kalendář (verze 1.0)"
+                        + newline + newline + "Autoři: Jan Bruzl, Tomáš Dragoun, "
+                        + "Lukáš Tesař, Jiří Železný", "DesKal", JOptionPane.PLAIN_MESSAGE);
             }
         });
 
@@ -827,12 +928,12 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
-
     }//GEN-LAST:event_removeEventButtonActionPerformed
 
     private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitMenuItemActionPerformed
         calendarDB.closeDB();
         dispose();
+        System.exit(0);
     }//GEN-LAST:event_ExitMenuItemActionPerformed
 
     private void filtersComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersComboBoxActionPerformed
@@ -921,7 +1022,6 @@ public class MainFrame extends javax.swing.JFrame {
                 refreshTableSwingWorker.execute();
             }
         });
-
     }//GEN-LAST:event_nextMonthButtonActionPerformed
 
     private void iCalExportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iCalExportMenuActionPerformed
@@ -1006,6 +1106,129 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_hCalImportMenuActionPerformed
+
+    private void newEventMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEventMenuActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                JDialog addDialog = new AddDialog(null, true, daysTable, eventsList,
+                        filters, evtManager, calManager);
+                addDialog.setLocationRelativeTo(daysTable);
+                addDialog.setVisible(true);
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
+                refreshTableSwingWorker.execute();
+            }
+        });
+    }//GEN-LAST:event_newEventMenuActionPerformed
+
+    private void editEventMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editEventMenuActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                Event event = listModel.getEventAt(eventsList.getSelectedIndex());
+                JDialog editDialog = new EditDialog(null, true, daysTable, eventsList, filters, event, evtManager);
+                editDialog.setLocationRelativeTo(daysTable);
+                editDialog.setVisible(true);
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
+                refreshTableSwingWorker.execute();
+            }
+        });
+    }//GEN-LAST:event_editEventMenuActionPerformed
+
+    private void removeEventMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeEventMenuActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                int i = JOptionPane.showConfirmDialog(rootPane, "Odstranit událost  " + eventsList.getSelectedValue() + " ?", "Odstranit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (i == JOptionPane.YES_OPTION) {
+                    int index = eventsList.getSelectedIndex();
+                    removeEventWorker = new RemoveEventWorker(listModel.getEventAt(index));
+                    removeEventWorker.execute();
+                    listModel.remove(index);
+                }
+            }
+        });
+    }//GEN-LAST:event_removeEventMenuActionPerformed
+
+    private void prevMonthMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevMonthMenuActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                int month = date.get(Calendar.MONTH);
+                int year = date.get(Calendar.YEAR);
+                month--;
+                if (month == -1) {
+                    month = 11;
+                    year--;
+                }
+                date.set(Calendar.MONTH, month);
+                date.set(Calendar.YEAR, year);
+                monthLabel.setText(getNameOfMonth(date.get(Calendar.MONTH)));
+                yearLabel.setText(Integer.toString(date.get(Calendar.YEAR)));
+                daysTable.clearSelection();
+                eventsList.clearSelection();
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
+                refreshTableSwingWorker.execute();
+            }
+        });
+
+    }//GEN-LAST:event_prevMonthMenuActionPerformed
+
+    private void nextMonthMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextMonthMenuActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                int month = date.get(Calendar.MONTH);
+                int year = date.get(Calendar.YEAR);
+                month++;
+                if (month == 12) {
+                    month = 0;
+                    year++;
+                }
+                date.set(Calendar.YEAR, year);
+                date.set(Calendar.MONTH, month);
+                monthLabel.setText(getNameOfMonth(date.get(Calendar.MONTH)));
+                yearLabel.setText(Integer.toString(date.get(Calendar.YEAR)));
+                daysTable.clearSelection();
+                eventsList.clearSelection();
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
+                refreshTableSwingWorker.execute();
+            }
+        });
+    }//GEN-LAST:event_nextMonthMenuActionPerformed
+
+    private void goToMonthMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToMonthMenuActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                JDialog goToMonthDialog = new GoToDialog(null, true, date);
+                goToMonthDialog.setLocationRelativeTo(daysTable);
+                goToMonthDialog.setVisible(true);
+                monthLabel.setText(getNameOfMonth(date.get(Calendar.MONTH)));
+                yearLabel.setText(Integer.toString(date.get(Calendar.YEAR)));
+                daysTable.clearSelection();
+                eventsList.clearSelection();
+                refreshTableSwingWorker = new RefreshTableSwingWorker(date);
+                refreshTableSwingWorker.execute();
+            }
+        });
+    }//GEN-LAST:event_goToMonthMenuActionPerformed
+
+    private void removeAllEventsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAllEventsMenuActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                int i = JOptionPane.showConfirmDialog(rootPane, "ODSTRANIT VŠECHNY UDÁLOSTI?",
+                        "Odstranit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (i == JOptionPane.YES_OPTION) {
+                    removeAllEvents = new RemoveAllEventsWorker();
+                    removeAllEvents.execute();
+                    listModel.cleanList();
+                }
+            }
+        });
+    }//GEN-LAST:event_removeAllEventsMenuActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ExitMenuItem;
     private javax.swing.JMenu FileMenu;
@@ -1014,10 +1237,12 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTable daysTable;
     private javax.swing.JLabel durationLabel;
     private javax.swing.JButton editEventButton;
+    private javax.swing.JMenuItem editEventMenu;
     private javax.swing.JList eventsList;
     private javax.swing.JMenu exportMenu;
     private javax.swing.JComboBox filtersComboBox;
     private javax.swing.JMenuItem filtersMenuItem;
+    private javax.swing.JMenuItem goToMonthMenu;
     private javax.swing.JMenuItem hCalExportMenu;
     private javax.swing.JMenuItem hCalImportMenu;
     private javax.swing.JMenuItem iCalExportMenu;
@@ -1030,7 +1255,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1043,11 +1270,16 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel monthLabel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JButton newEventButton;
+    private javax.swing.JMenuItem newEventMenu;
     private javax.swing.JButton nextMonthButton;
+    private javax.swing.JMenuItem nextMonthMenu;
     private javax.swing.JLabel noteLabel;
     private javax.swing.JLabel placeLabel;
     private javax.swing.JButton prevMonthButton;
+    private javax.swing.JMenuItem prevMonthMenu;
+    private javax.swing.JMenuItem removeAllEventsMenu;
     private javax.swing.JButton removeEventButton;
+    private javax.swing.JMenuItem removeEventMenu;
     private javax.swing.JLabel tagLabel;
     private javax.swing.JLabel timeLabel;
     private javax.swing.JLabel yearLabel;
@@ -1056,15 +1288,13 @@ public class MainFrame extends javax.swing.JFrame {
     private void loadEvents() {
         eventsList.clearSelection();
 
-
         if (tableModel.isDayAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn())) {
             newEventButton.setEnabled(true);
-
+            newEventMenu.setEnabled(true);
 
         } else {
             newEventButton.setEnabled(false);
-
-
+            newEventMenu.setEnabled(false);
         }
         List<Event> events = tableModel.getEventsAt(daysTable.getSelectedRow(), daysTable.getSelectedColumn());
 

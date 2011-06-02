@@ -10,9 +10,10 @@
     <!--
     output method xml, because when method is html, parser insert incorrect tag <META ... > without endind /, so entire document is incorrect
     -->
-    <xsl:output method="xml" media-type="text/calendar" encoding="utf-8"/>
+    <xsl:output method="xml" version="1.0" encoding="UTF-8" media-type="text/calendar"/>
+    
 <xsl:template match="/calendar">
-    <div>
+    <span class="vcalendar">
     <xsl:for-each select="event">
         <div class="vevent">
             <abbr class="dtstart"><xsl:value-of select="translate(dateSince,'Z','T')"/><xsl:value-of select="timeFrom"/>+01:00</abbr>
@@ -29,6 +30,6 @@
             </xsl:if>
         </div>
     </xsl:for-each>
-    </div>
+    </span>
 </xsl:template>
 </xsl:stylesheet>
