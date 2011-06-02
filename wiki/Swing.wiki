@@ -1,4 +1,4 @@
-#labels swing,java
+#summary Page about Swing graphic library
 #Some info about Swing graphic library.
 
 = Swing graphic library =
