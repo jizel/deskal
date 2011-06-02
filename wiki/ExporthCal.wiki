@@ -15,6 +15,7 @@ XSL Stylesheet for transformation calendar to hCalendar format.
            "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">]]>
     </xsl:text>
     <html xmlns="http://www.w3.org/1999/xhtml">
+
         <head>           
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
             <title>hCalendar export</title>
