@@ -1,20 +1,12 @@
 #summary Export to iCal format
-#labels Phase-Implementation,Phase-Design
+#labels Phase-Implementation
 =Export to iCal format=
 
 XSL Stylesheet for transformation calendar to iCalendar format.
 
-_Code isn't well readable, because of newline characters, which makes unnecessary empty lines in export file_
+_Code isn't well readable, because of newline characters, which makes unnecessary empty lines in iCal file_
 
 <code>
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-    Document   : iCal.xsl
-    Created on : 24. květen 2011, 15:50
-    Author     : AdiC
-    Description:
-        Export XML calendar to iCal format
--->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:output method="text" media-type="text/calendar"/>
 <xsl:template match="/calendar">BEGIN:VCALENDAR
@@ -31,7 +23,7 @@ DESCRIPTION:<xsl:value-of select="note" />
 <xsl:if test="tag">
 CATEGORIES:<xsl:value-of select="tag/@tagref" />
 </xsl:if>
-END:VEVENT</xsl:for-each>
-END:VCALENDAR</xsl:template>
+END:VEVENT
+</xsl:for-each>END:VCALENDAR</xsl:template>
 </xsl:stylesheet>
 </code>
