@@ -1,3 +1,4 @@
+#summary Page about iCal4j library
 #Info about iCal4J library used to parse iCalendar files.
 
 = iCal4J =
