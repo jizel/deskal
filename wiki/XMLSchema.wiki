@@ -1,9 +1,9 @@
 #summary XML Schema
-#labels Phase-Design,Schema
+#labels Phase-Design,XMLSchema
 
 = XML Schema =
 
-XML Schema for calendar and tag list. 
+XML Schema for calendar and tags. See tags explanation below.
 
 === Schema contains: ===
 
@@ -22,13 +22,14 @@ XML Schema for calendar and tag list.
    * _optional node_
   * *note* - node for some notes about the event
    * _optional node_
-  * *tags* - contains event's tags
-   * _optional node_
-   * *tag* - name of the tag (label)
-    * _tagref_ - keyref of the label
-    * _if node *labels* occurs, then at least one is required_
+  * *tag* - name of the tag (label)
+   * _tagref_ - keyref of the label
 
- 
+ As you can see below, uniqueness of name of tag is achieved by setting attribute _name_ of the element _label_ as unique. It is also set as key for attribute _tagref_ of element tag.
+
+ Valid XML document according this schema contains one root element _calendar_. It has to contain one element _labels_ and non or many elements _event_. Element _labels_ can contain undbounded number of elements _label_ with attribute _name_, which has to be unique.
+
+ Element _event_ has exactly one attribute _id_, used for unique identification of the event. Further, element _event_ contains elements used to store information about title, place, note, date of beginning, date of ending. Also contains element _tag_ with attribute _tagref_ which contains reference to the attribute _name_ oh the _label_ element.
 
 == Schema code: ==
 <code>
@@ -48,7 +49,7 @@ XML Schema for calendar and tag list.
             <xsd:field xpath="@id"/>
         </xsd:unique>
         <xsd:unique name="tag">
-            <xsd:selector xpath="labels/tag"/>
+            <xsd:selector xpath="labels/label"/>
             <xsd:field xpath="text"/>
         </xsd:unique>
         <xsd:key name="tagKey">
@@ -56,7 +57,7 @@ XML Schema for calendar and tag list.
             <xsd:field xpath="@name" />
         </xsd:key>
         <xsd:keyref name="tagKeyRef" refer="tagKey">
-            <xsd:selector xpath="event/tags/tag"/>
+            <xsd:selector xpath="event/tag"/>
             <xsd:field xpath="@tagref"/>
         </xsd:keyref>
     </xsd:element>
@@ -72,9 +73,9 @@ XML Schema for calendar and tag list.
             <xsd:element name="title" type="userTypeTitle" />
             <xsd:element name="place" type="xsd:string" minOccurs="0"/>
             <xsd:element name="note" type="xsd:string" minOccurs="0"/>
-            <xsd:element name="tags" minOccurs="0" type="userTypeTags" />
+            <xsd:element name="tag" minOccurs="0" maxOccurs="1" type="userTypeTags"/>
         </xsd:sequence>
-        <xsd:attribute name="id" type="xsd:integer" use="required"/>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
     </xsd:complexType>
 
     <xsd:complexType name="userTypeTag">
@@ -94,18 +95,7 @@ XML Schema for calendar and tag list.
     </xsd:simpleType>
 
      <xsd:complexType name="userTypeTags">
-        <xsd:sequence>
-            <xsd:element name="tag" minOccurs="1" maxOccurs="unbounded">
-                 <xsd:complexType>
-                    <xsd:attribute name="tagref" type="xsd:NCName" use="required"/>
-                </xsd:complexType>
-            </xsd:element>
-        </xsd:sequence>
+            <xsd:attribute name="tagref" type="xsd:NCName" use="required"/>
     </xsd:complexType>
-
-
-
 </xsd:schema>
-
-
 </code>
