@@ -176,3 +176,6 @@ END:VEVENT
 END:VCALENDAR
 </code>
 After iCalendar was released, the Internet Mail Consortium stated that it "hopes that all vCalendar developers take advantage of these new open standards and make their software compatible with both vCalendar 1.0 and iCalendar.
+
+
+Převzato z Wikipedie
