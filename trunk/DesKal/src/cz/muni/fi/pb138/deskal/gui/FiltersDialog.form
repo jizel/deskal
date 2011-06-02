@@ -112,7 +112,7 @@
         </Container>
         <Component class="javax.swing.JButton" name="newFilterButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Nov&#xfd; &#x161;t&#xed;tek"/>
+            <Property name="text" type="java.lang.String" value="Vytvo&#x159;it"/>
             <Property name="focusCycleRoot" type="boolean" value="true"/>
           </Properties>
           <Events>

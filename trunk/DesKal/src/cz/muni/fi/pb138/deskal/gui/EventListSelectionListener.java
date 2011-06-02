@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.xml.datatype.Duration;
@@ -19,15 +20,20 @@ public class EventListSelectionListener implements ListSelectionListener {
 
     private JButton button1;
     private JButton button2;
+    private JMenuItem menuItem1;
+    private JMenuItem menuItem2;
     private JList list;
     private List<JLabel> labels;
     private EventListModel model;
     private Event event;
     private MessageFormat dateCzFormat;
 
-    EventListSelectionListener(JButton editEventButton, JButton removeEventButton, JList eventsList, List<JLabel> labels) {
+    EventListSelectionListener(JButton editEventButton, JButton removeEventButton, 
+            JList eventsList, List<JLabel> labels, JMenuItem editEventMenu, JMenuItem removeEventMenu) {
         button1 = editEventButton;
         button2 = removeEventButton;
+        menuItem1 = editEventMenu;
+        menuItem2 = removeEventMenu;
         list = eventsList;
         model = (EventListModel) list.getModel();
         this.labels = labels;
@@ -60,6 +66,8 @@ public class EventListSelectionListener implements ListSelectionListener {
                     public void run() {
                         button1.setEnabled(false);
                         button2.setEnabled(false);
+                        menuItem1.setEnabled(false);
+                        menuItem2.setEnabled(false);
                         for (int i = 0; i < labels.size(); i++) {
                             labels.get(i).setText(" ");
                         }
@@ -72,6 +80,8 @@ public class EventListSelectionListener implements ListSelectionListener {
                     public void run() {
                         button1.setEnabled(true);
                         button2.setEnabled(true);
+                        menuItem1.setEnabled(true);
+                        menuItem2.setEnabled(true);
                         event = model.getEventAt(list.getSelectedIndex());
                         labels.get(0).setText(event.getName());
                         labels.get(1).setText(event.getPlace());

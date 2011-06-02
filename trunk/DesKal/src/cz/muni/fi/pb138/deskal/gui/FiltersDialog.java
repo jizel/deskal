@@ -73,7 +73,7 @@ public class FiltersDialog extends javax.swing.JDialog {
         jScrollPane1.setViewportView(filtersList);
         filtersList.addListSelectionListener(new FiltersListSelectionListener(removeFilterButton,filtersList));
 
-        newFilterButton.setText("Nový štítek");
+        newFilterButton.setText("Vytvořit");
         newFilterButton.setFocusCycleRoot(true);
         newFilterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
