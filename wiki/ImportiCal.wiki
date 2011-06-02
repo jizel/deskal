@@ -1,0 +1,6 @@
+#summary Import from iCalendar format.
+#labels Phase-Implementation
+
+= Import from iCal format =
+
+TODO
