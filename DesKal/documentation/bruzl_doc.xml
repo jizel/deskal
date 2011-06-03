@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Projekt DesKal pro PB138</title>
+
+    <author>
+      <firstname>Jan</firstname>
+
+      <surname>Bruzl</surname>
+
+      <affiliation>
+        <orgname>FI MUNI</orgname>
+      </affiliation>
+    </author>
+
+    <pubdate>5. 6. 2011</pubdate>
+
+    <abbrev>Dokumentace mé práce</abbrev>
+  </articleinfo>
+
+  <section>
+    <title>Shrnutí</title>
+
+    <para>Mým úkolem na projektu byl návrh a implementace XML schéma, příprava
+    rozhraní pro práci s XML databází BaseX, tvorba dotazovacích výrazů a
+    implementace metod je využívající.</para>
+  </section>
+
+  <section>
+    <title>XML Schema</title>
+
+    <para>XML Schema, uložené v souboru
+    <filename>calendar-schema.xsd</filename>, využívá mimo klasických elementů
+    pro uložení <code>title</code>, <code>place</code>, <code>note</code>
+    elementy typu <code>date</code>, pro uložení data počátku a konce události
+    a <code>time</code> pro uložení počátečního a konečného času události.
+    Dále používá typ <code>NCName</code>, odkazující se na hodnotu atributu
+    <code>label</code> <code>name</code>. Atribut name obsahuje název tagu pro
+    událost kalendáře. Hodnota tohoto atributu musí být unikátní, což je ve
+    schématu definováno. Taktéž je definována jako klíčová hodnota pro hodnotu
+    elementu <code>tag</code>.</para>
+  </section>
+
+  <section>
+    <title>BaseX</title>
+
+    <para>Pro operace nad XML soubory využíváme v projektu nativní databázi
+    BaseX. Využíváme pro to služeb balíku <code>org.basex.core.*</code>.
+    Dotazy se realizují pomocí příkazu <code>XQuery(XQuery_výraz).
+    </code>Takto se realizují operace jako výběr jedné události z XML, výběr
+    událostí v daném intervalu, editace události, smazání události a obdobné
+    operace s tagy.</para>
+  </section>
+</article>
