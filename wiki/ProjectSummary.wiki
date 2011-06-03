@@ -8,7 +8,6 @@ Desktop calendar, writen in Java, using XML. Created as a project @PB138.FI.MUNI
 
 = Future Features =
 
-  * Switch between different calendars
   * Create/Edit/Delete evets
   * Assign a tag to the event 
   * Export to iCal and hCalendar
