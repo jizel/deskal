@@ -3,6 +3,11 @@
 
 = BaseX =
 
+BaseX is a very light-weight and high-performance XML database system and XPath/XQuery processor, including full support for the W3C Update and Full Text extensions. BaseX offers also an interactive and user-friendly GUI frontend gives you great insight into large XML data instances. 
+
+_Description taken from [http://basex.org/]_
+
+==Links==
 Homepage [http://basex.org/]
 
 Code examples: http://docs.basex.org/wiki/Code_Examples
