@@ -1,62 +1,44 @@
 #labels hCalendar
 ==hCalendar==
-jednoduchý, otevřený, distribuovaný formát pro kalendáře a události
-vychází ze standardu iCalendar (RFC2445)
-využívá se např. pro synchronizaci kalendářů v organizérech, mobilních telefonech, PDA, … s počítačem, výměnu informací časové povahy mezi uvedenými zařízeními, ...
-hCalendar odpovídá 1:1 standardu iCalendar*
+hCalendar (short for HTML iCalendar) is a microformat standard for displaying a semantic (X)HTML representation of iCalendar-format calendar information about an event, on web pages, using HTML classes and rel attributes.
+It allows parsing tools (for example other websites, or browser add-ons like Firefox's Operator extension) to extract the details of the event, and display them using some other website, index or search them, or to load them into a calendar or diary program, for instance. Multiple instances can be displayed as timelines.
 
-Odkaz by měl být vložen do (X)HTML souboru, který ho používá:
-<code>
-<head profile="http://microformats.org/profile/hcalendar">
-<link rel="profile" href="http://microformats.org/profile/hcalendar">
-Tento obsah používá 
-<a rel="profile" 
- href="http://microformats.org/profile/hcalendar">hCalendar</a>.
+Example:
+<code>   
+   The English Wikipedia was launched
+   on 15 January 2001 with a party from 
+   2-4pm at 
+   Jimmy Wales' house 
+   (more information).
 </code>
 
-=======Ukázka události ve formátu iCalendar=======
-<code>
-     BEGIN:VCALENDAR
-     BEGIN:VEVENT
-     UID:guid-1.host1.com
-     DTSTAMP:19980309T231000Z
-     DESCRIPTION:Project XYZ Review Meeting
-     SUMMARY:XYZ Project Review
-     DTSTART:19980312T133000Z
-     DTEND:19980312T143000Z
-     LOCATION:1CP Conference Room 4350
-     END:VEVENT
-     END:VCALENDAR
+The HTML mark-up might be:
+<code>  
+<p>
+    The English Wikipedia was launched 
+    on 15 January 2001 with a party from 
+    2-4pm at 
+    Jimmy Wales' house 
+    (<a href="http://en.wikipedia.org/wiki/History_of_Wikipedia">more information</a>)
+</p>
 </code>
 
-
-====Ukázka odpovídající události ve formátu hCalendar====
-<code>
-<div class="vevent">
-<h3 class="summary">XYZ Project Review</h3>
-<p class="description">Project XYZ Review Meeting</p>
-<p>To be held on <abbr class="dtstart" title="1998-03-12T08:30:00-05:00">12 March 1998 from 8:30am EST</abbr> 
-until <abbr class="dtend" title="1998-03-12T09:30:00-05:00">9:30am EST</abbr></p>
-<p>Location: <span class="location">1CP Conference Room 4350</span></p>
-<small>Booked by: <span class="uid">guid-1.host1.com</span> on 
-<abbr class="dtstamp" title="19980309T231000Z">9 Mar 1998 6:00pm</abbr></small>
-
-</code>
-
-hCalendar (zkratka z HTML iCalendar) je mikroformát sloužící k sémantickému zápisu dat ve formátu iCal do webových stránek pomocí HTML nebo XHTML.
-Umožňuje webovým prohlížečům, vyhledávačům a dalším programům snadno
-extrahovat informace z webových stránek a pracovat s nimi (např. vyexportovat je do kalendářového programu uživatele).
-
+hCalendar mark-up may be added using span HTML elements and the classes vevent, summary, dtstart (start date), dtend (end date), location and url:
 <code>
 <p class="vevent">
-    <span class="summary">Konference o používání mikroformátů na českém internetu</span> 
-    proběhne 15. května 2008 od
-    <abbr class="dtstart" title="2008-05-15T10:00:00+02:00">10:00</abbr> do
-    <abbr class="dtend" title="2008-05-15T17:00:00+02:00">17:00</abbr> v 
-    <span class="location">Pražském konferenčním centru</span> 
-    (<a class="url" href="http://microformats.cz/konference">další informace</a>)
+    The <span class="summary">English Wikipedia was launched</span> 
+    on 15 January 2001 with a party from 
+    <abbr class="dtstart" title="2001-01-15T14:00:00+06:00">2</abbr>-
+    <abbr class="dtend" title="2001-01-15T16:00:00+06:00">4</abbr>pm at 
+    <span class="location">Jimmy Wales' house</span> 
+    (<a class="url" href="http://en.wikipedia.org/wiki/History_of_Wikipedia">more information</a>)
 </p>
-
 </code>
 
-Převzato z Wikipedie
+Note the use of the abbr element to contain the machine readable, ISO8601, date-time format for the start and end times.
+
+Exclusive end-dates:
+For whole-day dates, where no time is specified, the end-date must be recorded as exclusive (i.e. the day after the event ends). For example:
+<code>
+ <abbr class="dtend" title="2001-02-01">31 January 2001</abbr>
+</code>
