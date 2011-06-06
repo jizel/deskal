@@ -29,7 +29,7 @@ public class EventManagerImpl implements EventManager {
     private DatatypeFactory df;
     private DocumentBuilderFactory docFactory;
     private DocumentBuilder builder;
-
+    //konstruktor s parametrem kontextu databaze
     public EventManagerImpl(Context context) {
         this.context = context;
         String userDir = System.getProperty("user.home");
@@ -45,7 +45,7 @@ public class EventManagerImpl implements EventManager {
             throw new RuntimeException("Document builder init error", ex);
         }
     }
-
+    //metoda ktera prida udalost do databaze a vygeneruje ID
     public void addEvent(Event e) {
 
         String newNode = eventToXml(e);
@@ -58,7 +58,7 @@ public class EventManagerImpl implements EventManager {
 
         executeUpdate(xQuery);
     }
-
+    //metoda pro editaci udalosti v databazi podle ID
     public void editEvent(Event e) {
 
         String newNode = eventToXml(e);
@@ -70,7 +70,7 @@ public class EventManagerImpl implements EventManager {
 
         executeUpdate(xQuery);
     }
-
+    //metoda pro smazani udalosti z databaze podle ID
     public void removeEvent(Event e) {
 
         String xquery = "delete node /calendar/event[@id='" + e.getId() + "']";
@@ -79,7 +79,7 @@ public class EventManagerImpl implements EventManager {
 
         executeUpdate(xQuery);
     }
-
+    //metoda vrati List vsech udalosti v databazi
     public List<Event> getAllEvents() {
 
         String queryForEvents = "<events>"
@@ -104,7 +104,7 @@ public class EventManagerImpl implements EventManager {
         return parseDocument(doc);
 
     }
-
+    //metoda vrati List udalosti ktere jakkoli zasahuji do daneho mesice
     public List<Event> getEventsForMonth(int year, int month) {
 
         GregorianCalendar sinceHelp = new GregorianCalendar();
@@ -144,7 +144,7 @@ public class EventManagerImpl implements EventManager {
 
         return parseDocument(doc);
     }
-
+    //metoda vrati List udalosti ktere jakkoli zasahuji do daneho mesice s danym stitkem
     public List<Event> getEventsForMonth(int year, int month, String tag) {
 
         GregorianCalendar sinceHelp = new GregorianCalendar();
@@ -188,6 +188,8 @@ public class EventManagerImpl implements EventManager {
     }
 
     //help methods
+
+    //metoda ktera provede zmenu dat v databazi
     private void executeUpdate(XQuery xQuery) {
         try {
             xQuery.execute(context);
@@ -200,7 +202,7 @@ public class EventManagerImpl implements EventManager {
             throw new RuntimeException("Error while updating db", ex);
         }
     }
-
+    //metoda prevede Event do jejiho vyjadreni v XML k dalsimu zpracovani
     private String eventToXml(Event e) {
         //create dateSince without time
         XMLGregorianCalendar dateFrom = df.newXMLGregorianCalendar();
@@ -283,7 +285,7 @@ public class EventManagerImpl implements EventManager {
         }
         return doc;
     }
-
+    //metoda ktera z XML vyjadreni vytvori objekty Event a vrati je v kolekci List
     private List<Event> parseDocument(Document doc) {
         List<Event> events = new ArrayList<Event>();
 

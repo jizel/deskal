@@ -77,7 +77,7 @@ public class Event {
     public void setTag(String tag) {
         this.tag = tag;
     }
-
+    //metoda vraci retezec popisujici zacatek udalosti
     public String getStartString() {
         int minute = date.getMinute();
         int hour = date.getHour();
@@ -90,9 +90,7 @@ public class Event {
         }
         return dateString + "   " + time;
     }
-
-
-
+    //metoda vraci cas zacatku - volano z GUI
     public int[] getTime() {
         int[] time = new int[2];
         time[0] = date.getHour();

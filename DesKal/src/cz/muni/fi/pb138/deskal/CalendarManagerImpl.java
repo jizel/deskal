@@ -31,6 +31,7 @@ public class CalendarManagerImpl implements CalendarManager {
     private EventManager eventManager;
     private DatatypeFactory df;
 
+    //konstruktor s parametry: kontext databaze a EventManager
     public CalendarManagerImpl(Context context, EventManager eventManager) {
         this.context = context;
         String userDir = System.getProperty("user.home");
@@ -47,7 +48,7 @@ public class CalendarManagerImpl implements CalendarManager {
             throw new RuntimeException("Unable to init document builder", ex);
         }
     }
-
+    //metoda slouzi k ziskani vsech stitku z databaze
     public List<String> getAllTags() {
         List<String> labels = new ArrayList<String>();
 
@@ -85,7 +86,7 @@ public class CalendarManagerImpl implements CalendarManager {
 
         return labels;
     }
-
+    //metoda vraci List dni pro dany rok, mesic a stitek, vyuziva EventManager
     public List<Day> getDaysInMonthWithTag(int year, int month, String tag) {
         List<Day> days = createDaysForMonth(year, month);
         List<Event> events = null;
@@ -124,7 +125,7 @@ public class CalendarManagerImpl implements CalendarManager {
         }
         return days;
     }
-
+    //metoda ktera prida stitek do databaze
     public void addFilter(Filter filter) {
 
         String xquery = "insert node (<label name='" + filter.getName() 
@@ -142,7 +143,7 @@ public class CalendarManagerImpl implements CalendarManager {
             throw new RuntimeException("Error while adding label to calendar.xml", ex);
         }
     }
-
+    //metoda ktera odebere stitek z databaze - ze seznamu stitku a vsech udalosti
     public void removeFilter(Filter filter) {
 
         String xquery = "delete node /calendar/labels/label[@name='" + filter.getName() + "']";
@@ -161,7 +162,7 @@ public class CalendarManagerImpl implements CalendarManager {
             throw new RuntimeException("Error while adding label to calendar.xml", ex);
         }
     }
-
+    //pomocna metoda - vytvori List dni pro dany mesic a rok
     private List<Day> createDaysForMonth(int year, int month) {
         List<Day> days = new ArrayList<Day>();
         GregorianCalendar date = new GregorianCalendar();

@@ -19,8 +19,9 @@ public class CalendarDB {
         DBfile = userDir + separator + "DesKal" + separator + "calendar.xml";
     }
 
+    //vytvoreni kontextu databaze - soubor calendar.xml
     public void ConnectToBaseX() {
-        org.basex.core.Context con = new org.basex.core.Context();
+        Context con = new org.basex.core.Context();
         try {
             new CreateDB("DBCalendar", DBfile).execute(con);
         } catch (BaseXException ex) {
@@ -28,11 +29,13 @@ public class CalendarDB {
         }
         context = con;
     }
-
+    //ziskani kontextu
     public Context getContext() {
+        if(context == null)
+            ConnectToBaseX();
         return context;
     }
-
+    //ukonceni databaze
     public void closeDB(){
         context.close();
     }

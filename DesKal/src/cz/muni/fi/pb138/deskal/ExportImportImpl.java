@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -46,6 +45,8 @@ public class ExportImportImpl implements ExportImport {
     private String userDir;
     private String separator;
 
+    //trida vyuziva EventManager pro ziskavani/ukladani udalosti z/do databaze
+    //take vyuziva CalendarManager pro pridavani stitku do databaze pri importu
     public ExportImportImpl(EventManager evtManager, CalendarManager calManager) {
         userDir = System.getProperty("user.home");
         separator = System.getProperty("file.separator");
