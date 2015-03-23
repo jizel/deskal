@@ -1,0 +1,1 @@
+Desktop calendar, using Java and XML. PB138 project @FI.MUNI.CZ
